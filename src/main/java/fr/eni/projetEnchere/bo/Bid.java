@@ -1,6 +1,6 @@
 package fr.eni.projetEnchere.bo;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Bid {
@@ -12,7 +12,7 @@ public class Bid {
 	private int idArticle;
 	
 	// not null
-	private LocalDate bidDate;
+	private LocalDateTime bidDate;
 	
 	// not null
 	private int bidPrice;
@@ -20,7 +20,7 @@ public class Bid {
 	public Bid() {
 		super();
 	}
-	public Bid(int idMember, int idArticle, LocalDate bidDate, int bidPrice) {
+	public Bid(int idMember, int idArticle, LocalDateTime bidDate, int bidPrice) {
 		super();
 		this.idMember = idMember;
 		this.idArticle = idArticle;
@@ -39,10 +39,10 @@ public class Bid {
 	public void setIdArticle(int idArticle) {
 		this.idArticle = idArticle;
 	}
-	public LocalDate getBidDate() {
+	public LocalDateTime getBidDate() {
 		return bidDate;
 	}
-	public void setBidDate(LocalDate bidDate) {
+	public void setBidDate(LocalDateTime bidDate) {
 		this.bidDate = bidDate;
 	}
 	public int getBidPrice() {

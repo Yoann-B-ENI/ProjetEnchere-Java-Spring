@@ -1,6 +1,6 @@
 package fr.eni.projetEnchere.bo;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Article {
@@ -15,10 +15,10 @@ public class Article {
 	private String description;
 	
 	// not null
-	private LocalDate auctionStartDate;
+	private LocalDateTime auctionStartDate;
 	
 	// not null
-	private LocalDate auctionEndDate;
+	private LocalDateTime auctionEndDate;
 	
 	// .
 	private int startingPrice;
@@ -39,7 +39,7 @@ public class Article {
 		super();
 	}
 	// only not nulls
-	public Article(int idArticle, String name, String description, LocalDate auctionStartDate, LocalDate auctionEndDate,
+	public Article(int idArticle, String name, String description, LocalDateTime auctionStartDate, LocalDateTime auctionEndDate,
 			int idVendor, int idCategory, RemovalPoint removalPoint) {
 		super();
 		this.idArticle = idArticle;
@@ -52,7 +52,7 @@ public class Article {
 		this.removalPoint = removalPoint;
 	}
 	// all attributes
-	public Article(int idArticle, String name, String description, LocalDate auctionStartDate, LocalDate auctionEndDate,
+	public Article(int idArticle, String name, String description, LocalDateTime auctionStartDate, LocalDateTime auctionEndDate,
 			int startingPrice, int salePrice, int idVendor, int idCategory, RemovalPoint removalPoint) {
 		super();
 		this.idArticle = idArticle;
