@@ -2,15 +2,15 @@
 
 DROP TABLE IF EXISTS Bids;
 DROP TABLE IF EXISTS Articles;
-DROP TABLE IF EXISTS Users;
+DROP TABLE IF EXISTS Members;
 DROP TABLE IF EXISTS Categories;
 DROP TABLE IF EXISTS RemovalPoints;
 
 
 
 
-CREATE TABLE IF NOT EXISTS users (
-    idUser		   	      SERIAL NOT NULL,
+CREATE TABLE IF NOT EXISTS Members (
+    idMember		   	      SERIAL NOT NULL,
     userName              VARCHAR(30) NOT NULL,
     password     		  VARCHAR(30) NOT NULL,
     name                  VARCHAR(30) NOT NULL,
@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS users (
     townName              VARCHAR(30) NOT NULL,
     credits           	  INTEGER NOT NULL,
     admin   			  BOOLEAN NOT NULL, 
-    CONSTRAINT users_pk PRIMARY KEY (idUser)
+    CONSTRAINT members_pk PRIMARY KEY (idMember)
 );
 
 CREATE TABLE IF NOT EXISTS CATEGORIES (
@@ -51,19 +51,19 @@ CREATE TABLE IF NOT EXISTS ARTICLES (
     idCategory                    INTEGER NOT NULL, 
     idRemovalPoint				  INTEGER NOT NULL, 
     CONSTRAINT articles_pk PRIMARY KEY (idArticle), 
-    CONSTRAINT articles_users_fk FOREIGN KEY (idVendor) REFERENCES USERS (idUser), 
+    CONSTRAINT articles_members_fk FOREIGN KEY (idVendor) REFERENCES USERS (idMember), 
     CONSTRAINT articles_categories_fk FOREIGN KEY (idCategory) REFERENCES CATEGORIES (idCategory), 
     CONSTRAINT articles_removalPoints_fk FOREIGN KEY (idRemovalPoint) REFERENCES RemovalPoints (idRemovalPoint)
 );
 
 
 CREATE TABLE IF NOT EXISTS BIDS (
-    idUser   		INTEGER NOT NULL,
+    idMember   		INTEGER NOT NULL,
     idArticle       INTEGER NOT NULL,
     bidDate     DATE NOT NULL,
 	bidPrice  	INTEGER NOT NULL, 
-	CONSTRAINT bids_pk PRIMARY KEY (idUser, idArticle), 
-	CONSTRAINT bids_users_fk FOREIGN KEY (idUser) REFERENCES USERS (idUser), 
+	CONSTRAINT bids_pk PRIMARY KEY (idMember, idArticle), 
+	CONSTRAINT bids_users_fk FOREIGN KEY (idMember) REFERENCES USERS (idMember), 
 	CONSTRAINT bids_articles_fk FOREIGN KEY (idArticle) REFERENCES ARTICLES (idArticle)
 );
 
