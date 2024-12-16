@@ -1,18 +1,39 @@
 
 
-CREATE TABLE CATEGORIES (
-    idCategory   INTEGER IDENTITY(1,1) NOT NULL,
-    name        VARCHAR(30) NOT NULL
-    CONSTRAINT categories_pk PRIMARY KEY (idCategory)
-)
 
-CREATE TABLE AUCTIONS (
-    idUser   INTEGER NOT NULL,
+CREATE TABLE IF NOT EXISTS users (
+    idUser		   	      SERIAL NOT NULL,
+    userName              VARCHAR(30) NOT NULL,
+    password     		  VARCHAR(30) NOT NULL,
+    name                  VARCHAR(30) NOT NULL,
+    firstName             VARCHAR(30) NOT NULL,
+    email                 VARCHAR(20) NOT NULL,
+    phoneNumber    	      VARCHAR(15),
+    roadName              VARCHAR(30) NOT NULL,
+    zipCode			      VARCHAR(10) NOT NULL,
+    townName              VARCHAR(30) NOT NULL,
+    credits           	  INTEGER NOT NULL,
+    admin   			  BOOLEAN NOT NULL, 
+    CONSTRAINT users_pk PRIMARY KEY (idUser)
+);
+
+CREATE TABLE IF NOT EXISTS CATEGORIES (
+    idCategory   SERIAL NOT NULL,
+    name         VARCHAR(30) NOT NULL, 
+    CONSTRAINT categories_pk PRIMARY KEY (idCategory)
+);
+
+CREATE TABLE IF NOT EXISTS AUCTIONS (
+    idUser   		INTEGER NOT NULL,
     idArticle       INTEGER NOT NULL,
-    auctionDate     datetime NOT NULL,
-	auctionPrice  INTEGER NOT NULL
-	CONSTRAINT auctions_pk PRIMARY KEY (idUser, isArticle)
-)
+    auctionDate     DATE NOT NULL,
+	auctionPrice  	INTEGER NOT NULL, 
+	CONSTRAINT auctions_pk PRIMARY KEY (idUser, idArticle)
+);
+
+
+
+/*
 
 CREATE TABLE RETRAITS (
 	no_article         INTEGER NOT NULL,
@@ -23,22 +44,6 @@ CREATE TABLE RETRAITS (
 
 ALTER TABLE RETRAITS ADD constraint retrait_pk PRIMARY KEY  (no_article)
 
-CREATE TABLE UTILISATEURS (
-    no_utilisateur   INTEGER IDENTITY(1,1) NOT NULL,
-    pseudo           VARCHAR(30) NOT NULL,
-    nom              VARCHAR(30) NOT NULL,
-    prenom           VARCHAR(30) NOT NULL,
-    email            VARCHAR(20) NOT NULL,
-    telephone        VARCHAR(15),
-    rue              VARCHAR(30) NOT NULL,
-    code_postal      VARCHAR(10) NOT NULL,
-    ville            VARCHAR(30) NOT NULL,
-    mot_de_passe     VARCHAR(30) NOT NULL,
-    credit           INTEGER NOT NULL,
-    administrateur   bit NOT NULL
-)
-
-ALTER TABLE UTILISATEURS ADD constraint utilisateur_pk PRIMARY KEY (no_utilisateur)
 
 
 CREATE TABLE ARTICLES_VENDUS (
@@ -83,3 +88,7 @@ ALTER TABLE ARTICLES_VENDUS
         REFERENCES utilisateurs ( no_utilisateur )
 ON DELETE NO ACTION 
     ON UPDATE no action 
+    
+    
+    
+*/
