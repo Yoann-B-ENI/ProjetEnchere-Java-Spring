@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS users (
     password     		  VARCHAR(30) NOT NULL,
     name                  VARCHAR(30) NOT NULL,
     firstName             VARCHAR(30) NOT NULL,
-    email                 VARCHAR(20) NOT NULL,
+    email                 VARCHAR(40) NOT NULL,
     phoneNumber    	      VARCHAR(15),
     roadName              VARCHAR(30) NOT NULL,
     zipCode			      VARCHAR(10) NOT NULL,
