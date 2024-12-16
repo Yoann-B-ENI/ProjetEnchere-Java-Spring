@@ -27,10 +27,10 @@ public class Article {
 	private int salePrice;
 	
 	// not null, fk members
-	private int idVendor;
+//	private Member vendor;
 	
 	// not null, fk categories
-	private int idCategory;
+	private Category category;
 	
 	// not null, fk removalpoints
 	private RemovalPoint removalPoint;
@@ -40,20 +40,20 @@ public class Article {
 	}
 	// only not nulls
 	public Article(int idArticle, String name, String description, LocalDateTime auctionStartDate, LocalDateTime auctionEndDate,
-			int idVendor, int idCategory, RemovalPoint removalPoint) {
+			int vendor, Category category, RemovalPoint removalPoint) {
 		super();
 		this.idArticle = idArticle;
 		this.name = name;
 		this.description = description;
 		this.auctionStartDate = auctionStartDate;
 		this.auctionEndDate = auctionEndDate;
-		this.idVendor = idVendor;
-		this.idCategory = idCategory;
+		//this.vendor = vendor;
+		this.category = category;
 		this.removalPoint = removalPoint;
 	}
 	// all attributes
 	public Article(int idArticle, String name, String description, LocalDateTime auctionStartDate, LocalDateTime auctionEndDate,
-			int startingPrice, int salePrice, int idVendor, int idCategory, RemovalPoint removalPoint) {
+			int startingPrice, int salePrice, int vendor, Category category, RemovalPoint removalPoint) {
 		super();
 		this.idArticle = idArticle;
 		this.name = name;
@@ -62,11 +62,74 @@ public class Article {
 		this.auctionEndDate = auctionEndDate;
 		this.startingPrice = startingPrice;
 		this.salePrice = salePrice;
-		this.idVendor = idVendor;
-		this.idCategory = idCategory;
+		//this.vendor = vendor;
+		this.category = category;
 		this.removalPoint = removalPoint;
 	}
+	
+	
 
+	public int getIdArticle() {
+		return idArticle;
+	}
+	public void setIdArticle(int idArticle) {
+		this.idArticle = idArticle;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	public LocalDateTime getAuctionStartDate() {
+		return auctionStartDate;
+	}
+	public void setAuctionStartDate(LocalDateTime auctionStartDate) {
+		this.auctionStartDate = auctionStartDate;
+	}
+	public LocalDateTime getAuctionEndDate() {
+		return auctionEndDate;
+	}
+	public void setAuctionEndDate(LocalDateTime auctionEndDate) {
+		this.auctionEndDate = auctionEndDate;
+	}
+	public int getStartingPrice() {
+		return startingPrice;
+	}
+	public void setStartingPrice(int startingPrice) {
+		this.startingPrice = startingPrice;
+	}
+	public int getSalePrice() {
+		return salePrice;
+	}
+	public void setSalePrice(int salePrice) {
+		this.salePrice = salePrice;
+	}
+//	public Member getVendor() {
+//		return vendor;
+//	}
+//	public void setVendor(Member vendor) {
+//		this.vendor = vendor;
+//	}
+	public Category getCategory() {
+		return category;
+	}
+	public void setCategory(Category category) {
+		this.category = category;
+	}
+	public RemovalPoint getRemovalPoint() {
+		return removalPoint;
+	}
+	public void setRemovalPoint(RemovalPoint removalPoint) {
+		this.removalPoint = removalPoint;
+	}
+	
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -84,10 +147,10 @@ public class Article {
 		builder.append(startingPrice);
 		builder.append(", salePrice=");
 		builder.append(salePrice);
-		builder.append(", idVendor=");
-		builder.append(idVendor);
-		builder.append(", idCategory=");
-		builder.append(idCategory);
+		//builder.append(", Vendor=");
+		//builder.append(vendor);
+		builder.append(", Category=");
+		builder.append(category);
 		builder.append(", idRemovalPoint=");
 		builder.append(removalPoint);
 		builder.append("]");
