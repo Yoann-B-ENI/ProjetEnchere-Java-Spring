@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS ARTICLES (
     idCategory                    INTEGER NOT NULL, 
     idRemovalPoint				  INTEGER NOT NULL, 
     CONSTRAINT articles_pk PRIMARY KEY (idArticle), 
-    CONSTRAINT articles_members_fk FOREIGN KEY (idVendor) REFERENCES USERS (idMember), 
+    CONSTRAINT articles_members_fk FOREIGN KEY (idVendor) REFERENCES Members (idMember), 
     CONSTRAINT articles_categories_fk FOREIGN KEY (idCategory) REFERENCES CATEGORIES (idCategory), 
     CONSTRAINT articles_removalPoints_fk FOREIGN KEY (idRemovalPoint) REFERENCES RemovalPoints (idRemovalPoint)
 );
@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS BIDS (
     bidDate     DATE NOT NULL,
 	bidPrice  	INTEGER NOT NULL, 
 	CONSTRAINT bids_pk PRIMARY KEY (idMember, idArticle), 
-	CONSTRAINT bids_users_fk FOREIGN KEY (idMember) REFERENCES USERS (idMember), 
+	CONSTRAINT bids_members_fk FOREIGN KEY (idMember) REFERENCES Members (idMember), 
 	CONSTRAINT bids_articles_fk FOREIGN KEY (idArticle) REFERENCES ARTICLES (idArticle)
 );
 

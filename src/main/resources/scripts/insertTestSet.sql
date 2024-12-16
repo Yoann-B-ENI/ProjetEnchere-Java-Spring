@@ -1,8 +1,8 @@
 
 
 
--- Insert Users
-INSERT INTO users (userName, password, name, firstName, email, phoneNumber, roadName, zipCode, townName, credits, admin)
+-- Insert Members
+INSERT INTO members (userName, password, name, firstName, email, phoneNumber, roadName, zipCode, townName, credits, admin)
 VALUES 
 ('john_doe', 'securePass123', 'Doe', 'John', 'john.doe@example.com', '123-456-7890', 'Main St', '12345', 'Springfield', 100, TRUE),
 ('jane_smith', 'password456', 'Smith', 'Jane', 'jane.smith@example.com', '987-654-3210', 'Oak Rd', '54321', 'Greenville', 50, FALSE),
@@ -32,7 +32,7 @@ VALUES
 ('Novel - "The Great Adventure"', 'A thrilling novel about an epic journey', '2024-12-02', '2024-12-09', 20, NULL, 3, 3, 3);  -- Bob Jones is the vendor (idVendor 3)
 
 -- Insert Bids
-INSERT INTO bids (idUser, idArticle, bidDate, bidPrice)
+INSERT INTO bids (idMember, idArticle, bidDate, bidPrice)
 VALUES 
 (2, 1, '2024-12-03', 550),  -- Jane Smith bidding on the Laptop
 (3, 2, '2024-12-06', 350),  -- Bob Jones bidding on the Sofa
