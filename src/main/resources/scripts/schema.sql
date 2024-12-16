@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS CATEGORIES (
 CREATE TABLE IF NOT EXISTS AUCTIONS (
     idUser   		INTEGER NOT NULL,
     idArticle       INTEGER NOT NULL,
-    auctionDate     DATE NOT NULL,
+    auctionEndDate     DATE NOT NULL,
 	auctionPrice  	INTEGER NOT NULL, 
 	CONSTRAINT auctions_pk PRIMARY KEY (idUser, idArticle)
 );
