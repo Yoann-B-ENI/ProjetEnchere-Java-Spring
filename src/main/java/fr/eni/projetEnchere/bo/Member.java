@@ -1,6 +1,12 @@
 package fr.eni.projetEnchere.bo;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+//import fr.eni.projetEnchere.bo.Article;
+//import fr.eni.projetEnchere.bo.Bid;
+//import fr.eni.projetEnchere.bo.RemovalPoint;
+
 
 public class Member {
 	private int idMember;
@@ -15,6 +21,10 @@ public class Member {
 	private String townName;
 	private String credits;
 	private Boolean admin;
+	
+//	private List<Article> articles = new ArrayList();
+//	private List<Bid> bids = new ArrayList(); 
+//	private List<RemovalPoint> removalPoints = new ArrayList();
 	
 	public Member() {
 		super();
@@ -56,6 +66,28 @@ public class Member {
 		this.credits = credits;
 		this.admin = admin;
 	}
+
+
+//	public Member(int idMember, String userName, String password, String name, String firstName, String email,
+//			String phoneNumber, String roadName, String zipCode, String townName, String credits, Boolean admin,
+//			List<Article> articles, List<Bid> bids, List<RemovalPoint> removalPoints) {
+//		super();
+//		this.idMember = idMember;
+//		this.userName = userName;
+//		this.password = password;
+//		this.name = name;
+//		this.firstName = firstName;
+//		this.email = email;
+//		this.phoneNumber = phoneNumber;
+//		this.roadName = roadName;
+//		this.zipCode = zipCode;
+//		this.townName = townName;
+//		this.credits = credits;
+//		this.admin = admin;
+//		this.articles = articles;
+//		this.bids = bids;
+//		this.removalPoints = removalPoints;
+//	}
 
 
 	@Override
@@ -227,7 +259,37 @@ public class Member {
 	public void setAdmin(Boolean admin) {
 		this.admin = admin;
 	}
-	
+
+
+//	public List<RemovalPoint> getRemovalPoints() {
+//		return removalPoints;
+//	}
+//
+//
+//	public void setRemovalPoints(List<RemovalPoint> removalPoints) {
+//		this.removalPoints = removalPoints;
+//	}
+//
+//
+//	public List<Article> getArticles() {
+//		return articles;
+//	}
+//
+//
+//	public void setArticles(List<Article> articles) {
+//		this.articles = articles;
+//	}
+//
+//
+//	public List<Bid> getBids() {
+//		return bids;
+//	}
+//
+//
+//	public void setBids(List<Bid> bids) {
+//		this.bids = bids;
+//	}
+//	
 	
 	
 }

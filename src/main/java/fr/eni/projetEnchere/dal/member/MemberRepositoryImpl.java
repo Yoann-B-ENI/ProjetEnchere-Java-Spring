@@ -42,7 +42,7 @@ public class MemberRepositoryImpl implements MemberRepository{
 	public Optional<Member> getById(int id) {
 		String sql ="idMember, userName, password, name, firstName, email, phoneNumber, roadName, zipCode, townname credits, admin from Members where id = ?";
 		
-		Member member = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<Member>(), id); 
+		Member member = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Member.class), id); 
 		
 		return Optional.ofNullable(member);
 	}
@@ -57,6 +57,15 @@ public class MemberRepositoryImpl implements MemberRepository{
 	public void delete(int id) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public Optional<Member> getByUserName(String userName) {
+		String sql ="select idMember, userName, password, name, firstName, email, phoneNumber, roadName, zipCode, townname credits, admin from Members where userName = ?";
+		
+		Member member = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Member.class), userName); 
+		
+		return Optional.ofNullable(member);
 	}
 	
 }
