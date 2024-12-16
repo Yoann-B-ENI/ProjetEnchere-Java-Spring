@@ -25,11 +25,15 @@ VALUES
 ('Broadway', '23456', 'Hilltop');
 
 -- Insert Articles
-INSERT INTO articles (name, description, auctionStartDate, auctionEndDate, startingPrice, salePrice, idVendor, idCategory, idRemovalPoint)
+INSERT INTO articles (name, description, auctionStartDate, auctionEndDate, 
+startingPrice, salePrice, status, idVendor, idCategory, idRemovalPoint)
 VALUES 
-('Laptop', 'A high-performance laptop with 16GB RAM and 512GB SSD', '2024-12-01', '2024-12-10', 500, NULL, 1, 1, 1),  -- John Doe is the vendor (idVendor 1)
-('Sofa', 'Comfortable 3-seater sofa with fabric upholstery', '2024-12-05', '2024-12-12', 300, NULL, 2, 2, 2),  -- Jane Smith is the vendor (idVendor 2)
-('Novel - "The Great Adventure"', 'A thrilling novel about an epic journey', '2024-12-02', '2024-12-09', 20, NULL, 3, 3, 3);  -- Bob Jones is the vendor (idVendor 3)
+('Laptop', 'A high-performance laptop with 16GB RAM and 512GB SSD', '2025-01-02', '2025-01-30', 
+500, NULL, 'created', 1, 1, 1),  -- John Doe is the vendor (idVendor 1)
+('Sofa', 'Comfortable 3-seater sofa with fabric upholstery', '2024-12-05', '2024-12-29', 
+300, NULL, 'auctionStarted', 2, 2, 2),  -- Jane Smith is the vendor (idVendor 2)
+('Novel - "The Great Adventure"', 'A thrilling novel about an epic journey', '2024-12-02', '2024-12-09', 
+20, NULL, 'auctionEnded', 3, 3, 3);  -- Bob Jones is the vendor (idVendor 3)
 
 -- Insert Bids
 INSERT INTO bids (idMember, idArticle, bidDate, bidPrice)

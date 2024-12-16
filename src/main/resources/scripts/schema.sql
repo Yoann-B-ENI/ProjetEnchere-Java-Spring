@@ -26,13 +26,13 @@ CREATE TABLE IF NOT EXISTS Members (
 );
 
 CREATE TABLE IF NOT EXISTS CATEGORIES (
-    idCategory   SERIAL NOT NULL,
+    idCategory   SERIAL 	 NOT NULL,
     name         VARCHAR(30) NOT NULL, 
     CONSTRAINT categories_pk PRIMARY KEY (idCategory)
 );
 
 CREATE TABLE IF NOT EXISTS RemovalPoints (
-	idRemovalPoint        SERIAL NOT NULL,
+	idRemovalPoint        SERIAL 	  NOT NULL,
     roadName              VARCHAR(30) NOT NULL,
     zipCode      		  VARCHAR(15) NOT NULL,
     townName              VARCHAR(30) NOT NULL, 
@@ -47,13 +47,23 @@ CREATE TABLE IF NOT EXISTS ARTICLES (
     auctionEndDate             	  DATE NOT NULL,
     startingPrice                 INTEGER,
     salePrice                     INTEGER,
+    status						  VARCHAR(30) NOT NULL, 
     idVendor                	  INTEGER NOT NULL,
     idCategory                    INTEGER NOT NULL, 
     idRemovalPoint				  INTEGER NOT NULL, 
     CONSTRAINT articles_pk PRIMARY KEY (idArticle), 
+    
     CONSTRAINT articles_members_fk FOREIGN KEY (idVendor) REFERENCES Members (idMember), 
     CONSTRAINT articles_categories_fk FOREIGN KEY (idCategory) REFERENCES CATEGORIES (idCategory), 
-    CONSTRAINT articles_removalPoints_fk FOREIGN KEY (idRemovalPoint) REFERENCES RemovalPoints (idRemovalPoint)
+    CONSTRAINT articles_removalPoints_fk FOREIGN KEY (idRemovalPoint) REFERENCES RemovalPoints (idRemovalPoint), 
+    
+    CONSTRAINT articles_status_ck CHECK(status in ('created', 'auctionStarted', 'auctionEnded', 'removed')), 
+    CONSTRAINT articles_dates_startEnd_ck CHECK (auctionStartDate < auctionEndDate), 
+    CONSTRAINT articles_status_date_ck CHECK(
+    	(status = 'created' AND CURRENT_DATE < auctionStartDate AND CURRENT_DATE < auctionEndDate) OR
+    	(status = 'auctionStarted' AND auctionStartDate < CURRENT_DATE AND CURRENT_DATE < auctionEndDate) OR
+    	(status = 'auctionEnded' AND auctionEndDate < CURRENT_DATE AND auctionStartDate < CURRENT_DATE) OR
+    	(status = 'removed' AND CURRENT_DATE < auctionEndDate))
 );
 
 
@@ -63,6 +73,7 @@ CREATE TABLE IF NOT EXISTS BIDS (
     bidDate     DATE NOT NULL,
 	bidPrice  	INTEGER NOT NULL, 
 	CONSTRAINT bids_pk PRIMARY KEY (idMember, idArticle), 
+	
 	CONSTRAINT bids_members_fk FOREIGN KEY (idMember) REFERENCES Members (idMember), 
 	CONSTRAINT bids_articles_fk FOREIGN KEY (idArticle) REFERENCES ARTICLES (idArticle)
 );

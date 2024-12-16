@@ -33,14 +33,14 @@ public class Article {
 	private int idCategory;
 	
 	// not null, fk removalpoints
-	private int idRemovalPoint;
+	private RemovalPoint removalPoint;
 
 	public Article() {
 		super();
 	}
 	// only not nulls
 	public Article(int idArticle, String name, String description, LocalDate auctionStartDate, LocalDate auctionEndDate,
-			int idVendor, int idCategory, int idRemovalPoint) {
+			int idVendor, int idCategory, RemovalPoint removalPoint) {
 		super();
 		this.idArticle = idArticle;
 		this.name = name;
@@ -49,11 +49,11 @@ public class Article {
 		this.auctionEndDate = auctionEndDate;
 		this.idVendor = idVendor;
 		this.idCategory = idCategory;
-		this.idRemovalPoint = idRemovalPoint;
+		this.removalPoint = removalPoint;
 	}
 	// all attributes
 	public Article(int idArticle, String name, String description, LocalDate auctionStartDate, LocalDate auctionEndDate,
-			int startingPrice, int salePrice, int idVendor, int idCategory, int idRemovalPoint) {
+			int startingPrice, int salePrice, int idVendor, int idCategory, RemovalPoint removalPoint) {
 		super();
 		this.idArticle = idArticle;
 		this.name = name;
@@ -64,7 +64,7 @@ public class Article {
 		this.salePrice = salePrice;
 		this.idVendor = idVendor;
 		this.idCategory = idCategory;
-		this.idRemovalPoint = idRemovalPoint;
+		this.removalPoint = removalPoint;
 	}
 
 	@Override
@@ -89,7 +89,7 @@ public class Article {
 		builder.append(", idCategory=");
 		builder.append(idCategory);
 		builder.append(", idRemovalPoint=");
-		builder.append(idRemovalPoint);
+		builder.append(removalPoint);
 		builder.append("]");
 		return builder.toString();
 	}
