@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Create Article</title>
+</head>
+<body>
+
+<h1>creation article</h1>
+
+<form action="article/create" method="post">
+
+<label> <p>Nom</p> <input name="name" type="text"> </label>
+<label> <p>Description</p> <input name="description" type="text"> </label>
+
+<fieldset>
+  <legend>Choisir les genres du jeu</legend>
+  
+  	<select name = "category">
+		<option th:each="cat : ${allCategories}" th:value = "${cat.idCategory}">
+		[[${cat.idCategory}]] - [[${cat.nom}]]</option>
+	</select>
+  
+</fieldset>
+
+<label> <p>Prix initial</p> <input name="startingPrice" type="number" placeholder=0> </label>
+<label> <p>Date début d'enchère</p> <input name="auctionStartDate" type="date"> </label>
+<label> <p>Date fin d'enchère</p> <input name="auctionEndDate" type="date"> </label>
+<label> <p>Point de retrait</p> <input name="removalPoint" type="text"> </label>
+
+
+
+
+
+<button type="submit">Envoyer</button>
+
+
+</form>
+
+
+
+
+
+</body>
+</html>
