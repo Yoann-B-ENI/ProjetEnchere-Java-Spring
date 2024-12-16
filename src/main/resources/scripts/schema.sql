@@ -23,72 +23,48 @@ CREATE TABLE IF NOT EXISTS CATEGORIES (
     CONSTRAINT categories_pk PRIMARY KEY (idCategory)
 );
 
-CREATE TABLE IF NOT EXISTS AUCTIONS (
+CREATE TABLE IF NOT EXISTS BIDS (
     idUser   		INTEGER NOT NULL,
     idArticle       INTEGER NOT NULL,
-    auctionEndDate     DATE NOT NULL,
-	auctionPrice  	INTEGER NOT NULL, 
-	CONSTRAINT auctions_pk PRIMARY KEY (idUser, idArticle)
+    bidDate     DATE NOT NULL,
+	bidPrice  	INTEGER NOT NULL, 
+	CONSTRAINT bids_pk PRIMARY KEY (idUser, idArticle), 
+	CONSTRAINT bids_users_fk FOREIGN KEY (idUser) REFERENCES USERS (idUser), 
+	CONSTRAINT bids_articles_fk FOREIGN KEY (idArticle) REFERENCES ARTICLES (idArticle)
+);
+
+
+
+CREATE TABLE IF NOT EXISTS RemovalPoints (
+	idRemovalPoint        SERIAL NOT NULL,
+    roadName              VARCHAR(30) NOT NULL,
+    zipCode      		  VARCHAR(15) NOT NULL,
+    townName              VARCHAR(30) NOT NULL, 
+    CONSTRAINT removalPoints_pk PRIMARY KEY (idRemovalPoint)
+);
+
+CREATE TABLE IF NOT EXISTS ARTICLES (
+    idArticle                     SERIAL NOT NULL,
+    name		                  VARCHAR(30) NOT NULL,
+    description                   VARCHAR(300) NOT NULL,
+	auctionStartDate           	  DATE NOT NULL,
+    auctionEndDate             	  DATE NOT NULL,
+    startingPrice                 INTEGER,
+    salePrice                     INTEGER,
+    idVendor                	  INTEGER NOT NULL,
+    idCategory                    INTEGER NOT NULL, 
+    idRemovalPoint				  INTEGER NOT NULL, 
+    CONSTRAINT articles_pk PRIMARY KEY (idArticle), 
+    CONSTRAINT articles_users_fk FOREIGN KEY (idVendor) REFERENCES USERS (idUser), 
+    CONSTRAINT articles_categories_fk FOREIGN KEY (idCategory) REFERENCES CATEGORIES (idCategory), 
+    CONSTRAINT articles_removalPoints_fk FOREIGN KEY (idRemovalPoint) REFERENCES RemovalPoints (idRemovalPoint)
 );
 
 
 
 /*
 
-CREATE TABLE RETRAITS (
-	no_article         INTEGER NOT NULL,
-    rue              VARCHAR(30) NOT NULL,
-    code_postal      VARCHAR(15) NOT NULL,
-    ville            VARCHAR(30) NOT NULL
-)
-
-ALTER TABLE RETRAITS ADD constraint retrait_pk PRIMARY KEY  (no_article)
 
 
 
-CREATE TABLE ARTICLES_VENDUS (
-    no_article                    INTEGER IDENTITY(1,1) NOT NULL,
-    nom_article                   VARCHAR(30) NOT NULL,
-    description                   VARCHAR(300) NOT NULL,
-	date_debut_encheres           DATE NOT NULL,
-    date_fin_encheres             DATE NOT NULL,
-    prix_initial                  INTEGER,
-    prix_vente                    INTEGER,
-    no_utilisateur                INTEGER NOT NULL,
-    no_categorie                  INTEGER NOT NULL
-)
-
-ALTER TABLE ARTICLES_VENDUS ADD constraint articles_vendus_pk PRIMARY KEY (no_article)
-
-ALTER TABLE ARTICLES_VENDUS
-    ADD CONSTRAINT encheres_utilisateur_fk FOREIGN KEY ( no_utilisateur ) REFERENCES UTILISATEURS ( no_utilisateur )
-ON DELETE NO ACTION 
-    ON UPDATE no action 
-
-ALTER TABLE ENCHERES
-    ADD CONSTRAINT encheres_articles_vendus_fk FOREIGN KEY ( no_article )
-        REFERENCES ARTICLES_VENDUS ( no_article )
-ON DELETE NO ACTION 
-    ON UPDATE no action 
-
-ALTER TABLE RETRAITS
-    ADD CONSTRAINT retraits_articles_vendus_fk FOREIGN KEY ( no_article )
-        REFERENCES ARTICLES_VENDUS ( no_article )
-ON DELETE NO ACTION 
-    ON UPDATE no action 
-
-ALTER TABLE ARTICLES_VENDUS
-    ADD CONSTRAINT articles_vendus_categories_fk FOREIGN KEY ( no_categorie )
-        REFERENCES categories ( no_categorie )
-ON DELETE NO ACTION 
-    ON UPDATE no action 
-
-ALTER TABLE ARTICLES_VENDUS
-    ADD CONSTRAINT ventes_utilisateur_fk FOREIGN KEY ( no_utilisateur )
-        REFERENCES utilisateurs ( no_utilisateur )
-ON DELETE NO ACTION 
-    ON UPDATE no action 
-    
-    
-    
 */
