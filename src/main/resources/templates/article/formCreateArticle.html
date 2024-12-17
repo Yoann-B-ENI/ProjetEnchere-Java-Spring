@@ -9,7 +9,8 @@
 <h1>Création d'un article</h1>
 
 <form action="create" method="post" th:object="${article}">
-<!-- <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/> -->
+
+<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
 
 <label> <p>Nom</p> <input name="name" type="text"> </label>
 <label> <p>Description</p> <input name="description" type="text"> </label>

@@ -29,7 +29,7 @@ public class Article {
 	private int salePrice;
 	
 	// not null, fk members
-	private int vendor;
+	private Member vendor;
 	
 	// not null, fk categories
 	private Category category;
@@ -46,7 +46,7 @@ public class Article {
 	// only not nulls
 	public Article(int idArticle, String name, String description, 
 			LocalDateTime auctionStartDate, LocalDateTime auctionEndDate, ArticleStatus status, 
-			int vendor, Category category, RemovalPoint removalPoint) {
+			Member vendor, Category category, RemovalPoint removalPoint) {
 		super();
 		this.idArticle = idArticle;
 		this.name = name;
@@ -60,7 +60,7 @@ public class Article {
 	}
 	// all attributes
 	public Article(int idArticle, String name, String description, LocalDateTime auctionStartDate,
-			LocalDateTime auctionEndDate, int startingPrice, int salePrice, int vendor, Category category,
+			LocalDateTime auctionEndDate, int startingPrice, int salePrice, Member vendor, Category category,
 			RemovalPoint removalPoint, ArticleStatus status) {
 		super();
 		this.idArticle = idArticle;
@@ -121,10 +121,10 @@ public class Article {
 	public void setSalePrice(int salePrice) {
 		this.salePrice = salePrice;
 	}
-	public int getVendor() {
+	public Member getVendor() {
 		return vendor;
 	}
-	public void setVendor(int vendor) {
+	public void setVendor(Member vendor) {
 		this.vendor = vendor;
 	}
 	public Category getCategory() {
@@ -163,8 +163,8 @@ public class Article {
 		builder.append(startingPrice);
 		builder.append(", salePrice=");
 		builder.append(salePrice);
-		//builder.append(", Vendor=");
-		//builder.append(vendor);
+		builder.append(", Vendor=");
+		builder.append(vendor);
 		builder.append(", Category=");
 		builder.append(category);
 		builder.append(", idRemovalPoint=");

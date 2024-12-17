@@ -18,6 +18,7 @@ import fr.eni.projetEnchere.bll.category.CategoryService;
 import fr.eni.projetEnchere.bll.removalpoint.RemovalPointService;
 import fr.eni.projetEnchere.bo.Article;
 import fr.eni.projetEnchere.bo.Category;
+import fr.eni.projetEnchere.bo.Member;
 import fr.eni.projetEnchere.bo.RemovalPoint;
 import fr.eni.projetEnchere.controllers.converters.CustomCategoryEditor;
 import fr.eni.projetEnchere.controllers.converters.CustomRemovalPointEditor;
@@ -71,21 +72,23 @@ public class ArticleController {
 	}
 	
 	@PostMapping("/create")
-	public String create(@ModelAttribute Article article, Model model) {
+	public String create(@ModelAttribute Article article, Model model, HttpSession session) {
 		System.out.println("Sending article to db " + article);
 		
 		articleService.determineStatusFromDates(article);
-		article.setVendor(1); //TODO change please please
-		// get member
+		Member member = (Member) session.getAttribute("loggedMember");
+		article.setVendor(member);
+		
 		// insert member's adress as a removalpoint
 		// make removalpoint user dependant
 		// add removalpoints in create article form
 		articleService.create(article);
 		
-		return "/";
+		return "redirect:/";
 	}
 	
-	
+	// jane_smith
+	// password
 	
 	
 	

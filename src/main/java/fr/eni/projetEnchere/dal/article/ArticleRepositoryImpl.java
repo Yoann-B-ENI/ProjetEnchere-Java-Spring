@@ -39,7 +39,7 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 		paramSource.addValue("auctionEndDate", t.getAuctionEndDate());
 		paramSource.addValue("startingPrice", t.getStartingPrice());
 		paramSource.addValue("statusTemp", t.getStatus().toString());
-		paramSource.addValue("vendorTemp", t.getVendor()); //TODO make member, get id
+		paramSource.addValue("vendorTemp", t.getVendor().getIdMember()); //TODO make member, get id
 		paramSource.addValue("categoryTemp", t.getCategory().getIdCategory());
 		paramSource.addValue("removalPointTemp", t.getRemovalPoint().getIdRemovalPoint());
 		namedParameterJdbcTemplate.update(sql, paramSource);
