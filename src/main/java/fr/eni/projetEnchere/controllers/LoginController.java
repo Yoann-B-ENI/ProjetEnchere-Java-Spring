@@ -12,9 +12,9 @@ public class LoginController {
         return "login"; 
     }
     
-    @GetMapping({"/", "/home"})
+    @GetMapping({"/", "/home", "/encheres"})
     public String home() {
-    	return "home";
+    	return "encheres";
     }
     
 }

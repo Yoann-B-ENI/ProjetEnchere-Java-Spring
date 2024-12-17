@@ -33,8 +33,7 @@ public class WebSecurityConfig {
 		//logger.debug("login");
 		http
 			.authorizeHttpRequests((requests) -> requests
-				.requestMatchers("/login","/","/images/*","/register","/home").permitAll()
-				.requestMatchers("/client*").hasAnyRole("ADMIN","USER")
+				.requestMatchers("/login","/","/images/*","/register","/home","/encheres").permitAll()
 				.anyRequest().authenticated()
 			)
 			.formLogin((form) -> form

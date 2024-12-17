@@ -3,9 +3,9 @@
 -- Insert Members
 INSERT INTO members (userName, password, name, firstName, email, phoneNumber, roadName, zipCode, townName, credits, admin)
 VALUES 
-('john_doe', '$2a$10$JWChjDv6qg9YX2bHlmQBPumCRON8dy0Uu5i7V3BXnS3vv65erVEtm', 'Doe', 'John', 'john.doe@example.com', '123-456-7890', 'Main St', '12345', 'Springfield', 100, TRUE),
-('jane_smith', '$2a$10$Oo9zBBNlD/BW1aGm9bEDxuH5vrm/zClQiwY0A3gKVIRg8becY.qEC', 'Smith', 'Jane', 'jane.smith@example.com', '987-654-3210', 'Oak Rd', '54321', 'Greenville', 50, FALSE),
-('bob_jones', '$2a$10$2letPCCcQL3rBmf6ElgIaOcgyOeOKgnDHDbnh3tQilLx7gE42qiZ6', 'Jones', 'Bob', 'bob.jones@example.com', '555-123-4567', 'Pine Ave', '11223', 'Riverside', 200, FALSE);
+('john_doe', '$2a$10$VzBJ.BwtXdnPOacBUMcm4.FAh4jhggmQCgPv5hEZrfbZ5S5xw.sHG', 'Doe', 'John', 'john.doe@example.com', '123-456-7890', 'Main St', '12345', 'Springfield', 100, TRUE),
+('jane_smith', '$2a$10$VzBJ.BwtXdnPOacBUMcm4.FAh4jhggmQCgPv5hEZrfbZ5S5xw.sHG', 'Smith', 'Jane', 'jane.smith@example.com', '987-654-3210', 'Oak Rd', '54321', 'Greenville', 50, FALSE),
+('bob_jones', '$2a$10$VzBJ.BwtXdnPOacBUMcm4.FAh4jhggmQCgPv5hEZrfbZ5S5xw.sHG', 'Jones', 'Bob', 'bob.jones@example.com', '555-123-4567', 'Pine Ave', '11223', 'Riverside', 200, FALSE);
 
 -- Insert Categories
 INSERT INTO categories (name)

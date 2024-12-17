@@ -29,8 +29,7 @@ public class MemberServiceImpl implements MemberService{
 	@Override
 	public void create(Member member) {
 		member.setPassword(passwordEncoder.encode(member.getPassword()));
-		memberRepo.create(member);
-		
+		memberRepo.create(member);	
 	}
 
 	@Override
