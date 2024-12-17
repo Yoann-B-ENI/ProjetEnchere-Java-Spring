@@ -9,21 +9,22 @@ DROP TABLE IF EXISTS RemovalPoints;
 
 
 
-CREATE TABLE IF NOT EXISTS Members (
-    idMember		   	      SERIAL NOT NULL,
-    userName              VARCHAR(30) NOT NULL,
-    password     		  VARCHAR(255) NOT NULL,
-    name                  VARCHAR(30) NOT NULL,
-    firstName             VARCHAR(30) NOT NULL,
-    email                 VARCHAR(40) NOT NULL,
-    phoneNumber    	      VARCHAR(15),
-    roadName              VARCHAR(30) NOT NULL,
-    zipCode			      VARCHAR(10) NOT NULL,
-    townName              VARCHAR(30) NOT NULL,
-    credits           	  INTEGER NOT NULL,
-    admin   			  BOOLEAN NOT NULL, 
-    CONSTRAINT members_pk PRIMARY KEY (idMember),
-    CONSTRAINT members_userName_uk unique (userName)
+CREATE TABLE IF NOT EXISTS Members (    
+	idMember            SERIAL NOT NULL,    
+	userName              VARCHAR(30) NOT NULL,    
+	password         VARCHAR(255) NOT NULL,    
+	name                  VARCHAR(30) NOT NULL,    
+	firstName             VARCHAR(30) NOT NULL,    
+	email                 VARCHAR(40) NOT NULL,    
+	phoneNumber           VARCHAR(15),    
+	roadNumber     INT NOT NULL,     
+	roadName              VARCHAR(30) NOT NULL,    
+	zipCode         VARCHAR(10) NOT NULL,    
+	townName              VARCHAR(30) NOT NULL,    
+	credits              INTEGER NOT NULL,    
+	admin        BOOLEAN NOT NULL,    
+	CONSTRAINT members_pk PRIMARY KEY (idMember),
+	CONSTRAINT members_userName_uk unique (userName)
 );
 
 CREATE TABLE IF NOT EXISTS CATEGORIES (
