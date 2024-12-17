@@ -83,9 +83,6 @@ public class ArticleController {
 		Member member = (Member) session.getAttribute("loggedMember");
 		article.setVendor(member);
 		
-		// insert member's adress as a removalpoint
-		// make removalpoint user dependant
-		// add removalpoints in create article form
 		System.out.println("Sending article to db " + article);
 		articleService.create(article);
 		
@@ -95,7 +92,7 @@ public class ArticleController {
 	// jane_smith
 	// password
 	
-	// get removal point from db with the member being real?
+	// get removal point from db with the member being real? -> row mapper
 	// when creating article, create removal point in db
 	// validation on article fields
 	
