@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
 import fr.eni.projetEnchere.bo.Member;
@@ -29,14 +30,24 @@ public class MemberRepositoryImpl implements MemberRepository{
 
 	@Override
 	public void create(Member member) {
-		String sql ="insert into Members (userName, password, name, firstName, email, phoneNumber, roadName, zipCode, townName, admin) "
-				+ "values :userName, :password, :name, :firstName, :email, :phoneNumber, :roadName, :zipCode, :townName, :admin";
-		
+		String sql ="insert into Members (userName, password, name, firstName, email, phoneNumber, roadName, zipCode, townName, admin, credits) "
+				+ "values (:userName, :password, :name, :firstName, :email, :phoneNumber, :roadName, :zipCode, :townName, :admin, :credits)";
+//		GeneratedKeyHolder keyHolder = new GeneratedKeyHolder(); , keyHolder, new String[]{"id"}
 		int nbRows = namedParameterJdbcTemplate.update(sql, new BeanPropertySqlParameterSource(member));
 		if (nbRows != 1) {
 			throw new RuntimeException("Erreur, aucune ligne n'a été ajoutée pour l'utilisateur: " + member);
 		}
 	}
+//	 @Override
+//	    public void create(Member member) {
+//	        String sql = "INSERT INTO Members (userName, password, name, firstName, email, phoneNumber, roadName, zipCode, townName, admin) " +
+//	                     "VALUES (:userName, :password, :name, :firstName, :email, :phoneNumber, :roadName, :zipCode, :townName, :admin)";
+//	        GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+//	        int nbRows = namedParameterJdbcTemplate.update(sql, new BeanPropertySqlParameterSource(member), keyHolder, new String[]{"id"});
+//	        if (nbRows != 1) {
+//	            throw new RuntimeException("Erreur, aucune ligne n'a été ajoutée pour l'utilisateur: " + member);
+//	        }
+//	    }
 
 	@Override
 	public List<Member> getAll() {

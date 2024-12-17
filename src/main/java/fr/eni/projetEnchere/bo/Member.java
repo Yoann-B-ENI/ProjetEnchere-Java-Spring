@@ -3,23 +3,45 @@ package fr.eni.projetEnchere.bo;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
 //import fr.eni.projetEnchere.bo.Article;
 //import fr.eni.projetEnchere.bo.Bid;
 //import fr.eni.projetEnchere.bo.RemovalPoint;
+import jakarta.validation.constraints.Size;
 
 
 public class Member {
 	private int idMember;
+	@NotEmpty
+	@Size(min=2, max=30)
 	private String userName;
+	@NotEmpty
+	@Size(min=2, max=30)
 	private String password;
+	@NotEmpty
+	@Size(min=2, max=30)
 	private String name;
+	@NotEmpty
+	@Size(min=2, max=30)
 	private String firstName;
+	@NotEmpty
+	@Email
 	private String email;
+	
+	
+	@Pattern(regexp = "^(0|\\+33)[1-9](\\d{2}){4}$", message = "Invalid phone number format")
 	private String phoneNumber;
+	@NotEmpty
 	private String roadName;
+	@NotEmpty
+	@Size(min=5, max=5, message="code postal incorect")
 	private String zipCode;
+	@NotEmpty
 	private String townName;
-	private String credits;
+	private int credits;
 	private Boolean admin;
 	
 //	private List<Article> articles = new ArrayList();
@@ -33,7 +55,7 @@ public class Member {
 	
 
 	public Member(int idMember, String userName, String password, String name, String firstName, String email,
-			String roadName, String zipCode, String townName, String credits, Boolean admin) {
+			String roadName, String zipCode, String townName, int credits, Boolean admin) {
 		super();
 		this.idMember = idMember;
 		this.userName = userName;
@@ -51,7 +73,7 @@ public class Member {
 
 
 	public Member(int idMember, String userName, String password, String name, String firstName, String email,
-			String phoneNumber, String roadName, String zipCode, String townName, String credits, Boolean admin) {
+			String phoneNumber, String roadName, String zipCode, String townName, int credits, Boolean admin) {
 		super();
 		this.idMember = idMember;
 		this.userName = userName;
@@ -241,13 +263,13 @@ public class Member {
 	}
 
 
-	public String getCredits() {
+	public int getCredits() {
 		return credits;
 	}
 
 
-	public void setCredits(String credits) {
-		this.credits = credits;
+	public void setCredits(int i) {
+		this.credits = i;
 	}
 
 
