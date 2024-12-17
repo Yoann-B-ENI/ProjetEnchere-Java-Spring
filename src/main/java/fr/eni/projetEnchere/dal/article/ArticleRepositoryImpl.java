@@ -5,7 +5,9 @@ import java.util.Optional;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import fr.eni.projetEnchere.bo.Article;
@@ -26,11 +28,21 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 
 	@Override
 	public void create(Article t) {
-		String sql = "INSERT into Article(name, description, auctionStartDate, auctionEndDate, "
+		String sql = "INSERT into Articles(name, description, auctionStartDate, auctionEndDate, "
 				+ "startingPrice, status, idVendor, idCategory, idRemovalPoint)";
 		sql += "values(:name, :description, :auctionStartDate, :auctionEndDate, "
-				+ ":startingPrice, :status, :idVendor, :category.idCategory, :removalPoint.idRemovalPoint)";
-		namedParameterJdbcTemplate.update(sql, new BeanPropertySqlParameterSource(t));
+				+ ":startingPrice, :statusTemp, :vendorTemp, :categoryTemp, :removalPointTemp)";
+		MapSqlParameterSource paramSource = new MapSqlParameterSource();
+		paramSource.addValue("name", t.getName());
+		paramSource.addValue("description", t.getDescription());
+		paramSource.addValue("auctionStartDate", t.getAuctionStartDate());
+		paramSource.addValue("auctionEndDate", t.getAuctionEndDate());
+		paramSource.addValue("startingPrice", t.getStartingPrice());
+		paramSource.addValue("statusTemp", t.getStatus().toString());
+		paramSource.addValue("vendorTemp", t.getVendor()); //TODO make member, get id
+		paramSource.addValue("categoryTemp", t.getCategory().getIdCategory());
+		paramSource.addValue("removalPointTemp", t.getRemovalPoint().getIdRemovalPoint());
+		namedParameterJdbcTemplate.update(sql, paramSource);
 	}
 
 	@Override

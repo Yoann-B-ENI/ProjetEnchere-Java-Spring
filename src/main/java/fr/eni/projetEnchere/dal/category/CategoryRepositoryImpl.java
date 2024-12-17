@@ -34,6 +34,7 @@ public class CategoryRepositoryImpl implements CategoryRepository{
 
 	@Override
 	public List<Category> getAll() {
+		System.out.println("DATABASE: get all categories");
 		String sql = "SELECT * FROM categories ORDER BY idCategory ASC";
 		List<Category> categoriesFound = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Category.class));
 		return categoriesFound;

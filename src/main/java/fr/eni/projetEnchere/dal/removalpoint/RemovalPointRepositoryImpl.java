@@ -33,6 +33,7 @@ public class RemovalPointRepositoryImpl implements RemovalPointRepository{
 
 	@Override
 	public List<RemovalPoint> getAll() {
+		System.out.println("DATABASE : get all removalpoints");
 		String sql = "SELECT * FROM removalpoints ORDER BY idRemovalPoint ASC";
 		List<RemovalPoint> removalPointsFound = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(RemovalPoint.class));
 		return removalPointsFound;

@@ -57,13 +57,13 @@ CREATE TABLE IF NOT EXISTS ARTICLES (
     CONSTRAINT articles_categories_fk FOREIGN KEY (idCategory) REFERENCES CATEGORIES (idCategory), 
     CONSTRAINT articles_removalPoints_fk FOREIGN KEY (idRemovalPoint) REFERENCES RemovalPoints (idRemovalPoint), 
     
-    CONSTRAINT articles_status_ck CHECK(status in ('created', 'auctionStarted', 'auctionEnded', 'removed')), 
+    CONSTRAINT articles_status_ck CHECK(status in ('Created', 'AuctionStarted', 'AuctionEnded', 'Removed')), 
     CONSTRAINT articles_dates_startEnd_ck CHECK (auctionStartDate < auctionEndDate), 
     CONSTRAINT articles_status_date_ck CHECK(
-    	(status = 'created' AND CURRENT_DATE < auctionStartDate AND CURRENT_DATE < auctionEndDate) OR
-    	(status = 'auctionStarted' AND auctionStartDate < CURRENT_DATE AND CURRENT_DATE < auctionEndDate) OR
-    	(status = 'auctionEnded' AND auctionEndDate < CURRENT_DATE AND auctionStartDate < CURRENT_DATE) OR
-    	(status = 'removed' AND CURRENT_DATE < auctionEndDate))
+    	(status = 'Created' AND CURRENT_DATE < auctionStartDate AND CURRENT_TIMESTAMP < auctionEndDate) OR
+    	(status = 'AuctionStarted' AND auctionStartDate <= CURRENT_TIMESTAMP AND CURRENT_TIMESTAMP < auctionEndDate) OR
+    	(status = 'AuctionEnded' AND auctionEndDate <= CURRENT_TIMESTAMP AND auctionStartDate < CURRENT_TIMESTAMP) OR
+    	(status = 'Removed' AND CURRENT_DATE <= auctionEndDate))
 );
 
 
