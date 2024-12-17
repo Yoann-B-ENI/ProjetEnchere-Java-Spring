@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -27,9 +28,14 @@ public class MemberRepositoryImpl implements MemberRepository{
 	}
 
 	@Override
-	public void create() {
-		// TODO Auto-generated method stub
+	public void create(Member member) {
+		String sql ="insert into Members (userName, password, name, firstName, email, phoneNumber, roadName, zipCode, townName, admin) "
+				+ "values :userName, :password, :name, :firstName, :email, :phoneNumber, :roadName, :zipCode, :townName, :admin";
 		
+		int nbRows = namedParameterJdbcTemplate.update(sql, new BeanPropertySqlParameterSource(member));
+		if (nbRows != 1) {
+			throw new RuntimeException("Erreur, aucune ligne n'a été ajoutée pour l'utilisateur: " + member);
+		}
 	}
 
 	@Override

@@ -39,7 +39,7 @@ public class WebSecurityConfig {
 			)
 			.formLogin((form) -> form
 				.loginPage("/login")
-				.defaultSuccessUrl("/jeux", true)
+				.defaultSuccessUrl("/home", true)
 				.permitAll()
 			)
 			.logout((logout) -> logout
