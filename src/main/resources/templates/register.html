@@ -5,10 +5,10 @@
 </head>
 <body>
     <div>
-        <h2>Formulaire d'inscription</h2>
+        <h2 sec:authorize="!isAuthenticated()">Formulaire d'inscription</h2>
         <form th:action="@{/register}" th:object="${member}" method="post">
             <div>
-                <label for="userName">Nom d'utilisateur</label>
+                <label for="userName">Pseudo</label>
                 <input type="text" id="userName" th:field="*{userName}" />
                 <div th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}" style="color: red;"></div>
             </div>
@@ -33,12 +33,17 @@
                 <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" style="color: red;"></div>
             </div>
             <div>
-                <label for="phoneNumber">Numéro de téléphone</label>
+                <label for="phoneNumber">Téléphone</label>
                 <input type="text" id="phoneNumber" th:field="*{phoneNumber}" />
                 <div th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}" style="color: red;"></div>
             </div>
             <div>
-                <label for="roadName">Nom de la rue</label>
+                <label for="roadNumber">numéro de rue</label>
+                <input type="text" id="roadNumber" th:field="*{roadNumber}" />
+                <div th:if="${#fields.hasErrors('roadNumber')}" th:errors="*{roadNumber}" style="color: red;"></div>
+            </div>
+            <div>
+                <label for="roadName">Rue</label>
                 <input type="text" id="roadName" th:field="*{roadName}" />
                 <div th:if="${#fields.hasErrors('roadName')}" th:errors="*{roadName}" style="color: red;"></div>
             </div>
@@ -48,11 +53,12 @@
                 <div th:if="${#fields.hasErrors('zipCode')}" th:errors="*{zipCode}" style="color: red;"></div>
             </div>
             <div>
-                <label for="townName">Nom de la ville</label>
+                <label for="townName">Ville</label>
                 <input type="text" id="townName" th:field="*{townName}" />
                 <div th:if="${#fields.hasErrors('townName')}" th:errors="*{townName}" style="color: red;"></div>
             </div>
-            <button type="submit">S'inscrire</button>
+            <button sec:authorize="!isAuthenticated()" type="submit">S'inscrire</button>
+            <button sec:authorize="isAuthenticated()" type="submit">modifier</button>
         </form>
     </div>
 </body>
