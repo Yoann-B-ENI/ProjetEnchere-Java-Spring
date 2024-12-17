@@ -6,30 +6,37 @@
 </head>
 <body>
 
-<h1>creation article</h1>
+<h1>Création d'un article</h1>
 
-<form action="article/create" method="post">
+<form action="create" method="post" th:object="${article}">
+<!-- <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/> -->
 
 <label> <p>Nom</p> <input name="name" type="text"> </label>
 <label> <p>Description</p> <input name="description" type="text"> </label>
 
 <fieldset>
-  <legend>Choisir les genres du jeu</legend>
+  <legend>Choisir la catégorie de l'article</legend>
   
   	<select name = "category">
 		<option th:each="cat : ${allCategories}" th:value = "${cat.idCategory}">
-		[[${cat.idCategory}]] - [[${cat.nom}]]</option>
+		[[${cat.idCategory}]] - [[${cat.name}]]</option>
 	</select>
   
 </fieldset>
 
 <label> <p>Prix initial</p> <input name="startingPrice" type="number" placeholder=0> </label>
-<label> <p>Date début d'enchère</p> <input name="auctionStartDate" type="date"> </label>
-<label> <p>Date fin d'enchère</p> <input name="auctionEndDate" type="date"> </label>
-<label> <p>Point de retrait</p> <input name="removalPoint" type="text"> </label>
+<label> <p>Date début d'enchère</p> <input name="auctionStartDate" type="datetime-local" placeholder="Date début"> </label>
+<label> <p>Date fin d'enchère</p> <input name="auctionEndDate" type="datetime-local" placeholder="Date fin"> </label>
 
-
-
+<fieldset>
+  <legend>Choisir le point de retrait</legend>
+  
+  	<select name = "removalPoint">
+		<option th:each="rp : ${allRemovalPoints}" th:value = "${rp.idRemovalPoint}">
+		[[${rp.idRemovalPoint}]] - [[${rp.roadName}]] [[${rp.zipCode}]] [[${rp.townName}]]</option>
+	</select>
+  
+</fieldset>
 
 
 <button type="submit">Envoyer</button>

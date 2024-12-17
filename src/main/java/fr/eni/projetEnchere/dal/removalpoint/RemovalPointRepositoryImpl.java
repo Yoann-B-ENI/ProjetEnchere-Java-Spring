@@ -1,52 +1,51 @@
-package fr.eni.projetEnchere.dal.category;
+package fr.eni.projetEnchere.dal.removalpoint;
 
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import fr.eni.projetEnchere.bo.Category;
+import fr.eni.projetEnchere.bo.RemovalPoint;
 
 @Repository
-public class CategoryRepositoryImpl implements CategoryRepository{
+public class RemovalPointRepositoryImpl implements RemovalPointRepository{
 	
 	private JdbcTemplate jdbcTemplate;
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 	
 	
-	@Autowired
-	public CategoryRepositoryImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+
+	public RemovalPointRepositoryImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
 		super();
 		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
 		this.jdbcTemplate = this.namedParameterJdbcTemplate.getJdbcTemplate();
 	}
 
 	@Override
-	public void create(Category t) {
+	public void create(RemovalPoint t) {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Method not implemented yet");
 		
 	}
 
 	@Override
-	public List<Category> getAll() {
-		String sql = "SELECT * FROM categories ORDER BY idCategory ASC";
-		List<Category> categoriesFound = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Category.class));
-		return categoriesFound;
+	public List<RemovalPoint> getAll() {
+		String sql = "SELECT * FROM removalpoints ORDER BY idRemovalPoint ASC";
+		List<RemovalPoint> removalPointsFound = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(RemovalPoint.class));
+		return removalPointsFound;
 	}
 
 	@Override
-	public Optional<Category> getById(int id) {
+	public Optional<RemovalPoint> getById(int id) {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Method not implemented yet");
 	}
 
 	@Override
-	public void update(Category t) {
+	public void update(RemovalPoint t) {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Method not implemented yet");
 		

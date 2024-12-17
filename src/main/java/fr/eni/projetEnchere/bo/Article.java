@@ -3,6 +3,8 @@ package fr.eni.projetEnchere.bo;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+import org.springframework.boot.jdbc.HikariCheckpointRestoreLifecycle;
+
 public class Article {
 	
 	// not null, pk
@@ -27,19 +29,23 @@ public class Article {
 	private int salePrice;
 	
 	// not null, fk members
-//	private Member vendor;
+	private int vendor;
 	
 	// not null, fk categories
 	private Category category;
 	
 	// not null, fk removalpoints
 	private RemovalPoint removalPoint;
+	
+	// not null
+	private ArticleStatus status;
 
 	public Article() {
 		super();
 	}
 	// only not nulls
-	public Article(int idArticle, String name, String description, LocalDateTime auctionStartDate, LocalDateTime auctionEndDate,
+	public Article(int idArticle, String name, String description, 
+			LocalDateTime auctionStartDate, LocalDateTime auctionEndDate, ArticleStatus status, 
 			int vendor, Category category, RemovalPoint removalPoint) {
 		super();
 		this.idArticle = idArticle;
@@ -47,13 +53,15 @@ public class Article {
 		this.description = description;
 		this.auctionStartDate = auctionStartDate;
 		this.auctionEndDate = auctionEndDate;
-		//this.vendor = vendor;
+		this.status = status;
+		this.vendor = vendor;
 		this.category = category;
 		this.removalPoint = removalPoint;
 	}
 	// all attributes
-	public Article(int idArticle, String name, String description, LocalDateTime auctionStartDate, LocalDateTime auctionEndDate,
-			int startingPrice, int salePrice, int vendor, Category category, RemovalPoint removalPoint) {
+	public Article(int idArticle, String name, String description, LocalDateTime auctionStartDate,
+			LocalDateTime auctionEndDate, int startingPrice, int salePrice, int vendor, Category category,
+			RemovalPoint removalPoint, ArticleStatus status) {
 		super();
 		this.idArticle = idArticle;
 		this.name = name;
@@ -62,10 +70,12 @@ public class Article {
 		this.auctionEndDate = auctionEndDate;
 		this.startingPrice = startingPrice;
 		this.salePrice = salePrice;
-		//this.vendor = vendor;
+		this.vendor = vendor;
 		this.category = category;
 		this.removalPoint = removalPoint;
+		this.status = status;
 	}
+	
 	
 	
 
@@ -111,12 +121,12 @@ public class Article {
 	public void setSalePrice(int salePrice) {
 		this.salePrice = salePrice;
 	}
-//	public Member getVendor() {
-//		return vendor;
-//	}
-//	public void setVendor(Member vendor) {
-//		this.vendor = vendor;
-//	}
+	public int getVendor() {
+		return vendor;
+	}
+	public void setVendor(int vendor) {
+		this.vendor = vendor;
+	}
 	public Category getCategory() {
 		return category;
 	}
@@ -128,6 +138,12 @@ public class Article {
 	}
 	public void setRemovalPoint(RemovalPoint removalPoint) {
 		this.removalPoint = removalPoint;
+	}
+	public ArticleStatus getStatus() {
+		return status;
+	}
+	public void setStatus(ArticleStatus status) {
+		this.status = status;
 	}
 	
 	@Override
@@ -173,6 +189,7 @@ public class Article {
 		Article other = (Article) obj;
 		return idArticle == other.idArticle;
 	}
+	
 	
 	
 	

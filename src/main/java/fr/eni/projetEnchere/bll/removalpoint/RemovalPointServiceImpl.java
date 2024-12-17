@@ -1,4 +1,4 @@
-package fr.eni.projetEnchere.bll.category;
+package fr.eni.projetEnchere.bll.removalpoint;
 
 import java.util.List;
 import java.util.Optional;
@@ -6,40 +6,40 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import fr.eni.projetEnchere.bo.Category;
-import fr.eni.projetEnchere.dal.category.CategoryRepository;
+import fr.eni.projetEnchere.bo.RemovalPoint;
+import fr.eni.projetEnchere.dal.removalpoint.RemovalPointRepository;
 
 @Service
-public class CategoryServiceImpl implements CategoryService{
+public class RemovalPointServiceImpl implements RemovalPointService{
 	
-	private CategoryRepository categoryRepo;
+	private RemovalPointRepository removalPointRepository;
 	
 	@Autowired
-	public CategoryServiceImpl(CategoryRepository categoryRepo) {
+	public RemovalPointServiceImpl(RemovalPointRepository removalPointRepository) {
 		super();
-		this.categoryRepo = categoryRepo;
+		this.removalPointRepository = removalPointRepository;
 	}
 
 	@Override
-	public void create(Category t) {
+	public void create(RemovalPoint t) {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Method not implemented yet");
 		
 	}
 
 	@Override
-	public List<Category> getAll() {
-		return this.categoryRepo.getAll();
+	public List<RemovalPoint> getAll() {
+		return this.removalPointRepository.getAll();
 	}
 
 	@Override
-	public Category getById(int id) {
+	public RemovalPoint getById(int id) {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Method not implemented yet");
 	}
 
 	@Override
-	public void update(Category t) {
+	public void update(RemovalPoint t) {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Method not implemented yet");
 		

@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CRUDService<T> {
-		public void create();
+		public void create(T t);
 		public List<T> getAll();
-		public Optional<T> getById(int id);
+		public T getById(int id);
 		public void update(T t);
 		public void delete(int id);
 
