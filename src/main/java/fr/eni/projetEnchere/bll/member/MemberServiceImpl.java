@@ -17,6 +17,7 @@ public class MemberServiceImpl implements MemberService{
 	
 	Logger logger = LoggerFactory.getLogger(MemberServiceImpl.class);
 	BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+	
 	@Autowired
 	MemberRepository memberRepo;
 	
@@ -40,8 +41,7 @@ public class MemberServiceImpl implements MemberService{
 
 	@Override
 	public Member getById(int id) {
-		// TODO Auto-generated method stub
-		return null;
+		return memberRepo.getById(id).get();
 	}
 
 	@Override

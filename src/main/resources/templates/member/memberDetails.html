@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Member Details</title>
+</head>
+<body>
+    <h1>Member Details</h1>
+    <table border="1">
+        <tr>
+            <th>Pseudo</th>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th>Email</th>
+            <th>Téléphone</th>
+            <th>Rue</th>
+            <th>Code Postal</th>
+            <th>Ville</th>
+        </tr>
+        <tr>
+            <td th:text="${member.userName}">Pseudo</td>
+            <td th:text="${member.name}">Nom</td>
+            <td th:text="${member.firstName}">Prénom</td>
+            <td th:text="${member.email}">Email</td>
+            <td th:text="${member.phoneNumber}">Téléphone</td>
+            <td th:text="${member.roadName}">Rue</td>
+            <td th:text="${member.zipCode}">Code Postal</td>
+            <td th:text="${member.townName}">Ville</td>
+        </tr>
+    </table>
+</body>
+</html>

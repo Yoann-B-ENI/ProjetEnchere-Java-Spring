@@ -4,8 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+
+
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 //import fr.eni.projetEnchere.bo.Article;
 //import fr.eni.projetEnchere.bo.Bid;
@@ -14,31 +18,40 @@ import jakarta.validation.constraints.Size;
 
 
 public class Member {
+	
 	private int idMember;
+	
 	@NotEmpty
 	@Size(min=2, max=30)
 	private String userName;
+	
 	@NotEmpty
 	@Size(min=2, max=30)
 	private String password;
+	
 	@NotEmpty
 	@Size(min=2, max=30)
 	private String name;
+	
 	@NotEmpty
 	@Size(min=2, max=30)
 	private String firstName;
+	
 	@NotEmpty
 	@Email
 	private String email;
-	
-	
 	@Pattern(regexp = "^(0|\\+33)[1-9](\\d{2}){4}$", message = "Invalid phone number format")
 	private String phoneNumber;
+	@NotNull
+	@Min(0)
+	private int roadNumber;
 	@NotEmpty
 	private String roadName;
+	
 	@NotEmpty
 	@Size(min=5, max=5, message="code postal incorect")
 	private String zipCode;
+	
 	@NotEmpty
 	private String townName;
 	private int credits;

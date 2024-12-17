@@ -22,7 +22,8 @@ CREATE TABLE IF NOT EXISTS Members (
     townName              VARCHAR(30) NOT NULL,
     credits           	  INTEGER NOT NULL,
     admin   			  BOOLEAN NOT NULL, 
-    CONSTRAINT members_pk PRIMARY KEY (idMember)
+    CONSTRAINT members_pk PRIMARY KEY (idMember),
+    CONSTRAINT members_userName_uk unique (userName)
 );
 
 CREATE TABLE IF NOT EXISTS CATEGORIES (
