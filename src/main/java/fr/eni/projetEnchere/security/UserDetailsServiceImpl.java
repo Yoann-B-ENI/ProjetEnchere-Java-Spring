@@ -13,13 +13,13 @@ import fr.eni.projetEnchere.bo.Member;
 import fr.eni.projetEnchere.dal.member.MemberRepository;
 
 @Service
-public class UserDetailsSerivceImpl implements UserDetailsService{
+public class UserDetailsServiceImpl implements UserDetailsService{
 	
-	Logger logger = LoggerFactory.getLogger(UserDetailsSerivceImpl.class);
+	Logger logger = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
 	MemberRepository memberRepo;
+	Member member;
 	
-	@Autowired
-	public UserDetailsSerivceImpl(MemberRepository memberRepo) {
+	public UserDetailsServiceImpl(MemberRepository memberRepo) {
 		super();
 		this.memberRepo = memberRepo;
 	}
@@ -34,8 +34,8 @@ public class UserDetailsSerivceImpl implements UserDetailsService{
 		UserDetails user =null;
 		
 		if(!memberRepo.getByUserName(username).isEmpty()) {
-			Member member = memberRepo.getByUserName(username).get();	
-
+			member = memberRepo.getByUserName(username).get();
+			
 			 	user = User.builder()
 			 		.username(member.getUserName())
 			 		.password(member.getPassword())
@@ -47,4 +47,12 @@ public class UserDetailsSerivceImpl implements UserDetailsService{
 		throw new UsernameNotFoundException(username + " not found.");
 	}
 
+	public Member getMember() {
+		return member;
+	}
+
+	public void setMember(Member member) {
+		this.member = member;
+	}
+	
 }
