@@ -52,5 +52,10 @@ public class RemovalPointServiceImpl implements RemovalPointService{
 		
 	}
 
+	@Override
+	public List<RemovalPoint> getAllByMemberId(int idMember) {
+		return this.removalPointRepository.getAllByMemberId(idMember);
+	}
+
 
 }

@@ -34,7 +34,7 @@
   
   	<select name = "removalPoint">
 		<option th:each="rp : ${allRemovalPoints}" th:value = "${rp.idRemovalPoint}">
-		[[${rp.idRemovalPoint}]] - [[${rp.roadName}]] [[${rp.zipCode}]] [[${rp.townName}]]</option>
+		[[${rp.idRemovalPoint}]] - [[${rp.pointName}]] - [[${rp.roadNumber}]] [[${rp.roadName}]] [[${rp.zipCode}]] [[${rp.townName}]]</option>
 	</select>
   
 </fieldset>

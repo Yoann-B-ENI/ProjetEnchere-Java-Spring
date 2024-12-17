@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS Members (
     firstName             VARCHAR(30) NOT NULL,
     email                 VARCHAR(40) NOT NULL,
     phoneNumber    	      VARCHAR(15),
+    roadNumber			  INT NOT NULL, 
     roadName              VARCHAR(30) NOT NULL,
     zipCode			      VARCHAR(10) NOT NULL,
     townName              VARCHAR(30) NOT NULL,
@@ -41,6 +42,7 @@ CREATE TABLE IF NOT EXISTS RemovalPoints (
     idMember			  INT NOT NULL, 
     pointName			  VARCHAR(30) NULL, 
     CONSTRAINT removalPoints_pk PRIMARY KEY (idRemovalPoint), 
+    
     CONSTRAINT removalPoints_uq UNIQUE(roadNumber, roadName, zipCode, townName, idMember)
 );
 
