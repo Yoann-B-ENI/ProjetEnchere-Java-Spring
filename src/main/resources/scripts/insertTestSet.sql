@@ -3,9 +3,10 @@
 -- Insert Members
 INSERT INTO members (userName, password, name, firstName, email, phoneNumber, roadName, zipCode, townName, credits, admin)
 VALUES 
-('john_doe', '$2a$10$VzBJ.BwtXdnPOacBUMcm4.FAh4jhggmQCgPv5hEZrfbZ5S5xw.sHG', 'Doe', 'John', 'john.doe@example.com', '123-456-7890', 'Main St', '12345', 'Springfield', 100, TRUE),
-('jane_smith', '$2a$10$VzBJ.BwtXdnPOacBUMcm4.FAh4jhggmQCgPv5hEZrfbZ5S5xw.sHG', 'Smith', 'Jane', 'jane.smith@example.com', '987-654-3210', 'Oak Rd', '54321', 'Greenville', 50, FALSE),
-('bob_jones', '$2a$10$VzBJ.BwtXdnPOacBUMcm4.FAh4jhggmQCgPv5hEZrfbZ5S5xw.sHG', 'Jones', 'Bob', 'bob.jones@example.com', '555-123-4567', 'Pine Ave', '11223', 'Riverside', 200, FALSE);
+('john_doe', '$2a$10$VzBJ.BwtXdnPOacBUMcm4.FAh4jhggmQCgPv5hEZrfbZ5S5xw.sHG', 'Doe', 'John', 'john.doe@example.com', '1234567890', 'Main St', '12345', 'Springfield', 100, TRUE),
+('jane_smith', '$2a$10$VzBJ.BwtXdnPOacBUMcm4.FAh4jhggmQCgPv5hEZrfbZ5S5xw.sHG', 'Smith', 'Jane', 'jane.smith@example.com', '9876543210', 'Oak Rd', '54321', 'Greenville', 50, FALSE),
+('smith_smith', '$2a$10$VzBJ.BwtXdnPOacBUMcm4.FAh4jhggmQCgPv5hEZrfbZ5S5xw.sHG', 'Smith', 'Smith', 'smith.smith@example.com', '9876543210', 'Oak Rd', '54321', 'Greenville', 0, FALSE),
+('bob_jones', '$2a$10$VzBJ.BwtXdnPOacBUMcm4.FAh4jhggmQCgPv5hEZrfbZ5S5xw.sHG', 'Jones', 'Bob', 'bob.jones@example.com', '5551234567', 'Pine Ave', '11223', 'Riverside', 200, FALSE);
 
 -- Insert Categories
 INSERT INTO categories (name)
@@ -17,11 +18,16 @@ VALUES
 ('Toys');
 
 -- Insert Removal Points
-INSERT INTO removalPoints (roadName, zipCode, townName)
+INSERT INTO removalPoints (roadNumber, roadName, zipCode, townName, idMember, pointName)
 VALUES 
-('Elm St', '65432', 'Centerville'),
-('Maple Ave', '78901', 'Lakeview'),
-('Broadway', '23456', 'Hilltop');
+(5, 'Main St', '12345', 'Springfield', 1, 'Home JD'),
+(190, 'Oak Rd', '54321', 'Greenville', 2, 'My House'),
+(190, 'Oak Rd', '54321', 'Greenville', 3, 'my wife_s house <3'),
+(34, 'Pine Ave', '11223', 'Riverside', 4, 'pine house'), 
+(45, 'Rue de lassociation', '44880', 'Nantes', 1, 'Association'),
+(45, 'Rue de lassociation', '44880', 'Nantes', 2, 'Auction House Warehouse'),
+(45, 'Rue de lassociation', '44880', 'Nantes', 3, 'my wife_s assocation_s warehouse <3'),
+(45, 'Rue de lassociation', '44880', 'Nantes', 4, 'auction storage');
 
 -- Insert Articles
 INSERT INTO articles (name, description, auctionStartDate, auctionEndDate, 

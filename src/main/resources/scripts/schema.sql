@@ -33,10 +33,14 @@ CREATE TABLE IF NOT EXISTS CATEGORIES (
 
 CREATE TABLE IF NOT EXISTS RemovalPoints (
 	idRemovalPoint        SERIAL 	  NOT NULL,
+	roadNumber			  INT NOT NULL, 
     roadName              VARCHAR(30) NOT NULL,
     zipCode      		  VARCHAR(15) NOT NULL,
     townName              VARCHAR(30) NOT NULL, 
-    CONSTRAINT removalPoints_pk PRIMARY KEY (idRemovalPoint)
+    idMember			  INT NOT NULL, 
+    pointName			  VARCHAR(30) NULL, 
+    CONSTRAINT removalPoints_pk PRIMARY KEY (idRemovalPoint), 
+    CONSTRAINT removalPoints_uq UNIQUE(roadNumber, roadName, zipCode, townName, idMember)
 );
 
 CREATE TABLE IF NOT EXISTS ARTICLES (
