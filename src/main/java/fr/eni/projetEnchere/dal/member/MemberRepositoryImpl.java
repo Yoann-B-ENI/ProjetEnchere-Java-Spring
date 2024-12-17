@@ -57,7 +57,7 @@ public class MemberRepositoryImpl implements MemberRepository{
 
 	@Override
 	public Optional<Member> getById(int id) {
-		String sql ="idMember, userName, password, name, firstName, email, phoneNumber, roadName, zipCode, townname credits, admin from Members where id = ?";
+		String sql ="select idMember, userName, password, name, firstName, email, phoneNumber, roadName, zipCode, townname, credits, admin from Members where id = ?";
 		
 		Member member = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Member.class), id); 
 		
@@ -78,7 +78,7 @@ public class MemberRepositoryImpl implements MemberRepository{
 
 	@Override
 	public Optional<Member> getByUserName(String userName) {
-		String sql ="select idMember, userName, password, name, firstName, email, phoneNumber, roadName, zipCode, townname credits, admin from Members where userName = ?";
+		String sql ="select idMember, userName, password, name, firstName, email, phoneNumber, roadName, zipCode, townname, credits, admin from Members where userName = ?";
 		
 		Member member = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Member.class), userName); 
 		
