@@ -67,15 +67,21 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 		t.setIdArticle(newId);
 	}
 	
+	
+	
 	private String processFilters(Map<String, String> filterMapLike, Map<String, String> filterMapEquals) {
 		
 		String filterString = " ";
 		
-		for (Entry<String, String> entry : filterMapLike.entrySet()) {
-			filterString += "AND " + entry.getKey() + " LIKE %" + entry.getValue() + "% ";
+		if (filterMapLike != null) {
+			for (Entry<String, String> entry : filterMapLike.entrySet()) {
+				filterString += "AND " + entry.getKey() + " LIKE %" + entry.getValue() + "% ";
+			}
 		}
-		for (Entry<String, String> entry : filterMapEquals.entrySet()) {
-			filterString += "AND " + entry.getKey() + " = " + entry.getValue();
+		if (filterMapEquals != null) {
+			for (Entry<String, String> entry : filterMapEquals.entrySet()) {
+				filterString += "AND " + entry.getKey() + " = '" + entry.getValue() + "'";
+			}
 		}
 		
 		filterString += " ";//to be safe
@@ -90,7 +96,7 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 	
 	@Override
 	public List<Article> getAll(Map<String, String> filterMapLike, Map<String, String> filterMapEquals) {
-		System.out.println("DATABASE : get all articles");
+		System.out.println("\n > DATABASE : get all articles");
 		String sql = "select articles.idArticle, \r\n"
 				+ "	articles.name, \r\n"
 				+ "	articles.auctionStartDate, \r\n"
@@ -105,6 +111,7 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 				+ "WHERE 1=1 \r\n"
 				+ this.processFilters(filterMapLike, filterMapEquals)
 				+ "ORDER BY (articles.auctionEndDate, articles.salePrice) ASC \r\n";
+		System.out.println("\n\n > DATABASE ARTICLE FILTER QUERY \n"+sql+"\n\n");
 		List<Article> articlesFound = jdbcTemplate.query(sql, new ArticleSmallRowMapper());
 		
 		return articlesFound;
@@ -112,7 +119,7 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 
 	@Override
 	public Optional<Article> getById(int id) {
-		System.out.println("DATABASE : get article of id "+id);
+		System.out.println("\n > DATABASE : get article of id "+id);
 		String sql = "select articles.idArticle, \r\n"
 				+ "	articles.name AS article_name, \r\n"
 				+ "	articles.auctionStartDate, \r\n"
