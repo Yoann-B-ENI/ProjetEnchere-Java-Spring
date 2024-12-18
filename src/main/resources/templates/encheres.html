@@ -2,18 +2,12 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>ENI-Encheres</title>
 </head>
 <body>
 	<nav>
-		<h1>ENI-Enchères</h1>
-		<div sec:authorize="isAuthenticated()">
-			<a href="/encheres">Enchères</a> <a>Vendre un article</a> <a>mon
-				profil</a>
-			<form th:action="@{/logout}" method="post" class="text-center mt-6">
-				<button type="submit">Déconnexion</button>
-			</form>
-		</div>
+		<th:block th:replace="fragments/logo.html :: logo"></th:block>
+		<th:block th:replace="fragments/navBar.html :: navBar"></th:block>
 	</nav>
 
 	<h2>Liste des enchères</h2>
@@ -24,15 +18,19 @@
 		<form method="post">
 			<div>
 				<span> <input type="text">
-				</span> <span>
+				</span> 
+				<span>
 					<h4>Catégorie :</h4> <input type="text">
 				</span>
 			</div>
 			<div>
-				<button type="submit">Rechecher</button>
+				<button type="submit">Rechercher</button>
 			</div>
 		</form>
 	</span>
-	<span> </span>
+	
+	<span> 
+	
+	</span>
 </body>
 </html>
