@@ -5,24 +5,38 @@ import java.util.Objects;
 
 import org.springframework.boot.jdbc.HikariCheckpointRestoreLifecycle;
 
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
 public class Article {
 	
 	// not null, pk
 	private int idArticle;
 	
-	// not null
+	@NotNull(message = "Le nom de l'article est obligatoire.")
+	@NotBlank(message = "Le nom doit contenir autre chose que des espaces.")
+	@Size(min = 3, max = 30, message = "Le nom doit faire entre 3 et 30 caractères.")
 	private String name;
-	
-	// not null
+
+	@NotNull(message = "La description de l'article est obligatoire.")
+	@NotBlank(message = "La description doit contenir autre chose que des espaces.")
+	@Size(min = 3, max = 300, message = "La description doit faire entre 3 et 300 caractères.")
 	private String description;
-	
-	// not null
+
+	@NotNull(message = "La date de mise en vente est obligatoire.")
+	@FutureOrPresent
 	private LocalDateTime auctionStartDate;
-	
-	// not null
+
+	@NotNull(message = "La date de fin de vente est obligatoire.")
+	@Future
+	// validating that it's after the start date looks horrible to do
 	private LocalDateTime auctionEndDate;
 	
-	// .
+	@Min(value = 0, message = "Le prix de départ doit être positif.")
 	private int startingPrice;
 	
 	// .
@@ -31,10 +45,10 @@ public class Article {
 	// not null, fk members
 	private Member vendor;
 	
-	// not null, fk categories
+	@NotNull(message = "L'article doit avoir une catégorie.")
 	private Category category;
-	
-	// not null, fk removalpoints
+
+	@NotNull(message = "L'article doit avoir un point de retrait.")
 	private RemovalPoint removalPoint;
 	
 	// not null
@@ -75,7 +89,6 @@ public class Article {
 		this.removalPoint = removalPoint;
 		this.status = status;
 	}
-	
 	
 	
 
