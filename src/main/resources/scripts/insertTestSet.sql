@@ -39,11 +39,11 @@ INSERT INTO articles (name, description, auctionStartDate, auctionEndDate,
 startingPrice, salePrice, status, idVendor, idCategory, idRemovalPoint)
 VALUES 
 ('Laptop', 'A high-performance laptop with 16GB RAM and 512GB SSD', '2025-01-02', '2025-01-30', 
-500, NULL, 'Created', 1, 1, 1),  -- John Doe is the vendor (idVendor 1)
+500, 500, 'Created', 1, 1, 1),  -- John Doe is the vendor (idVendor 1)
 ('Sofa', 'Comfortable 3-seater sofa with fabric upholstery', '2024-12-05', '2024-12-29', 
-300, NULL, 'AuctionStarted', 2, 2, 2),  -- Jane Smith is the vendor (idVendor 2)
+300, 300, 'AuctionStarted', 2, 2, 2),  -- Jane Smith is the vendor (idVendor 2)
 ('Novel - "The Great Adventure"', 'A thrilling novel about an epic journey', '2024-12-02', '2024-12-09', 
-20, NULL, 'AuctionEnded', 3, 3, 3);  -- Bob Jones is the vendor (idVendor 3)
+20, 20, 'AuctionEnded', 3, 3, 3);  -- Bob Jones is the vendor (idVendor 3)
 
 -- Insert Bids
 INSERT INTO bids (idMember, idArticle, bidDate, bidPrice)
