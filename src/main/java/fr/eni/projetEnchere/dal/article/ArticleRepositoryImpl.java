@@ -1,9 +1,14 @@
 package fr.eni.projetEnchere.dal.article;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -13,6 +18,9 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import fr.eni.projetEnchere.bo.Article;
+import fr.eni.projetEnchere.bo.Category;
+import fr.eni.projetEnchere.bo.Member;
+import fr.eni.projetEnchere.bo.RemovalPoint;
 
 @Repository
 public class ArticleRepositoryImpl implements ArticleRepository{
@@ -55,12 +63,49 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 
 	@Override
 	public List<Article> getAll() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Method not implemented yet");
+		String sql = "select articles.idArticle, \r\n"
+				+ "	articles.name, \r\n"
+				+ "	articles.auctionStartDate, \r\n"
+				+ "	articles.auctionEndDate, \r\n"
+				+ "	articles.salePrice, \r\n"
+				+ "	articles.idVendor, \r\n"
+				+ "	members.username, \r\n"
+				+ "	articles.idCategory \r\n"
+				+ "from articles \r\n"
+				+ "JOIN members on articles.idvendor = members.idmember \r\n"
+				+ "ORDER BY (articles.auctionEndDate, articles.salePrice) ASC \r\n";
+		List<Article> articlesFound = jdbcTemplate.query(sql, new ArticleSmallRowMapper());
+		
+		return articlesFound;
 	}
 
 	@Override
 	public Optional<Article> getById(int id) {
+		String sql = "select articles.idArticle, \r\n"
+				+ "	articles.name AS article_name, \r\n"
+				+ "	articles.auctionStartDate, \r\n"
+				+ "	articles.auctionEndDate, \r\n"
+				+ "	articles.salePrice, \r\n"
+				+ "	articles.startingPrice, \r\n"
+				+ "	articles.idCategory, \r\n"
+				+ "	categories.name AS cat_name, \r\n"
+				+ "	articles.idVendor, \r\n"
+				+ "	members.username, \r\n"
+				+ "	articles.idRemovalPoint, \r\n"
+				+ "	removalpoints.roadNumber, \r\n"
+				+ "	removalpoints.roadName, \r\n"
+				+ "	removalpoints.zipCode, \r\n"
+				+ "	removalpoints.townName \r\n"
+				+ "from articles \r\n"
+				+ "JOIN members on articles.idvendor = members.idmember \r\n"
+				+ "JOIN categories on articles.idcategory = categories.idcategory \r\n"
+				+ "JOIN removalpoints on articles.idremovalpoint = removalpoints.idremovalpoint \r\n"
+				+ "WHERE idArticle = ?";
+		
+//		Article art = jdbcTemplate.queryForObject(sql, new ArticleBigRowMapper(), id);
+//		Optional<Article> return_art = Optional.ofNullable(art);
+//		return return_art;
+		
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Method not implemented yet");
 	}
@@ -78,6 +123,79 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 		throw new UnsupportedOperationException("Method not implemented yet");
 		
 	}
-
-
+	
+	
+	
+	
+	
+	
+	
+	private static class ArticleSmallRowMapper implements RowMapper<Article>{
+		@Override
+		public Article mapRow(ResultSet rs, int rowNum) throws SQLException {
+			Member emptyMember = new Member();
+			emptyMember.setIdMember(rs.getInt("idVendor"));
+			emptyMember.setUserName(rs.getString("username"));
+			
+			Category cat = new Category();
+			cat.setIdCategory(rs.getInt("idCategory"));
+			
+			Article art = new Article();
+			art.setVendor(emptyMember);
+			art.setCategory(cat);
+			
+			art.setIdArticle(rs.getInt("idArticle"));
+			art.setName(rs.getString("name"));
+			art.setAuctionStartDate(rs.getObject("auctionStartDate", LocalDateTime.class));
+			art.setAuctionEndDate(rs.getObject("auctionEndDate", LocalDateTime.class));
+			art.setSalePrice(rs.getInt("salePrice"));
+			
+			return art;
+		}
+	}
+	
+	
+	
+	private static class ArticleBigRowMapper implements RowMapper<Article>{
+		@Override
+		public Article mapRow(ResultSet rs, int rowNum) throws SQLException {
+			Member emptyMember = new Member();
+			emptyMember.setIdMember(rs.getInt("idVendor"));
+			emptyMember.setUserName(rs.getString("username"));
+			
+			Category cat = new Category();
+			cat.setIdCategory(rs.getInt("idCategory"));
+			cat.setName(rs.getString("cat_name"));
+			
+			RemovalPoint rp = new RemovalPoint();
+			rp.setIdRemovalPoint(rs.getInt("idRemovalPoint"));
+			rp.setRoadNumber(rs.getInt("roadNumber"));
+			rp.setRoadName(rs.getString("roadName"));
+			rp.setZipCode(rs.getString("zipCode"));
+			rp.setTownName(rs.getString("townName"));
+			
+			Article art = new Article();
+			art.setVendor(emptyMember);
+			art.setCategory(cat);
+			art.setRemovalPoint(rp);
+			
+			art.setIdArticle(rs.getInt("idArticle"));
+			art.setName(rs.getString("article_name"));
+			art.setAuctionStartDate(rs.getObject("auctionStartDate", LocalDateTime.class));
+			art.setAuctionEndDate(rs.getObject("auctionEndDate", LocalDateTime.class));
+			art.setSalePrice(rs.getInt("salePrice"));
+			art.setStartingPrice(rs.getInt("startingPrice"));
+			
+			return art;
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
