@@ -82,7 +82,6 @@ public class Member {
 		this.admin = admin;
 	}
 
-
 	public Member(int idMember, String userName, String password, String name, String firstName, String email,
 			String phoneNumber, String roadName, String zipCode, String townName, int credits, Boolean admin) {
 		super();
