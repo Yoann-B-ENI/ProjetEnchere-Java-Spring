@@ -82,6 +82,7 @@ public class ArticleController {
 		articleService.determineStatusFromDates(article);
 		Member member = (Member) session.getAttribute("loggedMember");
 		article.setVendor(member);
+		article.setSalePrice(article.getStartingPrice());
 		
 		if (article.getRemovalPoint().getIdRemovalPoint() == 0) {
 			this.removalPointService.create(article.getRemovalPoint());
