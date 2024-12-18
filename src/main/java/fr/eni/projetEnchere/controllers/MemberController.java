@@ -9,10 +9,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 import fr.eni.projetEnchere.bll.member.MemberService;
 import fr.eni.projetEnchere.bo.Member;
+import fr.eni.projetEnchere.exception.UserNameAlreadyExistsException;
 
 @Controller
 public class MemberController {
@@ -46,23 +49,35 @@ public class MemberController {
 	}
 
 	@GetMapping("/register")
-	public String showRegistrationForm(Model model) {
-		model.addAttribute("member", initializeMember());
+	public String showRegistrationForm(Model model, HttpSession session ) {
+		Member member = (Member) session.getAttribute("loggedMember");
+        if (member == null) {
+            member = initializeMember();
+        }
+        model.addAttribute("member", member);
 		return "register";
 	}
 
 	@PostMapping("/register")
-	public String addMember(@Valid @ModelAttribute Member member, BindingResult result,
-			RedirectAttributes redirectAttr) {
+	public String addMember(@Valid @ModelAttribute Member member, BindingResult result, RedirectAttributes redirectAttr,
+			HttpSession session, Model model) {
 
 		if (result.hasErrors()) {
 			redirectAttr.addFlashAttribute("org.springframework.validation.BindingResult.member", result);
 			redirectAttr.addFlashAttribute("member", member);
 			return "register";
 		}
-
-		service.create(member);
-		return "redirect:/login";
+//		logger.warn(member.toString());
+		 try {
+		        // Essayez de sauvegarder le membre
+		        service.save(member, session);
+		    } catch (UserNameAlreadyExistsException e) {
+		        // Si l'exception est levée, on ajoute un message d'exception personnalisé à la vue
+		        redirectAttr.addFlashAttribute("UserNameAlreadyExistsException", true);
+		        redirectAttr.addFlashAttribute("ExceptionMessage", e.getMessage());  // Message d'exception
+		        return "redirect:/register";
+		    }
+		return "redirect:/home";
 
 	}
 

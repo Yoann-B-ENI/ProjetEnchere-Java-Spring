@@ -3,6 +3,7 @@ package fr.eni.projetEnchere.bll.member;
 import java.util.List;
 import java.util.Optional;
 
+import org.postgresql.util.PSQLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,17 +12,18 @@ import org.springframework.stereotype.Service;
 
 import fr.eni.projetEnchere.bo.Member;
 import fr.eni.projetEnchere.dal.member.MemberRepository;
+import fr.eni.projetEnchere.exception.UserNameAlreadyExistsException;
+import jakarta.servlet.http.HttpSession;
 
 @Service
-public class MemberServiceImpl implements MemberService{
-	
+public class MemberServiceImpl implements MemberService {
+
 	Logger logger = LoggerFactory.getLogger(MemberServiceImpl.class);
 	BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-	
+
 	@Autowired
 	MemberRepository memberRepo;
-	
-	
+
 	public MemberServiceImpl(MemberRepository memberRepo) {
 		super();
 		this.memberRepo = memberRepo;
@@ -30,7 +32,7 @@ public class MemberServiceImpl implements MemberService{
 	@Override
 	public void create(Member member) {
 		member.setPassword(passwordEncoder.encode(member.getPassword()));
-		memberRepo.create(member);	
+		memberRepo.create(member);
 	}
 
 	@Override
@@ -42,18 +44,18 @@ public class MemberServiceImpl implements MemberService{
 	@Override
 	public Member getById(int id) {
 		return memberRepo.getById(id).get();
+
 	}
 
 	@Override
 	public void update(Member member) {
-		// TODO Auto-generated method stub
-		
+		memberRepo.update(member);
 	}
 
 	@Override
 	public void delete(int id) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -61,5 +63,27 @@ public class MemberServiceImpl implements MemberService{
 		return memberRepo.getByUserName(userName).get();
 	}
 
+	@Override
+	public void save(Member member, HttpSession session) throws UserNameAlreadyExistsException {
+		Member loggedMember = (Member) session.getAttribute("loggedMember");
+
+		if (loggedMember != null) {
+			member.setIdMember(loggedMember.getIdMember());
+			Optional<Member> optMember = memberRepo.getByUserName(member.getUserName());
+
+			if (optMember.isEmpty() || member.equals(optMember.get())) {
+//				try {
+					this.update(member);
+//				} catch (PSQLException e) {
+//					throw new UserNameAlreadyExistsException("Pseudo non disponible");
+//				}
+			}else {
+				
+				throw new UserNameAlreadyExistsException("Pseudo non disponible");		
+			}	
+		} else {
+			this.create(member);
+		}
+	}
 
 }
