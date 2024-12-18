@@ -8,7 +8,10 @@ import java.util.Optional;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import fr.eni.projetEnchere.bo.Member;
@@ -30,9 +33,24 @@ public class RemovalPointRepositoryImpl implements RemovalPointRepository{
 
 	@Override
 	public void create(RemovalPoint t) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Method not implemented yet");
+		// sets the new id in the java object
+		String sql = "INSERT into RemovalPoints (roadNumber, roadName, zipCode, townName, idMember, pointName)"
+				+ " VALUES(:roadNumber, :roadName, :zipCode, :townName, :memberTemp, :pointName)";
 		
+		MapSqlParameterSource paramSource = new MapSqlParameterSource();
+		paramSource.addValue("roadNumber", t.getRoadNumber());
+		paramSource.addValue("roadName", t.getRoadName());
+		paramSource.addValue("zipCode", t.getZipCode());
+		paramSource.addValue("townName", t.getTownName());
+		paramSource.addValue("memberTemp", t.getMember().getIdMember());
+		paramSource.addValue("pointName", t.getPointName());
+		
+		KeyHolder keyHolder = new GeneratedKeyHolder();
+		namedParameterJdbcTemplate.update(sql, paramSource, keyHolder, new String[]{"idmember"});
+		int newId = keyHolder.getKey().intValue();
+		
+		// in place, hope it reflects back up to the previous function call
+		t.setIdRemovalPoint(newId);
 	}
 
 	@Override

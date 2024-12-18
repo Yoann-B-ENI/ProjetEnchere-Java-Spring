@@ -83,6 +83,9 @@ public class ArticleController {
 		Member member = (Member) session.getAttribute("loggedMember");
 		article.setVendor(member);
 		
+		if (article.getRemovalPoint().getIdRemovalPoint() == 0) {
+			this.removalPointService.create(article.getRemovalPoint());
+		} // pray for an inplace modification
 		System.out.println("Sending article to db " + article);
 		articleService.create(article);
 		
@@ -92,9 +95,6 @@ public class ArticleController {
 	// jane_smith
 	// password
 	
-	// get removal point from db with the member being real? -> row mapper
-	// when creating article, create removal point in db
-	// validation on article fields
 	
 	
 	
