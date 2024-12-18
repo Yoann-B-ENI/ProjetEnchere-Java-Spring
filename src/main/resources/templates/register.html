@@ -1,65 +1,81 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Inscription</title>
+<title>Inscription</title>
 </head>
 <body>
-    <div>
-        <h2 sec:authorize="!isAuthenticated()">Formulaire d'inscription</h2>
-        <form th:action="@{/register}" th:object="${member}" method="post">
-            <div>
-                <label for="userName">Pseudo</label>
-                <input type="text" id="userName" th:field="*{userName}" />
-                <div th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}" style="color: red;"></div>
-            </div>
-            <div>
-                <label for="password">Mot de passe</label>
-                <input type="password" id="password" th:field="*{password}" />
-                <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" style="color: red;"></div>
-            </div>
-            <div>
-                <label for="name">Nom</label>
-                <input type="text" id="name" th:field="*{name}" />
-                <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" style="color: red;"></div>
-            </div>
-            <div>
-                <label for="firstName">Prénom</label>
-                <input type="text" id="firstName" th:field="*{firstName}" />
-                <div th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}" style="color: red;"></div>
-            </div>
-            <div>
-                <label for="email">Email</label>
-                <input type="email" id="email" th:field="*{email}" />
-                <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" style="color: red;"></div>
-            </div>
-            <div>
-                <label for="phoneNumber">Téléphone</label>
-                <input type="text" id="phoneNumber" th:field="*{phoneNumber}" />
-                <div th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}" style="color: red;"></div>
-            </div>
-            <div>
-                <label for="roadNumber">numéro de rue</label>
-                <input type="text" id="roadNumber" th:field="*{roadNumber}" />
-                <div th:if="${#fields.hasErrors('roadNumber')}" th:errors="*{roadNumber}" style="color: red;"></div>
-            </div>
-            <div>
-                <label for="roadName">Rue</label>
-                <input type="text" id="roadName" th:field="*{roadName}" />
-                <div th:if="${#fields.hasErrors('roadName')}" th:errors="*{roadName}" style="color: red;"></div>
-            </div>
-            <div>
-                <label for="zipCode">Code postal</label>
-                <input type="text" id="zipCode" th:field="*{zipCode}" />
-                <div th:if="${#fields.hasErrors('zipCode')}" th:errors="*{zipCode}" style="color: red;"></div>
-            </div>
-            <div>
-                <label for="townName">Ville</label>
-                <input type="text" id="townName" th:field="*{townName}" />
-                <div th:if="${#fields.hasErrors('townName')}" th:errors="*{townName}" style="color: red;"></div>
-            </div>
-            <button sec:authorize="!isAuthenticated()" type="submit">S'inscrire</button>
-            <button sec:authorize="isAuthenticated()" type="submit">modifier</button>
-        </form>
-    </div>
+	<div>
+		<h2 sec:authorize="!isAuthenticated()">Formulaire d'inscription</h2>
+		<form th:action="@{/register}" th:object="${member}" method="post">
+			<div>
+				<label for="userName">Pseudo</label> <input type="text"
+					id="userName" th:field="*{userName}" th:value="*{userName}" />
+				<div th:if="${#fields.hasErrors('userName')}"
+					th:errors="*{userName}" style="color: red;"></div>
+
+				<!-- Affichage de l'exception pour le pseudo si elle existe -->
+				<div th:if="${UserNameAlreadyExistsException}" style="color: red;">
+					<p th:text="${ExceptionMessage}"></p>
+				</div>
+
+			</div>
+			<div>
+				<label for="password">Mot de passe</label> <input type="password"
+					id="password" th:field="*{password}" />
+				<div th:if="${#fields.hasErrors('password')}"
+					th:errors="*{password}" style="color: red;"></div>
+			</div>
+			<div>
+				<label for="name">Nom</label> <input type="text" id="name"
+					th:field="*{name}" />
+				<div th:if="${#fields.hasErrors('name')}" th:errors="*{name}"
+					style="color: red;"></div>
+			</div>
+			<div>
+				<label for="firstName">Prénom</label> <input type="text"
+					id="firstName" th:field="*{firstName}" />
+				<div th:if="${#fields.hasErrors('firstName')}"
+					th:errors="*{firstName}" style="color: red;"></div>
+			</div>
+			<div>
+				<label for="email">Email</label> <input type="email" id="email"
+					th:field="*{email}" />
+				<div th:if="${#fields.hasErrors('email')}" th:errors="*{email}"
+					style="color: red;"></div>
+			</div>
+			<div>
+				<label for="phoneNumber">Téléphone</label> <input type="text"
+					id="phoneNumber" th:field="*{phoneNumber}" />
+				<div th:if="${#fields.hasErrors('phoneNumber')}"
+					th:errors="*{phoneNumber}" style="color: red;"></div>
+			</div>
+			<div>
+				<label for="roadNumber">numéro de rue</label> <input type="text"
+					id="roadNumber" th:field="*{roadNumber}" />
+				<div th:if="${#fields.hasErrors('roadNumber')}"
+					th:errors="*{roadNumber}" style="color: red;"></div>
+			</div>
+			<div>
+				<label for="roadName">Rue</label> <input type="text" id="roadName"
+					th:field="*{roadName}" />
+				<div th:if="${#fields.hasErrors('roadName')}"
+					th:errors="*{roadName}" style="color: red;"></div>
+			</div>
+			<div>
+				<label for="zipCode">Code postal</label> <input type="text"
+					id="zipCode" th:field="*{zipCode}" />
+				<div th:if="${#fields.hasErrors('zipCode')}" th:errors="*{zipCode}"
+					style="color: red;"></div>
+			</div>
+			<div>
+				<label for="townName">Ville</label> <input type="text" id="townName"
+					th:field="*{townName}" />
+				<div th:if="${#fields.hasErrors('townName')}"
+					th:errors="*{townName}" style="color: red;"></div>
+			</div>
+			<button sec:authorize="!isAuthenticated()" type="submit">S'inscrire</button>
+			<button sec:authorize="isAuthenticated()" type="submit">modifier</button>
+		</form>
+	</div>
 </body>
 </html>
