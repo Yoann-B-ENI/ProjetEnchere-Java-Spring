@@ -36,6 +36,7 @@ public class MemberController {
 		m.setName(null);
 		m.setPassword(null);
 		m.setPhoneNumber(null);
+		m.setRoadNumber(0);
 		m.setRoadName(null);
 		m.setTownName(null);
 		m.setUserName(null);

@@ -9,6 +9,7 @@ DROP TABLE IF EXISTS RemovalPoints;
 
 
 
+
 CREATE TABLE IF NOT EXISTS Members (
     idMember		   	      SERIAL NOT NULL,
     userName              VARCHAR(30) NOT NULL,
