@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -26,6 +27,7 @@ import fr.eni.projetEnchere.bo.RemovalPoint;
 import fr.eni.projetEnchere.controllers.converters.CustomCategoryEditor;
 import fr.eni.projetEnchere.controllers.converters.CustomRemovalPointEditor;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/article")
@@ -84,7 +86,13 @@ public class ArticleController {
 	}
 	
 	@PostMapping("/create")
-	public String create(@ModelAttribute Article article, Model model, HttpSession session) {
+	public String create(@ModelAttribute @Valid Article article, BindingResult bindingResult, 
+			Model model, HttpSession session) {
+		
+		if (bindingResult.hasErrors()) {
+			model.addAttribute("validationErrors", bindingResult.getAllErrors());
+			return "article/formCreateArticle";
+		}
 		
 		articleService.determineStatusFromDates(article);
 		Member member = (Member) session.getAttribute("loggedMember");
