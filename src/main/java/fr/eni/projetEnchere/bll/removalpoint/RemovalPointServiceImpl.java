@@ -22,9 +22,7 @@ public class RemovalPointServiceImpl implements RemovalPointService{
 
 	@Override
 	public void create(RemovalPoint t) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Method not implemented yet");
-		
+		this.removalPointRepository.create(t);
 	}
 
 	@Override
@@ -50,6 +48,11 @@ public class RemovalPointServiceImpl implements RemovalPointService{
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Method not implemented yet");
 		
+	}
+
+	@Override
+	public List<RemovalPoint> getAllByMemberId(int idMember) {
+		return this.removalPointRepository.getAllByMemberId(idMember);
 	}
 
 

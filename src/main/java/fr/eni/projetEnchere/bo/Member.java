@@ -245,7 +245,16 @@ public class Member {
 		this.phoneNumber = phoneNumber;
 	}
 
+	public int getRoadNumber() {
+		return roadNumber;
+	}
 
+
+	public void setRoadNumber(int roadNumber) {
+		this.roadNumber = roadNumber;
+	}
+	
+	
 	public String getRoadName() {
 		return roadName;
 	}

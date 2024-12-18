@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import fr.eni.projetEnchere.bll.article.ArticleService;
 import fr.eni.projetEnchere.bll.category.CategoryService;
@@ -63,7 +62,13 @@ public class ArticleController {
 		model.addAttribute("allCategories", categoriesFound);
 		System.out.println(categoriesFound);
 		
-		List<RemovalPoint> removalPointsFound = removalPointService.getAll();
+		Member member = (Member) session.getAttribute("loggedMember");
+		RemovalPoint rp = new RemovalPoint(0, 
+				member.getRoadNumber(), member.getRoadName(), member.getZipCode(), member.getTownName(), member, 
+				"Home Adress (auto)");
+		List<RemovalPoint> removalPointsFound = removalPointService.getAllByMemberId(member.getIdMember());
+		if (!removalPointsFound.contains(rp)) {removalPointsFound.add(rp);}
+		
 		session.setAttribute("allRemovalPoints", removalPointsFound);
 		model.addAttribute("allRemovalPoints", removalPointsFound);
 		System.out.println(removalPointsFound);
@@ -73,15 +78,15 @@ public class ArticleController {
 	
 	@PostMapping("/create")
 	public String create(@ModelAttribute Article article, Model model, HttpSession session) {
-		System.out.println("Sending article to db " + article);
 		
 		articleService.determineStatusFromDates(article);
 		Member member = (Member) session.getAttribute("loggedMember");
 		article.setVendor(member);
 		
-		// insert member's adress as a removalpoint
-		// make removalpoint user dependant
-		// add removalpoints in create article form
+		if (article.getRemovalPoint().getIdRemovalPoint() == 0) {
+			this.removalPointService.create(article.getRemovalPoint());
+		} // pray for an inplace modification
+		System.out.println("Sending article to db " + article);
 		articleService.create(article);
 		
 		return "redirect:/";
@@ -89,6 +94,7 @@ public class ArticleController {
 	
 	// jane_smith
 	// password
+	
 	
 	
 	

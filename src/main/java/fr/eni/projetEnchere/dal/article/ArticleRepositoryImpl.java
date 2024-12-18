@@ -8,6 +8,8 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import fr.eni.projetEnchere.bo.Article;
@@ -27,6 +29,7 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 	}
 
 	@Override
+	// sets the new id in the java object
 	public void create(Article t) {
 		String sql = "INSERT into Articles(name, description, auctionStartDate, auctionEndDate, "
 				+ "startingPrice, status, idVendor, idCategory, idRemovalPoint)";
@@ -39,10 +42,15 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 		paramSource.addValue("auctionEndDate", t.getAuctionEndDate());
 		paramSource.addValue("startingPrice", t.getStartingPrice());
 		paramSource.addValue("statusTemp", t.getStatus().toString());
-		paramSource.addValue("vendorTemp", t.getVendor().getIdMember()); //TODO make member, get id
+		paramSource.addValue("vendorTemp", t.getVendor().getIdMember());
 		paramSource.addValue("categoryTemp", t.getCategory().getIdCategory());
 		paramSource.addValue("removalPointTemp", t.getRemovalPoint().getIdRemovalPoint());
-		namedParameterJdbcTemplate.update(sql, paramSource);
+		
+		KeyHolder keyHolder = new GeneratedKeyHolder();
+		namedParameterJdbcTemplate.update(sql, paramSource, keyHolder, new String[]{"idarticle"});
+		int newId = keyHolder.getKey().intValue();
+		
+		t.setIdArticle(newId);
 	}
 
 	@Override
