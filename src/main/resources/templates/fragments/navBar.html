@@ -18,11 +18,12 @@
 			<p>Utilisateur connecté <label th:text="${#authentication.getPrincipal().getUsername()}"></label></p>
 			<a href="/encheres">Enchères</a> <br>
 			<a href="/article/redirectToCreate">Vendre un article</a> <br>
-			<a>Mon Profil</a> <br>
+			<a href="/register">Mon Profil</a> <br>
 			<form th:action="@{/logout}" method="post" class="text-center mt-6">
 				<button type="submit">Déconnexion</button>
 			</form>
 		</div>
+		
 		
 	</div>
 
