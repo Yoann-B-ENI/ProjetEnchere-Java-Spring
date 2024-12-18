@@ -302,15 +302,6 @@ public class Member {
 	}
 
 
-	public int getRoadNumber() {
-		return roadNumber;
-	}
-
-
-	public void setRoadNumber(int roadNumber) {
-		this.roadNumber = roadNumber;
-	}
-
 
 //	public List<RemovalPoint> getRemovalPoints() {
 //		return removalPoints;

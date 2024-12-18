@@ -6,7 +6,8 @@
 <body>
 	<div>
 		<h2 sec:authorize="!isAuthenticated()">Formulaire d'inscription</h2>
-		<form th:action="@{/register}" th:object="${member}" method="post">
+		<form th:action="@{/register}" th:object="${member}" method="post"
+			name="registerForm">
 			<div>
 				<label for="userName">Pseudo</label> <input type="text"
 					id="userName" th:field="*{userName}" th:value="*{userName}" />
@@ -74,8 +75,16 @@
 					th:errors="*{townName}" style="color: red;"></div>
 			</div>
 			<button sec:authorize="!isAuthenticated()" type="submit">S'inscrire</button>
-			<button sec:authorize="isAuthenticated()" type="submit">modifier</button>
+			<button sec:authorize="isAuthenticated()"type="submit">Modifier</button>
 		</form>
+		<div sec:authorize="isAuthenticated()">
+
+			<form th:action="@{/deleteMember}" method="post">
+				<button type="submit">Supprimer mon compte</button>
+			</form>
+
+		</div>
+
 	</div>
 </body>
 </html>

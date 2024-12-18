@@ -74,7 +74,9 @@ public class MemberRepositoryImpl implements MemberRepository {
 
 	@Override
 	public void delete(int id) {
-		// TODO Auto-generated method stub
+		String sql = "delete from Members where idMember = ?";
+		
+		int nbRows = jdbcTemplate.update(sql, id);
 
 	}
 

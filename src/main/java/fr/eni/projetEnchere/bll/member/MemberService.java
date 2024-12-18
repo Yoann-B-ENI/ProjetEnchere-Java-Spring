@@ -5,8 +5,10 @@ import fr.eni.projetEnchere.bll.CRUDService;
 import fr.eni.projetEnchere.bo.Member;
 import fr.eni.projetEnchere.exception.UserNameAlreadyExistsException;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 
 public interface MemberService extends CRUDService<Member>{
 	public Member getByUserName(String userName);
-	void save(Member member, HttpSession session) throws UserNameAlreadyExistsException;
+//	public void save(@Valid Member member, Member loggedMember) throws UserNameAlreadyExistsException;
+	void save(Member member, Member loggedMember) throws UserNameAlreadyExistsException;
 }

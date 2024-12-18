@@ -54,7 +54,7 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public void delete(int id) {
-		// TODO Auto-generated method stub
+		memberRepo.delete(id);
 
 	}
 
@@ -64,11 +64,9 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public void save(Member member, HttpSession session) throws UserNameAlreadyExistsException {
-		Member loggedMember = (Member) session.getAttribute("loggedMember");
-
+	public void save(Member member, Member loggedMember) throws UserNameAlreadyExistsException {
+	
 		if (loggedMember != null) {
-			member.setIdMember(loggedMember.getIdMember());
 			Optional<Member> optMember = memberRepo.getByUserName(member.getUserName());
 
 			if (optMember.isEmpty() || member.equals(optMember.get())) {

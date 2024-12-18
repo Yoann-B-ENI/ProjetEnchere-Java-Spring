@@ -9,6 +9,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.support.SessionStatus;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -16,6 +17,7 @@ import jakarta.validation.Valid;
 import fr.eni.projetEnchere.bll.member.MemberService;
 import fr.eni.projetEnchere.bo.Member;
 import fr.eni.projetEnchere.exception.UserNameAlreadyExistsException;
+import fr.eni.projetEnchere.security.UserDetailsServiceImpl;
 
 @Controller
 public class MemberController {
@@ -61,24 +63,37 @@ public class MemberController {
 	@PostMapping("/register")
 	public String addMember(@Valid @ModelAttribute Member member, BindingResult result, RedirectAttributes redirectAttr,
 			HttpSession session, Model model) {
-
+		Member loggedMember = (Member) session.getAttribute("loggedMember");
 		if (result.hasErrors()) {
 			redirectAttr.addFlashAttribute("org.springframework.validation.BindingResult.member", result);
 			redirectAttr.addFlashAttribute("member", member);
 			return "register";
 		}
-//		logger.warn(member.toString());
 		 try {
-		        // Essayez de sauvegarder le membre
-		        service.save(member, session);
+			 	member.setIdMember(loggedMember.getIdMember());
+		        session.setAttribute("loggedMember", member);
+		        service.save(member, loggedMember);
 		    } catch (UserNameAlreadyExistsException e) {
 		        // Si l'exception est levée, on ajoute un message d'exception personnalisé à la vue
 		        redirectAttr.addFlashAttribute("UserNameAlreadyExistsException", true);
-		        redirectAttr.addFlashAttribute("ExceptionMessage", e.getMessage());  // Message d'exception
+		        redirectAttr.addFlashAttribute("ExceptionMessage", e.getMessage()); 
 		        return "redirect:/register";
 		    }
+		 
 		return "redirect:/home";
 
 	}
+	 @PostMapping("/deleteMember")
+	    public String deleteAccount(HttpSession session) {
+	        Member member = (Member) session.getAttribute("loggedMember");
+	        logger.debug(member.toString());
+	        if (member != null) {
+	            service.delete(member.getIdMember());
+	            logger.warn(member.toString());
+	            session.invalidate();
+	            
+	        }
+	        return "redirect:/home";
+	    }
 
 }
