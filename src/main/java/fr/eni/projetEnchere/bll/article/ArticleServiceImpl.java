@@ -2,6 +2,7 @@ package fr.eni.projetEnchere.bll.article;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,15 +29,20 @@ public class ArticleServiceImpl implements ArticleService{
 	}
 
 	@Override
+	// call with empty filters
 	public List<Article> getAll() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Method not implemented yet");
+		return this.articleRepository.getAll(null, null);
+	}
+	
+	@Override
+	public List<Article> getAll(Map<String, String> filterMapLike, Map<String, String> filterMapEquals) {
+		return this.articleRepository.getAll(filterMapLike, filterMapEquals);
 	}
 
 	@Override
 	public Article getById(int id) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Method not implemented yet");
+		Optional<Article> opt_art = this.articleRepository.getById(id);
+		return opt_art.get();
 	}
 
 	@Override
@@ -65,6 +71,7 @@ public class ArticleServiceImpl implements ArticleService{
 			elem.setStatus(ArticleStatus.AuctionEnded);
 		}
 	}
+
 	
 	
 	
