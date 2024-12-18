@@ -55,7 +55,7 @@ public class RemovalPointRepositoryImpl implements RemovalPointRepository{
 
 	@Override
 	public List<RemovalPoint> getAll() {
-		System.out.println("DATABASE : get all removalpoints");
+		System.out.println("\n > DATABASE : get all removalpoints");
 		String sql = "SELECT * FROM removalpoints ORDER BY (idMember, idRemovalPoint) ASC";
 		List<RemovalPoint> removalPointsFound = jdbcTemplate.query(sql, new RemovalPointRowMapper());
 		return removalPointsFound;
@@ -63,7 +63,7 @@ public class RemovalPointRepositoryImpl implements RemovalPointRepository{
 
 	@Override
 	public List<RemovalPoint> getAllByMemberId(int idMember) {
-		System.out.println("DATABASE : get all removalpoints of Member "+idMember);
+		System.out.println("\n > DATABASE : get all removalpoints of Member "+idMember);
 		String sql = "SELECT * FROM removalpoints WHERE idMember = ? ORDER BY (idMember, idRemovalPoint) ASC";
 		List<RemovalPoint> removalPointsFound = jdbcTemplate.query(sql, new RemovalPointRowMapper(), idMember);
 		return removalPointsFound;

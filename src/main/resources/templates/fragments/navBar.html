@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<div th:fragment="navBar">
+		
+		<div sec:authorize="!isAuthenticated()">
+			<p>Utilisateur anonyme (non connecté)</p>
+			<a href="/encheres">Enchères</a> <br>
+			<a href="/login">S'inscrire - se connecter</a> <br>
+		</div>
+		
+		<div sec:authorize="isAuthenticated()">
+			<p>Utilisateur connecté <label th:text="${#authentication.getPrincipal().getUsername()}"></label></p>
+			<a href="/encheres">Enchères</a> <br>
+			<a href="/article/redirectToCreate">Vendre un article</a> <br>
+			<a>Mon Profil</a> <br>
+			<form th:action="@{/logout}" method="post" class="text-center mt-6">
+				<button type="submit">Déconnexion</button>
+			</form>
+		</div>
+		
+	</div>
+
+</body>
+</html>

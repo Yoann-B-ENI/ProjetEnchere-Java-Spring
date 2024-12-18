@@ -65,7 +65,7 @@ public class Member {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	public Member(int idMember, String userName, String password, String name, String firstName, String email,
 			String roadName, String zipCode, String townName, int credits, Boolean admin) {
 		super();
@@ -153,12 +153,10 @@ public class Member {
 		return builder.toString();
 	}
 
-
 	@Override
 	public int hashCode() {
 		return Objects.hash(idMember);
 	}
-
 
 	@Override
 	public boolean equals(Object obj) {
@@ -176,68 +174,48 @@ public class Member {
 	public int getIdMember() {
 		return idMember;
 	}
-
-
 	public void setIdMember(int idMember) {
 		this.idMember = idMember;
 	}
 
-
 	public String getUserName() {
 		return userName;
 	}
-
-
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
 
-
 	public String getPassword() {
 		return password;
 	}
-
-
 	public void setPassword(String password) {
 		this.password = password;
 	}
 
-
 	public String getName() {
 		return name;
 	}
-
-
 	public void setName(String name) {
 		this.name = name;
 	}
 
-
 	public String getFirstName() {
 		return firstName;
 	}
-
-
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
 
-
 	public String getEmail() {
 		return email;
 	}
-
-
 	public void setEmail(String email) {
 		this.email = email;
 	}
 
-
 	public String getPhoneNumber() {
 		return phoneNumber;
 	}
-
-
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
@@ -245,62 +223,44 @@ public class Member {
 	public int getRoadNumber() {
 		return roadNumber;
 	}
-
-
 	public void setRoadNumber(int roadNumber) {
 		this.roadNumber = roadNumber;
 	}
 	
-	
 	public String getRoadName() {
 		return roadName;
 	}
-
-
 	public void setRoadName(String roadName) {
 		this.roadName = roadName;
 	}
 
-
 	public String getZipCode() {
 		return zipCode;
 	}
-
-
 	public void setZipCode(String zipCode) {
 		this.zipCode = zipCode;
 	}
 
-
 	public String getTownName() {
 		return townName;
 	}
-
-
 	public void setTownName(String townName) {
 		this.townName = townName;
 	}
 
-
 	public int getCredits() {
 		return credits;
 	}
-
-
 	public void setCredits(int i) {
 		this.credits = i;
 	}
 
-
 	public Boolean getAdmin() {
 		return admin;
 	}
-
-
 	public void setAdmin(Boolean admin) {
 		this.admin = admin;
 	}
-
 
 
 //	public List<RemovalPoint> getRemovalPoints() {

@@ -2,37 +2,94 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>ENI-Encheres YV</title>
 </head>
 <body>
 	<nav>
-		<h1>ENI-Enchères</h1>
-		<div sec:authorize="isAuthenticated()">
-			<a href="/encheres">Enchères</a> <a>Vendre un article</a> <a href="/register">mon
-				profil</a>
-			<form th:action="@{/logout}" method="post" class="text-center mt-6">
-				<button type="submit">Déconnexion</button>
-			</form>
-		</div>
+		<th:block th:replace="~{fragments/logo.html :: logo}"></th:block>
+		<th:block th:replace="~{fragments/navBar.html :: navBar}"></th:block>
 	</nav>
 
-	<h2>Liste des enchères</h2>
+	<h2>Recherche d'enchères</h2>
 	<span>
-		<h3>Filtres:</h3>
-	</span>
-	<span>
-		<form method="post">
+		<form action="/article/searchArticles", method="post">
+		<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+		<p th:each = "error : ${validationErrors}" th:text = "${error.defaultMessage}"></p>
+			
+			<fieldset>
 			<div>
-				<span> <input type="text">
-				</span> <span>
-					<h4>Catégorie :</h4> <input type="text">
+				<span> 
+					<h3>Filtre nom d'article (contient)</h3> 
+					<input type="text" name="like__-__name" placeholder="Recherche dans nom article">
+				</span> 
+				
+				<span sec:authorize="isAuthenticated()">
+					<h3>Toutes enchères</h3>
+					<div><input type="radio" name="equals__-__status" value="IGNORE" checked="checked" />Toutes enchères en cours</div>
+					
+					<div>
+					<h3>Mes achats</h3>
+					<div><input type="radio" name="equals__-__status" value="AuctionStarted" />Enchères en cours</div>
+					<div><input type="radio" name="equals__-__status" value="AuctionEnded" />Enchères remportées non retirées</div>
+					<div><input type="radio" name="equals__-__status" value="Removed" />Enchères remportées retirées</div>
+					</div>
+					
+					<div>
+					<h3>Mes enchères</h3>
+					<div><input type="radio" name="equals__-__status" value="Created" />Enchères pré-début</div>
+					<div><input type="radio" name="equals__-__status" value="AuctionStarted" />Enchères en cours</div>
+					<div><input type="radio" name="equals__-__status" value="AuctionEnded" />Enchères remportées non retirées</div>
+					<div><input type="radio" name="equals__-__status" value="Removed" />Enchères remportées retirées</div>
+					</div>
+					
+					
 				</span>
+				
+				<span>
+					<fieldset>
+					  <h3>Choisir la catégorie de l'article</h3>
+					  
+					  	<select name = "equals__-__idCategory">
+					  		<option value = "IGNORE">Toutes catégories</option>
+							<option th:each="cat : ${allCategories}" th:value = "${cat.idCategory}">
+							[[${cat.idCategory}]] - [[${cat.name}]]</option>
+						</select>
+					  
+					</fieldset>
+				</span>
+				
 			</div>
 			<div>
-				<button type="submit">Rechecher</button>
+				<button type="submit">Rechercher</button>
 			</div>
+			</fieldset>
 		</form>
 	</span>
-	<span> </span>
+	
+	
+	
+	<h2>Liste des enchères</h2>
+	<span> 
+		
+		<table border="20">
+		  <tr>
+		    <th>Id Enchere</th>
+		    <th>Nom</th>
+		    <th>Vendeur</th>
+		    <th>Date début</th>
+		    <th>Date fin</th>
+		    <th>Prix actuel</th>
+		  </tr>
+		  <tr th:each="art : ${articles}">
+		    <td href="article/getId/something" th:text="${art.idArticle}"></td>
+		    <td th:text="${art.name}"></td>
+		    <td href="member/getId/something" th:text="${art.vendor.userName}"></td>
+		    <td th:text="${art.auctionStartDate}"></td>
+		    <td th:text="${art.auctionEndDate}"></td>
+		    <td th:text="${art.salePrice}"></td>
+		  </tr>
+		</table>
+
+	</span>
 </body>
 </html>
