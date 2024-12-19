@@ -87,8 +87,10 @@ public class MemberController {
 
 	@GetMapping("/member/{id}")
 	public String showMember(@PathVariable(name = "id") int id, Model model) {
-		Member member;
-		return "memberDetails";
+		Member member = service.getById(id);
+		model.addAttribute("member", member);
+		logger.debug(member.toString());
+		return "member/memberDetails";
 		
 	}
 	
