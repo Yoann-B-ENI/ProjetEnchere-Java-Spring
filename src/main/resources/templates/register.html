@@ -1,90 +1,125 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>Inscription</title>
+    <title>Inscription</title>
+    <!-- Inclusion de TailwindCSS depuis le CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Flashy Animated Background */
+        body {
+
+            background: linear-gradient(135deg, #ff00ff, #ff7700, #00ff00, #0000ff);
+            background-size: 400% 400%;
+            animation: backgroundGradient 8s infinite;
+        }
+
+        @keyframes backgroundGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+    </style>
 </head>
-<body>
-	<div>
-		<h2 sec:authorize="!isAuthenticated()">Formulaire d'inscription</h2>
-		<form th:action="@{/register}" th:object="${member}" method="post"
-			name="registerForm">
-			<div>
-				<label for="userName">Pseudo</label> <input type="text"
-					id="userName" th:field="*{userName}" th:value="*{userName}" />
-				<div th:if="${#fields.hasErrors('userName')}"
-					th:errors="*{userName}" style="color: red;"></div>
+<body class="font-sans text-gray-100">
 
-				<!-- Affichage de l'exception pour le pseudo si elle existe -->
-				<div th:if="${UserNameAlreadyExistsException}" style="color: red;">
-					<p th:text="${ExceptionMessage}"></p>
-				</div>
+<body class="bg-gray-900 font-sans text-gray-100">
 
+	<!-- Navigation -->
+	<nav class="bg-gray-800 shadow-md">
+		<div class="max-w-7xl mx-auto px-4 py-4">
+			<div class="flex justify-between items-center">
+				<!-- Logo -->
+				<th:block th:replace="~{fragments/logo.html :: logo}"></th:block>
+				<!-- Barre de navigation -->
+				<th:block th:replace="~{fragments/navBar.html :: navBar}"></th:block>
 			</div>
-			<div>
-				<label for="password">Mot de passe</label> <input type="password"
-					id="password" th:field="*{password}" />
-				<div th:if="${#fields.hasErrors('password')}"
-					th:errors="*{password}" style="color: red;"></div>
-			</div>
-			<div>
-				<label for="name">Nom</label> <input type="text" id="name"
-					th:field="*{name}" />
-				<div th:if="${#fields.hasErrors('name')}" th:errors="*{name}"
-					style="color: red;"></div>
-			</div>
-			<div>
-				<label for="firstName">Prénom</label> <input type="text"
-					id="firstName" th:field="*{firstName}" />
-				<div th:if="${#fields.hasErrors('firstName')}"
-					th:errors="*{firstName}" style="color: red;"></div>
-			</div>
-			<div>
-				<label for="email">Email</label> <input type="email" id="email"
-					th:field="*{email}" />
-				<div th:if="${#fields.hasErrors('email')}" th:errors="*{email}"
-					style="color: red;"></div>
-			</div>
-			<div>
-				<label for="phoneNumber">Téléphone</label> <input type="text"
-					id="phoneNumber" th:field="*{phoneNumber}" />
-				<div th:if="${#fields.hasErrors('phoneNumber')}"
-					th:errors="*{phoneNumber}" style="color: red;"></div>
-			</div>
-			<div>
-				<label for="roadNumber">numéro de rue</label> <input type="text"
-					id="roadNumber" th:field="*{roadNumber}" />
-				<div th:if="${#fields.hasErrors('roadNumber')}"
-					th:errors="*{roadNumber}" style="color: red;"></div>
-			</div>
-			<div>
-				<label for="roadName">Rue</label> <input type="text" id="roadName"
-					th:field="*{roadName}" />
-				<div th:if="${#fields.hasErrors('roadName')}"
-					th:errors="*{roadName}" style="color: red;"></div>
-			</div>
-			<div>
-				<label for="zipCode">Code postal</label> <input type="text"
-					id="zipCode" th:field="*{zipCode}" />
-				<div th:if="${#fields.hasErrors('zipCode')}" th:errors="*{zipCode}"
-					style="color: red;"></div>
-			</div>
-			<div>
-				<label for="townName">Ville</label> <input type="text" id="townName"
-					th:field="*{townName}" />
-				<div th:if="${#fields.hasErrors('townName')}"
-					th:errors="*{townName}" style="color: red;"></div>
-			</div>
-			<button sec:authorize="!isAuthenticated()" type="submit">S'inscrire</button>
-			<button sec:authorize="isAuthenticated()"type="submit">Modifier</button>
-		</form>
-		<div sec:authorize="isAuthenticated()">
-
-			<form th:action="@{/deleteMember}" method="post">
-				<button type="submit">Supprimer mon compte</button>
-			</form>
-
 		</div>
+	</nav>
+    <div class="max-w-3xl mx-auto px-6 py-8 bg-gray-800 rounded-lg shadow-md mt-8">
+        <h2 class="text-3xl font-bold text-center text-gray-100 mb-8" sec:authorize="!isAuthenticated()">Formulaire d'inscription</h2>
 
-	</div>
+        <!-- Formulaire d'inscription -->
+        <form th:action="@{/register}" th:object="${member}" method="post" name="registerForm" class="space-y-6">
+            
+            <div>
+                <label for="userName" class="block text-lg font-medium text-gray-100">Pseudo</label>
+                <input type="text" id="userName" th:field="*{userName}" class="w-full p-3 border border-gray-600 rounded-md bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <div th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}" class="text-red-500 text-sm"></div>
+                <div th:if="${UserNameAlreadyExistsException}" class="text-red-500 text-sm">
+                    <p th:text="${ExceptionMessage}"></p>
+                </div>
+            </div>
+
+            <div>
+                <label for="password" class="block text-lg font-medium text-gray-100">Mot de passe</label>
+                <input type="password" id="password" th:field="*{password}" class="w-full p-3 border border-gray-600 rounded-md bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="text-red-500 text-sm"></div>
+            </div>
+
+            <div>
+                <label for="name" class="block text-lg font-medium text-gray-100">Nom</label>
+                <input type="text" id="name" th:field="*{name}" class="w-full p-3 border border-gray-600 rounded-md bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-red-500 text-sm"></div>
+            </div>
+
+            <div>
+                <label for="firstName" class="block text-lg font-medium text-gray-100">Prénom</label>
+                <input type="text" id="firstName" th:field="*{firstName}" class="w-full p-3 border border-gray-600 rounded-md bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <div th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}" class="text-red-500 text-sm"></div>
+            </div>
+
+            <div>
+                <label for="email" class="block text-lg font-medium text-gray-100">Email</label>
+                <input type="email" id="email" th:field="*{email}" class="w-full p-3 border border-gray-600 rounded-md bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-red-500 text-sm"></div>
+            </div>
+
+            <div>
+                <label for="phoneNumber" class="block text-lg font-medium text-gray-100">Téléphone</label>
+                <input type="text" id="phoneNumber" th:field="*{phoneNumber}" class="w-full p-3 border border-gray-600 rounded-md bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <div th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}" class="text-red-500 text-sm"></div>
+            </div>
+
+            <div>
+                <label for="roadNumber" class="block text-lg font-medium text-gray-100">Numéro de rue</label>
+                <input type="text" id="roadNumber" th:field="*{roadNumber}" class="w-full p-3 border border-gray-600 rounded-md bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <div th:if="${#fields.hasErrors('roadNumber')}" th:errors="*{roadNumber}" class="text-red-500 text-sm"></div>
+            </div>
+
+            <div>
+                <label for="roadName" class="block text-lg font-medium text-gray-100">Rue</label>
+                <input type="text" id="roadName" th:field="*{roadName}" class="w-full p-3 border border-gray-600 rounded-md bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <div th:if="${#fields.hasErrors('roadName')}" th:errors="*{roadName}" class="text-red-500 text-sm"></div>
+            </div>
+
+            <div>
+                <label for="zipCode" class="block text-lg font-medium text-gray-100">Code postal</label>
+                <input type="text" id="zipCode" th:field="*{zipCode}" class="w-full p-3 border border-gray-600 rounded-md bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <div th:if="${#fields.hasErrors('zipCode')}" th:errors="*{zipCode}" class="text-red-500 text-sm"></div>
+            </div>
+
+            <div>
+                <label for="townName" class="block text-lg font-medium text-gray-100">Ville</label>
+                <input type="text" id="townName" th:field="*{townName}" class="w-full p-3 border border-gray-600 rounded-md bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <div th:if="${#fields.hasErrors('townName')}" th:errors="*{townName}" class="text-red-500 text-sm"></div>
+            </div>
+
+            <!-- Bouton d'inscription ou modification -->
+            <div class="flex justify-center space-x-4 mt-6">
+                <button sec:authorize="!isAuthenticated()" type="submit" class="w-full py-3 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">S'inscrire</button>
+                <button sec:authorize="isAuthenticated()" type="submit" class="w-full py-3 bg-violet-500 text-white font-semibold rounded-md hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-500">Modifier</button>
+            </div>
+        </form>
+
+        <!-- Formulaire de suppression de compte (visible uniquement si connecté) -->
+        <div sec:authorize="isAuthenticated()">
+            <form th:action="@{/deleteMember}" method="post" class="mt-8 text-center">
+                <button type="submit" class="py-2 px-4 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500">Supprimer mon compte</button>
+            </form>
+        </div>
+
+    </div>
+
 </body>
 </html>

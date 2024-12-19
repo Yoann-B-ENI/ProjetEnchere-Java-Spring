@@ -1,38 +1,79 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+<meta charset="UTF-8">
 <title>Member Details</title>
+<!-- Inclusion de TailwindCSS depuis le CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+ /* Flashy Animated Background */
+        body {
+
+            background: linear-gradient(135deg, #ff00ff, #ff7700, #00ff00, #0000ff);
+            background-size: 400% 400%;
+            animation: backgroundGradient 8s infinite;
+        }
+
+        @keyframes backgroundGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+</style>
 </head>
-<body>
-	<h1>Member Details</h1>
-	<div class="member-info">
-		<div>
-			<strong>Pseudo:</strong> <span th:text="${member.userName}">Pseudo</span>
+<body class="bg-gray-900 font-sans text-gray-100">
+
+	<h1 class="text-3xl font-bold text-gray-100 text-center mt-8">Member
+		Details</h1>
+
+	<div
+		class="max-w-2xl mx-auto px-4 py-6 bg-gray-800 rounded-lg shadow-md mt-8">
+		<div class="space-y-4">
+			<div class="flex justify-between">
+				<strong class="text-xl text-gray-100">Pseudo :</strong> <span
+					class="text-gray-300" th:text="${member.userName}">Pseudo</span>
+			</div>
+			<div class="flex justify-between">
+				<strong class="text-xl text-gray-100">Nom :</strong> <span
+					class="text-gray-300" th:text="${member.name}">Nom</span>
+			</div>
+			<div class="flex justify-between">
+				<strong class="text-xl text-gray-100">Prénom :</strong> <span
+					class="text-gray-300" th:text="${member.firstName}">Prénom</span>
+			</div>
+			<div class="flex justify-between">
+				<strong class="text-xl text-gray-100">Email :</strong> <span
+					class="text-gray-300" th:text="${member.email}">Email</span>
+			</div>
+			<div class="flex justify-between">
+				<strong class="text-xl text-gray-100">Téléphone :</strong> <span
+					class="text-gray-300" th:text="${member.phoneNumber}">Téléphone</span>
+			</div>
+			<div class="flex justify-between">
+				<strong class="text-xl text-gray-100">Adresse :</strong>
+				<div class="ml-auto flex space-x-1">
+					<span class="text-gray-300" th:text="${member.roadNumber}"></span>
+					<span class="text-gray-300" th:text="${member.roadName}">Rue</span>
+				</div>
+			</div>
+			<div class="flex justify-between">
+				<strong class="text-xl text-gray-100">Code Postal :</strong> <span
+					class="text-gray-300" th:text="${member.zipCode}">Code
+					Postal</span>
+			</div>
+			<div class="flex justify-between">
+				<strong class="text-xl text-gray-100">Ville :</strong> <span
+					class="text-gray-300" th:text="${member.townName}">Ville</span>
+			</div>
 		</div>
-		<div>
-			<strong>Nom:</strong> <span th:text="${member.name}">Nom</span>
-		</div>
-		<div>
-			<strong>Prénom:</strong> <span th:text="${member.firstName}">Prénom</span>
-		</div>
-		<div>
-			<strong>Email:</strong> <span th:text="${member.email}">Email</span>
-		</div>
-		<div>
-			<strong>Téléphone:</strong> <span th:text="${member.phoneNumber}">Téléphone</span>
-		</div>
-		<div>
-			<strong>Rue:</strong> <span th:text="${member.roadNumber}"></span> <span
-				th:text="${member.roadName}">Rue</span>
-		</div>
-		<div>
-			<strong>Code Postal:</strong> <span th:text="${member.zipCode}">Code
-				Postal</span>
-		</div>
-		<div>
-			<strong>Ville:</strong> <span th:text="${member.townName}">Ville</span>
-		</div>
+		<!-- Bouton retour -->
+    <div class="flex justify-center  mb-4">
+        <button onclick="window.history.back()" class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            Retour
+        </button>
+    </div>
 	</div>
+	
 
 </body>
 </html>

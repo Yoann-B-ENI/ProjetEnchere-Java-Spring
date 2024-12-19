@@ -1,142 +1,183 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
+
 <head>
 <meta charset="UTF-8">
 <title>ENI-Encheres YV</title>
+<!-- Inclusion de TailwindCSS depuis le CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+
+ /* Flashy Animated Background */
+        body {
+
+            background: linear-gradient(135deg, #ff00ff, #ff7700, #00ff00, #0000ff);
+            background-size: 400% 400%;
+            animation: backgroundGradient 8s infinite;
+        }
+
+        @keyframes backgroundGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+</style>
 </head>
-<body>
-	<nav>
-		<th:block th:replace="~{fragments/logo.html :: logo}"></th:block>
-		<th:block th:replace="~{fragments/navBar.html :: navBar}"></th:block>
+
+<body class="bg-gray-900 font-sans text-gray-100">
+
+	<!-- Navigation -->
+	<nav class="bg-gray-800 shadow-md">
+		<div class="max-w-7xl mx-auto px-4 py-4">
+			<div class="flex justify-between items-center">
+				<!-- Logo -->
+				<th:block th:replace="~{fragments/logo.html :: logo}"></th:block>
+				<!-- Barre de navigation -->
+				<th:block th:replace="~{fragments/navBar.html :: navBar}"></th:block>
+			</div>
+		</div>
 	</nav>
 
-	<h2>Recherche d'enchères</h2>
-	<span>
-		<form action="/article/searchArticles" , method="post">
+	<!-- Recherche d'enchères -->
+	<section class="max-w-7xl mx-auto px-4 py-8">
+		<h2 class="text-3xl font-bold text-gray-800 mb-6">Recherche
+			d'enchères</h2>
+		<form action="/article/searchArticles" method="post" class="space-y-6">
 			<input type="hidden" th:name="${_csrf.parameterName}"
 				th:value="${_csrf.token}" />
-			<p th:each="error : ${validationErrors}"
-				th:text="${error.defaultMessage}"></p>
 
-			<fieldset>
+			<!-- Affichage des erreurs -->
+			<div class="text-red-500">
+				<p th:each="error : ${validationErrors}"
+					th:text="${error.defaultMessage}"></p>
+			</div>
+
+			<!-- Filtres -->
+			<fieldset class="bg-gray-700 p-6 rounded-lg shadow-md">
 				<div>
-					<span>
-						<h3>Filtre nom d'article (contient)</h3> <input type="text"
-						name="like__-__name" placeholder="Recherche dans nom article">
-					</span> <span sec:authorize="isAuthenticated()">
-						<h3>Toutes enchères</h3>
+					<h3 class=" text-xl font-semibold mb-2">Filtre nom d'article
+						(contient)</h3>
+					<input type="text" name="like__-__name"
+						placeholder="Recherche dans nom article"
+						class=" text-gray-800 w-full p-3 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+				</div>
+
+				<!-- Filtre statut -->
+				<div class="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+					<!-- Section Statut des enchères et Mes achats (empilées) -->
+					<div class="lg:col-span-2">
+						<h3 class="text-xl font-semibold mb-2">Statut des enchères</h3>
 						<div>
 							<input type="radio" name="equals__-__status" value="IGNORE"
-								checked="checked" />Toutes enchères en cours
+								checked="checked" id="all-auctions" /> <label
+								for="all-auctions" class="ml-2">Toutes enchères en cours</label>
 						</div>
 
+						<div class="mt-4">
+							<h3 class="text-xl font-semibold mb-2">Mes achats</h3>
+							<div>
+								<input type="radio" name="equals__-__status"
+									value="AuctionStarted" id="in-progress" /> <label
+									for="in-progress" class="ml-2">Enchères en cours</label>
+							</div>
+							<div class="mt-2">
+								<input type="radio" name="equals__-__status"
+									value="AuctionEnded" id="won-not-collected" /> <label
+									for="won-not-collected" class="ml-2">Enchères
+									remportées non retirées</label>
+							</div>
+							<div class="mt-2">
+								<input type="radio" name="equals__-__status" value="Removed"
+									id="won-collected" /> <label for="won-collected" class="ml-2">Enchères
+									remportées retirées</label>
+							</div>
+						</div>
+					</div>
+
+					<!-- Section Mes enchères (à côté) -->
+					<div>
+						<h3 class="text-xl font-semibold mb-2">Mes enchères</h3>
 						<div>
-							<h3>Mes achats</h3>
-							<div>
-								<input type="radio" name="equals__-__status"
-									value="AuctionStarted" />Enchères en cours
-							</div>
-							<div>
-								<input type="radio" name="equals__-__status"
-									value="AuctionEnded" />Enchères remportées non retirées
-							</div>
-							<div>
-								<input type="radio" name="equals__-__status" value="Removed" />Enchères
-								remportées retirées
-							</div>
+							<input type="radio" name="equals__-__status" value="Created"
+								id="pre-auction" /> <label for="pre-auction" class="ml-2">Enchères
+								pré-début</label>
 						</div>
-
-						<div>
-							<h3>Mes enchères</h3>
-							<div>
-								<input type="radio" name="equals__-__status" value="Created" />Enchères
-								pré-début
-							</div>
-							<div>
-								<input type="radio" name="equals__-__status"
-									value="AuctionStarted" />Enchères en cours
-							</div>
-							<div>
-								<input type="radio" name="equals__-__status"
-									value="AuctionEnded" />Enchères remportées non retirées
-							</div>
-							<div>
-								<input type="radio" name="equals__-__status" value="Removed" />Enchères
-								remportées retirées
-							</div>
+						<div class="mt-2">
+							<input type="radio" name="equals__-__status"
+								value="AuctionStarted" id="current-auction" /> <label
+								for="current-auction" class="ml-2">Enchères en cours</label>
 						</div>
-
-
-					</span> <span>
-						<fieldset>
-							<h3>Choisir la catégorie de l'article</h3>
-
-							<select name="equals__-__idCategory">
-								<option value="IGNORE">Toutes catégories</option>
-								<option th:each="cat : ${allCategories}"
-									th:value="${cat.idCategory}">[[${cat.idCategory}]] -
-									[[${cat.name}]]</option>
-							</select>
-
-						</fieldset>
-					</span>
-
+						<div class="mt-2">
+							<input type="radio" name="equals__-__status" value="AuctionEnded"
+								id="won-not-collected" /> <label for="won-not-collected"
+								class="ml-2">Enchères remportées non retirées</label>
+						</div>
+						<div class="mt-2">
+							<input type="radio" name="equals__-__status" value="Removed"
+								id="won-collected" /> <label for="won-collected" class="ml-2">Enchères
+								remportées retirées</label>
+						</div>
+					</div>
 				</div>
-				<div>
-					<button type="submit">Rechercher</button>
+
+
+				<!-- Choix de la catégorie -->
+				<div class="mt-6">
+					<h3 class="text-xl font-semibold mb-2">Choisir la catégorie de
+						l'article</h3>
+					<select name="equals__-__idCategory"
+						class=" text-gray-800 w-full p-3 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+						<option value="IGNORE">Toutes catégories</option>
+						<option th:each="cat : ${allCategories}"
+							th:value="${cat.idCategory}">[[${cat.idCategory}]] -
+							[[${cat.name}]]</option>
+					</select>
+				</div>
+
+				<!-- Bouton de soumission -->
+				<div class="mt-6">
+					<button type="submit"
+						class="w-full py-3 bg-violet-500 text-white font-semibold rounded-md hover:bg-violet-600 focus:outline-none focus:ring-2 focus:ring-violet-500">Rechercher</button>
 				</div>
 			</fieldset>
 		</form>
-	</span>
+	</section>
 
-
-
-	<h2>Liste des enchères</h2>
-	<span>
-		<div class="container">
-			<div class="card" th:each="art : ${articles}">
-				<h3 th:text="${art.name}">Nom de l'article</h3>
+	<!-- Liste des enchères -->
+	<section class="max-w-7xl mx-auto px-4 py-8">
+		<h2 class="text-3xl font-bold text-gray-800 mb-6">Liste des
+			enchères</h2>
+		<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+			<div class="card bg-gray-800 p-6 rounded-lg shadow-md"
+				th:each="art : ${articles}">
+				
+				<h3 class="text-xl font-semibold mb-2" th:text="${art.name}">Nom
+					de l'article</h3>
 				<p>
 					<strong>Id Enchère:</strong> <span th:text="${art.idArticle}"></span>
 				</p>
 				<p>
 					<strong>Vendeur:</strong> <span th:text="${art.vendor.userName}"></span>
-					<a th:href="@{/member/{id}(id=${art.vendor.idMember})}">(Voir
-						profil)</a>
+					<a th:href="@{/member/{id}(id=${art.vendor.idMember})}"
+						class="text-blue-400 hover:underline">Voir profil</a>
 				</p>
 				<p>
 					<strong>Date début:</strong> <span
 						th:text="${art.auctionStartDate}"></span>
 				</p>
 				<p>
-					<strong>Date fin:</strong> <span
-						th:text="${art.auctionEndDate}"></span>
+					<strong>Date fin:</strong> <span th:text="${art.auctionEndDate}"></span>
 				</p>
 				<p>
 					<strong>Prix actuel:</strong> <span th:text="${art.salePrice}"></span>
-					€
 				</p>
 			</div>
-		</div> <!--  <table border="20">
-		  <tr>
-		    <th>Id Enchere</th>
-		    <th>Nom</th>
-		    <th>Vendeur</th>
-		    <th>Date début</th>
-		    <th>Date fin</th>
-		    <th>Prix actuel</th>
-		  </tr>
-		  <tr th:each="art : ${articles}">
-		  
-		    <td href="article/getId/something" th:text="${art.idArticle}"></td>
-		    <td th:text="${art.name}"></td>
-		    <td th:text="${art.vendor.userName}"><a th:href="$/{art.Vendor.idMember}"></a></td>
-		    <td th:text="${art.auctionStartDate}"></td>
-		    <td th:text="${art.auctionEndDate}"></td>
-		    <td th:text="${art.salePrice}"></td>
-		  </tr>
-		</table>-->
+		</div>
+	</section>
+ 
+    
 
-	</span>
+
 </body>
+
 </html>
