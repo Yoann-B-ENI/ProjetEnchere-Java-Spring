@@ -84,7 +84,7 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 		String filterString = " ";
 		if (filterMapLike != null) {
 			for (Entry<String, String> entry : filterMapLike.entrySet()) {
-				filterString += "AND " + entry.getKey() + " LIKE '%" + entry.getValue() + "%' ";
+				filterString += "AND LOWER("+entry.getKey()+") LIKE '%"+entry.getValue().toLowerCase()+"%' ";
 			}
 		}
 		if (filterMapEquals != null) {
