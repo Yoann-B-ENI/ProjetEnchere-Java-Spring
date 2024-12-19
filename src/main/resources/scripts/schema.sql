@@ -53,15 +53,17 @@ CREATE TABLE IF NOT EXISTS ARTICLES (
     description                   VARCHAR(300) NOT NULL,
 	auctionStartDate           	  TIMESTAMP NOT NULL,
     auctionEndDate             	  TIMESTAMP NOT NULL,
-    startingPrice                 INTEGER,
-    salePrice                     INTEGER,
+    startingPrice                 INTEGER NOT NULL,
+    salePrice                     INTEGER NOT NULL,
     status						  VARCHAR(30) NOT NULL, 
     idVendor                	  INTEGER NOT NULL,
+    idBuyer						  INTEGER NULL, 
     idCategory                    INTEGER NOT NULL, 
     idRemovalPoint				  INTEGER NOT NULL, 
     CONSTRAINT articles_pk PRIMARY KEY (idArticle), 
     
-    CONSTRAINT articles_members_fk FOREIGN KEY (idVendor) REFERENCES Members (idMember), 
+    CONSTRAINT articles_members_vendor_fk FOREIGN KEY (idVendor) REFERENCES Members (idMember), 
+    CONSTRAINT articles_members_buyer_fk FOREIGN KEY (idBuyer) REFERENCES Members (idMember), 
     CONSTRAINT articles_categories_fk FOREIGN KEY (idCategory) REFERENCES CATEGORIES (idCategory), 
     CONSTRAINT articles_removalPoints_fk FOREIGN KEY (idRemovalPoint) REFERENCES RemovalPoints (idRemovalPoint), 
     
@@ -76,11 +78,12 @@ CREATE TABLE IF NOT EXISTS ARTICLES (
 
 
 CREATE TABLE IF NOT EXISTS BIDS (
+	idBid			SERIAL NOT NULL, 
     idMember   		INTEGER NOT NULL,
     idArticle       INTEGER NOT NULL,
-    bidDate     DATE NOT NULL,
+    bidDate     TIMESTAMP NOT NULL,
 	bidPrice  	INTEGER NOT NULL, 
-	CONSTRAINT bids_pk PRIMARY KEY (idMember, idArticle), 
+	CONSTRAINT bids_pk PRIMARY KEY (idBid), 
 	
 	CONSTRAINT bids_members_fk FOREIGN KEY (idMember) REFERENCES Members (idMember), 
 	CONSTRAINT bids_articles_fk FOREIGN KEY (idArticle) REFERENCES ARTICLES (idArticle)

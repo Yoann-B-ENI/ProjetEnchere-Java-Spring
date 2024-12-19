@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -26,14 +27,15 @@ import fr.eni.projetEnchere.bo.RemovalPoint;
 import fr.eni.projetEnchere.controllers.converters.CustomCategoryEditor;
 import fr.eni.projetEnchere.controllers.converters.CustomRemovalPointEditor;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/article")
 public class ArticleController {
 	
-	ArticleService articleService;
-	CategoryService categoryService;
-	RemovalPointService removalPointService;
+	private ArticleService articleService;
+	private CategoryService categoryService;
+	private RemovalPointService removalPointService;
 	
 	@Autowired
 	public ArticleController(CategoryService categoryService, RemovalPointService removalPointService, 
@@ -59,6 +61,10 @@ public class ArticleController {
         binder.registerCustomEditor(RemovalPoint.class, new CustomRemovalPointEditor(allRemovalPoints));
     }
 	
+	
+	
+	
+	
 	@GetMapping("/redirectToCreate")
 	public String redirectToCreate(Model model, HttpSession session) {
 		System.out.println("\n Redirecting to create article form");
@@ -67,7 +73,7 @@ public class ArticleController {
 		// model for the html, session for the 1-database-call editor in the init binder
 		session.setAttribute("allCategories", categoriesFound); // session so make sure to overwrite it every form
 		model.addAttribute("allCategories", categoriesFound);
-		System.out.println(categoriesFound);
+		categoriesFound.forEach(c -> System.out.println(c +"\n"));
 		
 		Member member = (Member) session.getAttribute("loggedMember");
 		RemovalPoint rp = new RemovalPoint(0, 
@@ -78,17 +84,24 @@ public class ArticleController {
 		
 		session.setAttribute("allRemovalPoints", removalPointsFound);
 		model.addAttribute("allRemovalPoints", removalPointsFound);
-		System.out.println(removalPointsFound);
+		removalPointsFound.forEach(rpTemp -> System.out.println(rpTemp +"\n"));
 		
 		return "article/formCreateArticle";
 	}
 	
 	@PostMapping("/create")
-	public String create(@ModelAttribute Article article, Model model, HttpSession session) {
+	public String create(@ModelAttribute @Valid Article article, BindingResult bindingResult, 
+			Model model, HttpSession session) {
+		
+		if (bindingResult.hasErrors()) {
+			model.addAttribute("validationErrors", bindingResult.getAllErrors());
+			return "article/formCreateArticle";
+		}
 		
 		articleService.determineStatusFromDates(article);
 		Member member = (Member) session.getAttribute("loggedMember");
 		article.setVendor(member);
+		article.setBuyer(null);
 		article.setSalePrice(article.getStartingPrice());
 		
 		if (article.getRemovalPoint().getIdRemovalPoint() == 0) {
@@ -99,6 +112,9 @@ public class ArticleController {
 		
 		return "redirect:/";
 	}
+	
+	
+	
 	
 	@GetMapping("/loadArticles")
 	public String loadArticles(HttpSession session, Model model) {
@@ -111,50 +127,96 @@ public class ArticleController {
 		}
 		
 		List<Category> categoriesFound = categoryService.getAll();
-		// model for the html, session for the 1-database-call editor in the init binder
-		session.setAttribute("allCategories", categoriesFound); // session so make sure to overwrite it every form
 		model.addAttribute("allCategories", categoriesFound);
-		System.out.println(categoriesFound);
+		//categoriesFound.forEach(c -> System.out.println(c +"\n"));
 		
 		List<Article> articlesFound = articleService.getAll();
 		model.addAttribute("articles", articlesFound);
-		System.out.println(articlesFound);
+		//articlesFound.forEach(art -> System.out.println(art +"\n"));
 		
 		return "encheres";
 	}
+	
 	
 	@PostMapping("/searchArticles")
-	public String searchArticles(@RequestParam Map<String,String> allRequestParams, Model model) {
+	public String searchArticles(@RequestParam Map<String,String> allRequestParams, 
+			HttpSession session, Model model) {
 		System.out.println("\n article controller post map search articles");
 		System.out.println(allRequestParams);
-		Map<String, String> filterMapLike = new HashMap<String, String>();
-		Map<String, String> filterMapEquals = new HashMap<String, String>();
 		
-		for (Entry<String, String> entry : allRequestParams.entrySet()) {
-			String key = entry.getKey();
-			String val = entry.getValue();
-			String[] splitKey = key.split("__-__");
-			if (splitKey[0].equals("like") && !val.equals("IGNORE") && !val.isBlank() && !val.isEmpty()) {
-				filterMapLike.put(splitKey[1], val);
-			}
-			if (splitKey[0].equals("equals") && !val.equals("IGNORE") && !val.isBlank() && !val.isEmpty()) {
-				filterMapEquals.put(splitKey[1], val);
-			}
+		FilterSystem filters = new FilterSystem(allRequestParams.entrySet());
+		
+		Member member = (Member) session.getAttribute("loggedMember");
+		int idLoggedMember = 1;
+		if (member != null) {
+			idLoggedMember = member.getIdMember();
+			model.addAttribute("idMember", member.getIdMember());
+			System.out.println("model member id " + member.getIdMember());
 		}
-		
-		List<Article> articlesFound = articleService.getAll(filterMapLike, filterMapEquals);
+		List<Article> articlesFound = articleService.getAll(
+				filters.getFilterMapLike(), 
+				filters.getFilterMapEquals(), 
+				idLoggedMember);
 		
 		model.addAttribute("articles", articlesFound);
-		System.out.println(articlesFound);
+		//articlesFound.forEach(art -> System.out.println(art +"\n"));
+		
+		List<Category> categoriesFound = categoryService.getAll();
+		model.addAttribute("allCategories", categoriesFound);
 		
 		return "encheres";
 	}
-	
-	
 	
 	
 	// jane_smith
 	// password
+	
+	
+	
+	// re-make the filter system
+	
+	
+	/* 
+	 * 	toutes encheres
+	 * get all (null, null, 1)
+	 * 
+	 * 	mes achats
+	 * encheres en cours
+	 * 	status = AuctionStarted
+	 * 	is_found_bid = 1
+	 * 
+	 * encheres remportees non retirees
+	 * 	status = AuctionEnded
+	 * 	idBuyer = loggedMember.idMember
+	 * 
+	 * encheres remportees retirees
+	 * 	status = Removed
+	 * 	idBuyer = loggedMember.idMember
+	 * 
+	 * 
+	 * 
+	 * 	mes encheres
+	 * ventes pre debut
+	 * 	status = Created
+	 * 	idVendor = loggedMember.idMember
+	 * 
+	 * ventes en cours
+	 * 	status = AuctionStarted
+	 * 	idVendor = loggedMember.idMember
+	 * 
+	 * ventes remportees non retirees
+	 * 	status = AuctionEnded
+	 * 	idVendor = loggedMember.idMember
+	 * 
+	 * ventes remportees retirees
+	 * 	status = Removed
+	 * 	idVendor = loggedMember.idMember
+	 * 
+	 * 
+	 * 
+	 * 
+	 */
+	
 	
 	
 	

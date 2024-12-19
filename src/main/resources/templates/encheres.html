@@ -19,72 +19,69 @@
 				th:text="${error.defaultMessage}"></p>
 
 			<fieldset>
-				<div>
-					<span>
-						<h3>Filtre nom d'article (contient)</h3> <input type="text"
-						name="like__-__name" placeholder="Recherche dans nom article">
-					</span> <span sec:authorize="isAuthenticated()">
-						<h3>Toutes enchères</h3>
-						<div>
-							<input type="radio" name="equals__-__status" value="IGNORE"
-								checked="checked" />Toutes enchères en cours
-						</div>
+        
+			<div>
+				<span> 
+					<h3>Filtre nom d'article (contient)</h3> 
+					<input type="text" name="like_-_name" placeholder="Recherche dans nom article">
+				</span> 
+				
+				<span sec:authorize="isAuthenticated()">
+					<h3>Toutes enchères</h3>
+					<div><input type="radio" 
+						name="equals_-_status" value="IGNORE" 
+						checked="checked" />Toutes enchères en cours</div>
+					
+					<div>
+					<h3>Mes achats</h3>
+					<div><input type="radio" 
+						name="equals_-_status" value="AuctionStarted_----_equals_-_is_found_bid_-_1" 
+						/>Enchères en cours</div>
+					<div><input type="radio" 
+						th:name="equals_-_status" th:value="'AuctionEnded_----_equals_-_idBuyer_-_'+${idMember}" 
+						/>Enchères remportées non retirées</div>
+					<div><input type="radio" 
+						th:name="equals_-_status" th:value="'Removed_----_equals_-_idBuyer_-_'+${idMember}" 
+						/>Enchères remportées retirées</div>
+					</div>
+					
+					<div>
+					<h3>Mes enchères</h3>
+					<div><input type="radio" 
+						name="equals_-_status" th:value="'Created_----_equals_-_idVendor_-_'+${idMember}" 
+						/>Ventes pré-début</div>
+					<div><input type="radio" 
+						name="equals_-_status" th:value="'AuctionStarted_----_equals_-_idVendor_-_'+${idMember}" 
+						/>Ventes en cours</div>
+					<div><input type="radio" 
+						name="equals_-_status" th:value="'AuctionEnded_----_equals_-_idVendor_-_'+${idMember}" 
+						/>Ventes remportées non retirées</div>
+					<div><input type="radio" 
+						name="equals_-_status" th:value="'Removed_----_equals_-_idVendor_-_'+${idMember}" 
+						/>Ventes remportées retirées</div>
+					</div>
+					
+					
+				</span>
+				
+				<span>
+					<fieldset>
+					  <h3>Choisir la catégorie de l'article</h3>
+					  
+					  	<select name = "equals_-_idCategory">
+					  		<option value = "IGNORE">Toutes catégories</option>
+							<option th:each="cat : ${allCategories}" th:value = "${cat.idCategory}">
+							[[${cat.idCategory}]] - [[${cat.name}]]</option>
+						</select>
+					  
+					</fieldset>
+				</span>
+				
+			</div>
+			<div>
+				<button type="submit">Rechercher</button>
+			</div>
 
-						<div>
-							<h3>Mes achats</h3>
-							<div>
-								<input type="radio" name="equals__-__status"
-									value="AuctionStarted" />Enchères en cours
-							</div>
-							<div>
-								<input type="radio" name="equals__-__status"
-									value="AuctionEnded" />Enchères remportées non retirées
-							</div>
-							<div>
-								<input type="radio" name="equals__-__status" value="Removed" />Enchères
-								remportées retirées
-							</div>
-						</div>
-
-						<div>
-							<h3>Mes enchères</h3>
-							<div>
-								<input type="radio" name="equals__-__status" value="Created" />Enchères
-								pré-début
-							</div>
-							<div>
-								<input type="radio" name="equals__-__status"
-									value="AuctionStarted" />Enchères en cours
-							</div>
-							<div>
-								<input type="radio" name="equals__-__status"
-									value="AuctionEnded" />Enchères remportées non retirées
-							</div>
-							<div>
-								<input type="radio" name="equals__-__status" value="Removed" />Enchères
-								remportées retirées
-							</div>
-						</div>
-
-
-					</span> <span>
-						<fieldset>
-							<h3>Choisir la catégorie de l'article</h3>
-
-							<select name="equals__-__idCategory">
-								<option value="IGNORE">Toutes catégories</option>
-								<option th:each="cat : ${allCategories}"
-									th:value="${cat.idCategory}">[[${cat.idCategory}]] -
-									[[${cat.name}]]</option>
-							</select>
-
-						</fieldset>
-					</span>
-
-				</div>
-				<div>
-					<button type="submit">Rechercher</button>
-				</div>
 			</fieldset>
 		</form>
 	</span>

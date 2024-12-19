@@ -28,7 +28,7 @@ public class Article {
 	private String description;
 
 	@NotNull(message = "La date de mise en vente est obligatoire.")
-	@FutureOrPresent
+	// took out the FutureOrPresent because it didn't work for current minute? + people might cross over the minute
 	private LocalDateTime auctionStartDate;
 
 	@NotNull(message = "La date de fin de vente est obligatoire.")
@@ -44,6 +44,10 @@ public class Article {
 	
 	// not null, fk members
 	private Member vendor;
+	
+	// null, fk members
+	// can be null at creation, so same in sql
+	private Member buyer;
 	
 	@NotNull(message = "L'article doit avoir une catégorie.")
 	private Category category;
@@ -140,6 +144,12 @@ public class Article {
 	public void setVendor(Member vendor) {
 		this.vendor = vendor;
 	}
+	public Member getBuyer() {
+		return buyer;
+	}
+	public void setBuyer(Member buyer) {
+		this.buyer = buyer;
+	}
 	public Category getCategory() {
 		return category;
 	}
@@ -159,6 +169,8 @@ public class Article {
 		this.status = status;
 	}
 	
+	
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -176,16 +188,19 @@ public class Article {
 		builder.append(startingPrice);
 		builder.append(", salePrice=");
 		builder.append(salePrice);
-		builder.append(", Vendor=");
+		builder.append(", \n  >  >  vendor=");
 		builder.append(vendor);
-		builder.append(", Category=");
+		builder.append(", \n  >  >  buyer=");
+		builder.append(buyer);
+		builder.append(", \n  >  >  category=");
 		builder.append(category);
-		builder.append(", idRemovalPoint=");
+		builder.append(", \n  >  >  removalPoint=");
 		builder.append(removalPoint);
+		builder.append(", \n  >  >  status=");
+		builder.append(status);
 		builder.append("]");
 		return builder.toString();
 	}
-
 	@Override
 	public int hashCode() {
 		return Objects.hash(idArticle);

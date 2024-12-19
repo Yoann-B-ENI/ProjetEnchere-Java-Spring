@@ -45,9 +45,10 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 	// sets the new id in the java object
 	public void create(Article t) {
 		String sql = "INSERT into Articles(name, description, auctionStartDate, auctionEndDate, "
-				+ "startingPrice, salePrice, status, idVendor, idCategory, idRemovalPoint)";
+				+ "startingPrice, salePrice, status, idVendor, idBuyer, idCategory, idRemovalPoint)";
 		sql += "values(:name, :description, :auctionStartDate, :auctionEndDate, "
-				+ ":startingPrice, :salePrice, :statusTemp, :vendorTemp, :categoryTemp, :removalPointTemp)";
+				+ ":startingPrice, :salePrice, :statusTemp, :vendorTemp, :buyerTemp, :categoryTemp, :removalPointTemp)";
+		
 		MapSqlParameterSource paramSource = new MapSqlParameterSource();
 		paramSource.addValue("name", t.getName());
 		paramSource.addValue("description", t.getDescription());
@@ -57,6 +58,12 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 		paramSource.addValue("salePrice", t.getSalePrice());
 		paramSource.addValue("statusTemp", t.getStatus().toString());
 		paramSource.addValue("vendorTemp", t.getVendor().getIdMember());
+		if (t.getBuyer() != null) {
+			paramSource.addValue("buyerTemp", t.getBuyer().getIdMember());
+		}
+		else {
+			paramSource.addValue("buyerTemp", null);
+		}
 		paramSource.addValue("categoryTemp", t.getCategory().getIdCategory());
 		paramSource.addValue("removalPointTemp", t.getRemovalPoint().getIdRemovalPoint());
 		
@@ -70,20 +77,17 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 	
 	
 	private String processFilters(Map<String, String> filterMapLike, Map<String, String> filterMapEquals) {
-		
 		String filterString = " ";
-		
 		if (filterMapLike != null) {
 			for (Entry<String, String> entry : filterMapLike.entrySet()) {
-				filterString += "AND " + entry.getKey() + " LIKE %" + entry.getValue() + "% ";
+				filterString += "AND " + entry.getKey() + " LIKE '%" + entry.getValue() + "%' ";
 			}
 		}
 		if (filterMapEquals != null) {
 			for (Entry<String, String> entry : filterMapEquals.entrySet()) {
-				filterString += "AND " + entry.getKey() + " = '" + entry.getValue() + "'";
+				filterString += "AND " + entry.getKey() + " = '" + entry.getValue() + "' ";
 			}
 		}
-		
 		filterString += " ";//to be safe
 		return filterString;
 	}
@@ -91,28 +95,40 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 
 	@Override
 	public List<Article> getAll() {// call other one with empty filters
-		return this.getAll(null, null);
+		return this.getAll(null, null, 1);
 	}
 	
 	@Override
-	public List<Article> getAll(Map<String, String> filterMapLike, Map<String, String> filterMapEquals) {
+	public List<Article> getAll(Map<String, String> filterMapLike, Map<String, String> filterMapEquals, 
+			int idLoggedMember) {
 		System.out.println("\n > DATABASE : get all articles");
-		String sql = "select articles.idArticle, \r\n"
-				+ "	articles.name, \r\n"
-				+ "	articles.auctionStartDate, \r\n"
-				+ "	articles.auctionEndDate, \r\n"
-				+ " articles.status, \r\n"
-				+ "	articles.salePrice, \r\n"
-				+ "	articles.idVendor, \r\n"
-				+ "	members.userName, \r\n"
-				+ "	articles.idCategory \r\n"
-				+ "from articles \r\n"
-				+ "JOIN members on articles.idvendor = members.idmember \r\n"
+		String sql = "SELECT * \r\n"
+				+ "FROM \r\n"
+				+ "(\r\n"
+				+ "	SELECT \r\n"
+				+ "		art.idArticle, \r\n"
+				+ "		art.name, \r\n"
+				+ "		art.auctionStartDate, \r\n"
+				+ "		art.auctionEndDate, \r\n"
+				+ "		art.status, \r\n"
+				+ "		art.salePrice, \r\n"
+				+ "		art.idVendor, m1.username as username_vendor, \r\n"
+				+ "		art.idBuyer, m2.username as username_buyer, \r\n"
+				+ "		art.idCategory, \r\n"
+				+ "		(case when exists (select 1 \r\n"
+				+ "							from bids \r\n"
+				+ "							where bids.idArticle = art.idArticle \r\n"
+				+ "							and bids.idMember = ?) \r\n"
+				+ "			then 1 else 0 end) as is_found_bid \r\n"
+				+ "	FROM articles art \r\n"
+				+ "	JOIN members m1 on art.idvendor = m1.idmember \r\n"
+				+ "	LEFT JOIN members m2 on art.idbuyer = m2.idmember \r\n"
+				+ ") as innerTable \r\n"
 				+ "WHERE 1=1 \r\n"
 				+ this.processFilters(filterMapLike, filterMapEquals)
-				+ "ORDER BY (articles.auctionEndDate, articles.salePrice) ASC \r\n";
-		System.out.println("\n\n > DATABASE ARTICLE FILTER QUERY \n"+sql+"\n\n");
-		List<Article> articlesFound = jdbcTemplate.query(sql, new ArticleSmallRowMapper());
+				+ "ORDER BY (innerTable.auctionEndDate, innerTable.salePrice) ASC";
+		System.out.println("  > DATABASE ARTICLE FILTER QUERY \n"+sql+"\n\n");
+		List<Article> articlesFound = jdbcTemplate.query(sql, new ArticleSmallRowMapper(), idLoggedMember);
 		
 		return articlesFound;
 	}
@@ -120,27 +136,29 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 	@Override
 	public Optional<Article> getById(int id) {
 		System.out.println("\n > DATABASE : get article of id "+id);
-		String sql = "select articles.idArticle, \r\n"
-				+ "	articles.name AS article_name, \r\n"
-				+ "	articles.auctionStartDate, \r\n"
-				+ "	articles.auctionEndDate, \r\n"
-				+ " articles.status, \r\n"
-				+ "	articles.salePrice, \r\n"
-				+ "	articles.startingPrice, \r\n"
-				+ "	articles.idCategory, \r\n"
-				+ "	categories.name AS cat_name, \r\n"
-				+ "	articles.idVendor, \r\n"
-				+ "	members.userName, \r\n"
-				+ "	articles.idRemovalPoint, \r\n"
-				+ "	removalpoints.roadNumber, \r\n"
-				+ "	removalpoints.roadName, \r\n"
-				+ "	removalpoints.zipCode, \r\n"
-				+ "	removalpoints.townName \r\n"
-				+ "from articles \r\n"
-				+ "JOIN members on articles.idvendor = members.idmember \r\n"
-				+ "JOIN categories on articles.idcategory = categories.idcategory \r\n"
-				+ "JOIN removalpoints on articles.idremovalpoint = removalpoints.idremovalpoint \r\n"
-				+ "WHERE idArticle = ?";
+		String sql = "SELECT \r\n"
+				+ "	art.idArticle, \r\n"
+				+ "	art.name as article_name, \r\n"
+				+ "	art.auctionStartDate, \r\n"
+				+ "	art.auctionEndDate, \r\n"
+				+ "	art.status, \r\n"
+				+ "	art.startingPrice, \r\n"
+				+ "	art.salePrice, \r\n"
+				+ "	art.idVendor, m1.username as username_vendor, \r\n"
+				+ "	art.idBuyer, m2.username as username_buyer, \r\n"
+				+ "	art.idCategory, \r\n"
+				+ "	cat.name as cat_name, \r\n"
+				+ "	art.idRemovalPoint, \r\n"
+				+ "	rp.roadNumber, \r\n"
+				+ "	rp.roadName, \r\n"
+				+ "	rp.zipCode, \r\n"
+				+ "	rp.townName \r\n"
+				+ "FROM articles art\r\n"
+				+ "JOIN members m1 on art.idvendor = m1.idmember\r\n"
+				+ "LEFT JOIN members m2 on art.idbuyer = m2.idmember\r\n"
+				+ "JOIN categories cat on art.idcategory = cat.idcategory\r\n"
+				+ "JOIN removalpoints rp on art.idremovalpoint = rp.idremovalpoint\r\n"
+				+ "WHERE art.idArticle = ?";
 		
 		Article art = jdbcTemplate.queryForObject(sql, new ArticleBigRowMapper(), id);
 		Optional<Article> return_art = Optional.ofNullable(art);
@@ -166,19 +184,23 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 	
 	
 	
-	
 	private static class ArticleSmallRowMapper implements RowMapper<Article>{
 		@Override
 		public Article mapRow(ResultSet rs, int rowNum) throws SQLException {
-			Member emptyMember = new Member();
-			emptyMember.setIdMember(rs.getInt("idVendor"));
-			emptyMember.setUserName(rs.getString("userName"));
+			Member emptyVendor = new Member();
+			emptyVendor.setIdMember(rs.getInt("idVendor"));
+			emptyVendor.setUserName(rs.getString("username_vendor"));
+			
+			Member emptyBuyer = new Member();
+			emptyBuyer.setIdMember(rs.getInt("idBuyer"));
+			emptyBuyer.setUserName(rs.getString("username_buyer"));
 			
 			Category cat = new Category();
 			cat.setIdCategory(rs.getInt("idCategory"));
 			
 			Article art = new Article();
-			art.setVendor(emptyMember);
+			art.setVendor(emptyVendor);
+			art.setBuyer(emptyBuyer);
 			art.setCategory(cat);
 			
 			art.setIdArticle(rs.getInt("idArticle"));
@@ -192,12 +214,17 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 		}
 	}
 	
+	
 	private static class ArticleBigRowMapper implements RowMapper<Article>{
 		@Override
 		public Article mapRow(ResultSet rs, int rowNum) throws SQLException {
-			Member emptyMember = new Member();
-			emptyMember.setIdMember(rs.getInt("idVendor"));
-			emptyMember.setUserName(rs.getString("userName"));
+			Member emptyVendor = new Member();
+			emptyVendor.setIdMember(rs.getInt("idVendor"));
+			emptyVendor.setUserName(rs.getString("username_vendor"));
+			
+			Member emptyBuyer = new Member();
+			emptyBuyer.setIdMember(rs.getInt("idBuyer"));
+			emptyBuyer.setUserName(rs.getString("username_buyer"));
 			
 			Category cat = new Category();
 			cat.setIdCategory(rs.getInt("idCategory"));
@@ -211,7 +238,8 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 			rp.setTownName(rs.getString("townName"));
 			
 			Article art = new Article();
-			art.setVendor(emptyMember);
+			art.setVendor(emptyVendor);
+			art.setBuyer(emptyBuyer);
 			art.setCategory(cat);
 			art.setRemovalPoint(rp);
 			
@@ -220,8 +248,8 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 			art.setAuctionStartDate(rs.getObject("auctionStartDate", LocalDateTime.class));
 			art.setAuctionEndDate(rs.getObject("auctionEndDate", LocalDateTime.class));
 			art.setStatus(rs.getObject("status", ArticleStatus.class));
-			art.setSalePrice(rs.getInt("salePrice"));
 			art.setStartingPrice(rs.getInt("startingPrice"));
+			art.setSalePrice(rs.getInt("salePrice"));
 			
 			return art;
 		}

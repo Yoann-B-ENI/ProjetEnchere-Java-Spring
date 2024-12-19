@@ -106,9 +106,9 @@ public class RemovalPoint {
 		builder.append(zipCode);
 		builder.append(", townName=");
 		builder.append(townName);
-		builder.append(", member=");
+		builder.append(", \n  >  >  member=");
 		builder.append(member);
-		builder.append(", pointName=");
+		builder.append(", \n  >  >  pointName=");
 		builder.append(pointName);
 		builder.append("]");
 		return builder.toString();
