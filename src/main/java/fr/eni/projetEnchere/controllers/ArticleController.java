@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,63 +34,62 @@ import jakarta.validation.Valid;
 @Controller
 @RequestMapping("/article")
 public class ArticleController {
-	
+
+
+	Logger logger = LoggerFactory.getLogger(ArticleController.class);
+
 	private ArticleService articleService;
 	private CategoryService categoryService;
 	private RemovalPointService removalPointService;
-	
+
+
 	@Autowired
-	public ArticleController(CategoryService categoryService, RemovalPointService removalPointService, 
+	public ArticleController(CategoryService categoryService, RemovalPointService removalPointService,
 			ArticleService articleService) {
 		super();
 		this.categoryService = categoryService;
 		this.removalPointService = removalPointService;
 		this.articleService = articleService;
 	}
-	
-	
-	
-	
+
 	@InitBinder
-    public void initBinder(WebDataBinder binder, HttpSession session) {
-		System.out.println("init binder called, binding category");
-        // Use the cached list from session, since we can't pass Model as an argument
+	public void initBinder(WebDataBinder binder, HttpSession session) {
+		//logger.debug("init binder called, binding category");
+		// Use the cached list from session, since we can't pass Model as an argument
 		List<Category> allCategories = (List<Category>) session.getAttribute("allCategories");
+
         binder.registerCustomEditor(Category.class, new CustomCategoryEditor(allCategories));
         
-        System.out.println("> > now binding removalPoint");
+        //logger.debug("> > now binding removalPoint");
         List<RemovalPoint> allRemovalPoints = (List<RemovalPoint>) session.getAttribute("allRemovalPoints");
         binder.registerCustomEditor(RemovalPoint.class, new CustomRemovalPointEditor(allRemovalPoints));
     }
-	
-	
-	
-	
-	
+
 	@GetMapping("/redirectToCreate")
 	public String redirectToCreate(Model model, HttpSession session) {
-		System.out.println("\n Redirecting to create article form");
-		
+		//logger.debug("\n Redirecting to create article form");
+
 		List<Category> categoriesFound = categoryService.getAll();
 		// model for the html, session for the 1-database-call editor in the init binder
 		session.setAttribute("allCategories", categoriesFound); // session so make sure to overwrite it every form
 		model.addAttribute("allCategories", categoriesFound);
-		categoriesFound.forEach(c -> System.out.println(c +"\n"));
-		
+		//logger.debug(categoriesFound);
+
 		Member member = (Member) session.getAttribute("loggedMember");
-		RemovalPoint rp = new RemovalPoint(0, 
-				member.getRoadNumber(), member.getRoadName(), member.getZipCode(), member.getTownName(), member, 
-				"Home Adress (auto)");
+		RemovalPoint rp = new RemovalPoint(0, member.getRoadNumber(), member.getRoadName(), member.getZipCode(),
+				member.getTownName(), member, "Home Adress (auto)");
 		List<RemovalPoint> removalPointsFound = removalPointService.getAllByMemberId(member.getIdMember());
-		if (!removalPointsFound.contains(rp)) {removalPointsFound.add(rp);}
-		
+		if (!removalPointsFound.contains(rp)) {
+			removalPointsFound.add(rp);
+		}
+
 		session.setAttribute("allRemovalPoints", removalPointsFound);
 		model.addAttribute("allRemovalPoints", removalPointsFound);
-		removalPointsFound.forEach(rpTemp -> System.out.println(rpTemp +"\n"));
-		
+		//logger.debug(removalPointsFound);
+
 		return "article/formCreateArticle";
 	}
-	
+
 	@PostMapping("/create")
 	public String create(@ModelAttribute @Valid Article article, BindingResult bindingResult, 
 			Model model, HttpSession session) {
@@ -98,34 +99,32 @@ public class ArticleController {
 			return "article/formCreateArticle";
 		}
 		
+
 		articleService.determineStatusFromDates(article);
 		Member member = (Member) session.getAttribute("loggedMember");
 		article.setVendor(member);
 		article.setBuyer(null);
 		article.setSalePrice(article.getStartingPrice());
-		
+
 		if (article.getRemovalPoint().getIdRemovalPoint() == 0) {
 			this.removalPointService.create(article.getRemovalPoint());
 		} // pray for an inplace modification
-		System.out.println("\n Sending article to db " + article);
+		//logger.debug("\n Sending article to db " + article);
 		articleService.create(article);
-		
+
 		return "redirect:/";
 	}
-	
-	
-	
-	
+
 	@GetMapping("/loadArticles")
 	public String loadArticles(HttpSession session, Model model) {
-		System.out.println("\n article controller get load articles");
-		
+		//logger.debug("\n article controller get load articles");
+
 		Member member = (Member) session.getAttribute("loggedMember");
 		if (member != null) {
 			model.addAttribute("idMember", member.getIdMember());
-			System.out.println("model member id " + member.getIdMember());
+			//logger.debug("model member id " + member.getIdMember());
 		}
-		
+
 		List<Category> categoriesFound = categoryService.getAll();
 		model.addAttribute("allCategories", categoriesFound);
 		//categoriesFound.forEach(c -> System.out.println(c +"\n"));
@@ -219,6 +218,3 @@ public class ArticleController {
 	
 	
 	
-	
-	
-}

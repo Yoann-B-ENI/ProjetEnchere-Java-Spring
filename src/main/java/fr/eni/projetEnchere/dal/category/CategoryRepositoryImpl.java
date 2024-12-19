@@ -3,6 +3,9 @@ package fr.eni.projetEnchere.dal.category;
 import java.util.List;
 import java.util.Optional;
 
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -13,6 +16,8 @@ import fr.eni.projetEnchere.bo.Category;
 
 @Repository
 public class CategoryRepositoryImpl implements CategoryRepository{
+	
+	Logger logger = LoggerFactory.getLogger(CategoryRepositoryImpl.class);
 	
 	private JdbcTemplate jdbcTemplate;
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -34,7 +39,7 @@ public class CategoryRepositoryImpl implements CategoryRepository{
 
 	@Override
 	public List<Category> getAll() {
-		System.out.println("\n > DATABASE: get all categories");
+		//logger.debug("\n > DATABASE: get all categories");
 		String sql = "SELECT * FROM categories ORDER BY idCategory ASC";
 		List<Category> categoriesFound = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Category.class));
 		return categoriesFound;

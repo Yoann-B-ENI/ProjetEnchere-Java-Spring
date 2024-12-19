@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -29,6 +31,8 @@ import fr.eni.projetEnchere.bo.RemovalPoint;
 
 @Repository
 public class ArticleRepositoryImpl implements ArticleRepository{
+	
+	Logger logger = LoggerFactory.getLogger(ArticleRepositoryImpl.class);
 	
 	private JdbcTemplate jdbcTemplate;
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -99,6 +103,7 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 	}
 	
 	@Override
+<<<<<<< HEAD
 	public List<Article> getAll(Map<String, String> filterMapLike, Map<String, String> filterMapEquals, 
 			int idLoggedMember) {
 		System.out.println("\n > DATABASE : get all articles");
@@ -129,12 +134,33 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 				+ "ORDER BY (innerTable.auctionEndDate, innerTable.salePrice) ASC";
 		System.out.println("  > DATABASE ARTICLE FILTER QUERY \n"+sql+"\n\n");
 		List<Article> articlesFound = jdbcTemplate.query(sql, new ArticleSmallRowMapper(), idLoggedMember);
+=======
+	public List<Article> getAll(Map<String, String> filterMapLike, Map<String, String> filterMapEquals) {
+		//logger.debug("\n > DATABASE : get all articles");
+		String sql = "select articles.idArticle, \r\n"
+				+ "	articles.name, \r\n"
+				+ "	articles.auctionStartDate, \r\n"
+				+ "	articles.auctionEndDate, \r\n"
+				+ " articles.status, \r\n"
+				+ "	articles.salePrice, \r\n"
+				+ "	articles.idVendor, \r\n"
+				+ "	members.userName, \r\n"
+				+ "	articles.idCategory \r\n"
+				+ "from articles \r\n"
+				+ "JOIN members on articles.idvendor = members.idmember \r\n"
+				+ "WHERE 1=1 \r\n"
+				+ this.processFilters(filterMapLike, filterMapEquals)
+				+ "ORDER BY (articles.auctionEndDate, articles.salePrice) ASC \r\n";
+		//logger.debug("\n\n > DATABASE ARTICLE FILTER QUERY \n"+sql+"\n\n");
+		List<Article> articlesFound = jdbcTemplate.query(sql, new ArticleSmallRowMapper());
+>>>>>>> 45f84358783d0db6740fce4e421fbe025c192a5c
 		
 		return articlesFound;
 	}
 
 	@Override
 	public Optional<Article> getById(int id) {
+<<<<<<< HEAD
 		System.out.println("\n > DATABASE : get article of id "+id);
 		String sql = "SELECT \r\n"
 				+ "	art.idArticle, \r\n"
@@ -159,6 +185,30 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 				+ "JOIN categories cat on art.idcategory = cat.idcategory\r\n"
 				+ "JOIN removalpoints rp on art.idremovalpoint = rp.idremovalpoint\r\n"
 				+ "WHERE art.idArticle = ?";
+=======
+		//logger.debug("\n > DATABASE : get article of id "+id);
+		String sql = "select articles.idArticle, \r\n"
+				+ "	articles.name AS article_name, \r\n"
+				+ "	articles.auctionStartDate, \r\n"
+				+ "	articles.auctionEndDate, \r\n"
+				+ " articles.status, \r\n"
+				+ "	articles.salePrice, \r\n"
+				+ "	articles.startingPrice, \r\n"
+				+ "	articles.idCategory, \r\n"
+				+ "	categories.name AS cat_name, \r\n"
+				+ "	articles.idVendor, \r\n"
+				+ "	members.userName, \r\n"
+				+ "	articles.idRemovalPoint, \r\n"
+				+ "	removalpoints.roadNumber, \r\n"
+				+ "	removalpoints.roadName, \r\n"
+				+ "	removalpoints.zipCode, \r\n"
+				+ "	removalpoints.townName \r\n"
+				+ "from articles \r\n"
+				+ "JOIN members on articles.idvendor = members.idmember \r\n"
+				+ "JOIN categories on articles.idcategory = categories.idcategory \r\n"
+				+ "JOIN removalpoints on articles.idremovalpoint = removalpoints.idremovalpoint \r\n"
+				+ "WHERE idArticle = ?";
+>>>>>>> 45f84358783d0db6740fce4e421fbe025c192a5c
 		
 		Article art = jdbcTemplate.queryForObject(sql, new ArticleBigRowMapper(), id);
 		Optional<Article> return_art = Optional.ofNullable(art);

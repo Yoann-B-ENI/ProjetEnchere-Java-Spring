@@ -68,7 +68,7 @@ public class MemberServiceImpl implements MemberService {
 	
 		if (loggedMember != null) {
 			Optional<Member> optMember = memberRepo.getByUserName(member.getUserName());
-
+			logger.debug(member.toString());
 			if (optMember.isEmpty() || member.equals(optMember.get())) {
 //				try {
 					this.update(member);
