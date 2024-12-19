@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -29,6 +31,8 @@ import fr.eni.projetEnchere.bo.RemovalPoint;
 
 @Repository
 public class ArticleRepositoryImpl implements ArticleRepository{
+	
+	Logger logger = LoggerFactory.getLogger(ArticleRepositoryImpl.class);
 	
 	private JdbcTemplate jdbcTemplate;
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -96,7 +100,7 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 	
 	@Override
 	public List<Article> getAll(Map<String, String> filterMapLike, Map<String, String> filterMapEquals) {
-		System.out.println("\n > DATABASE : get all articles");
+		//logger.debug("\n > DATABASE : get all articles");
 		String sql = "select articles.idArticle, \r\n"
 				+ "	articles.name, \r\n"
 				+ "	articles.auctionStartDate, \r\n"
@@ -111,7 +115,7 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 				+ "WHERE 1=1 \r\n"
 				+ this.processFilters(filterMapLike, filterMapEquals)
 				+ "ORDER BY (articles.auctionEndDate, articles.salePrice) ASC \r\n";
-		System.out.println("\n\n > DATABASE ARTICLE FILTER QUERY \n"+sql+"\n\n");
+		//logger.debug("\n\n > DATABASE ARTICLE FILTER QUERY \n"+sql+"\n\n");
 		List<Article> articlesFound = jdbcTemplate.query(sql, new ArticleSmallRowMapper());
 		
 		return articlesFound;
@@ -119,7 +123,7 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 
 	@Override
 	public Optional<Article> getById(int id) {
-		System.out.println("\n > DATABASE : get article of id "+id);
+		//logger.debug("\n > DATABASE : get article of id "+id);
 		String sql = "select articles.idArticle, \r\n"
 				+ "	articles.name AS article_name, \r\n"
 				+ "	articles.auctionStartDate, \r\n"
