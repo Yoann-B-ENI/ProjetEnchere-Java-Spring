@@ -12,11 +12,14 @@
 
 	<h2>Recherche d'enchères</h2>
 	<span>
-		<form action="/article/searchArticles", method="post">
-		<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-		<p th:each = "error : ${validationErrors}" th:text = "${error.defaultMessage}"></p>
-			
+		<form action="/article/searchArticles" , method="post">
+			<input type="hidden" th:name="${_csrf.parameterName}"
+				th:value="${_csrf.token}" />
+			<p th:each="error : ${validationErrors}"
+				th:text="${error.defaultMessage}"></p>
+
 			<fieldset>
+        
 			<div>
 				<span> 
 					<h3>Filtre nom d'article (contient)</h3> 
@@ -78,16 +81,40 @@
 			<div>
 				<button type="submit">Rechercher</button>
 			</div>
+
 			</fieldset>
 		</form>
 	</span>
-	
-	
-	
+
+
+
 	<h2>Liste des enchères</h2>
-	<span> 
-		
-		<table border="20">
+	<span>
+		<div class="container">
+			<div class="card" th:each="art : ${articles}">
+				<h3 th:text="${art.name}">Nom de l'article</h3>
+				<p>
+					<strong>Id Enchère:</strong> <span th:text="${art.idArticle}"></span>
+				</p>
+				<p>
+					<strong>Vendeur:</strong> <span th:text="${art.vendor.userName}"></span>
+					<a th:href="@{/member/{id}(id=${art.vendor.idMember})}">(Voir
+						profil)</a>
+				</p>
+				<p>
+					<strong>Date début:</strong> <span
+						th:text="${art.auctionStartDate}"></span>
+				</p>
+				<p>
+					<strong>Date fin:</strong> <span
+						th:text="${art.auctionEndDate}"></span>
+				</p>
+				<p>
+					<strong>Prix actuel:</strong> <span th:text="${art.salePrice}"></span>
+					€
+				</p>
+			</div>
+		</div> <!--  <table border="20">
 		  <tr>
 		    <th>Id Enchere</th>
 		    <th>Nom</th>
@@ -97,14 +124,15 @@
 		    <th>Prix actuel</th>
 		  </tr>
 		  <tr th:each="art : ${articles}">
+		  
 		    <td href="article/getId/something" th:text="${art.idArticle}"></td>
 		    <td th:text="${art.name}"></td>
-		    <td href="member/getId/something" th:text="${art.vendor.userName}"></td>
+		    <td th:text="${art.vendor.userName}"><a th:href="$/{art.Vendor.idMember}"></a></td>
 		    <td th:text="${art.auctionStartDate}"></td>
 		    <td th:text="${art.auctionEndDate}"></td>
 		    <td th:text="${art.salePrice}"></td>
 		  </tr>
-		</table>
+		</table>-->
 
 	</span>
 </body>

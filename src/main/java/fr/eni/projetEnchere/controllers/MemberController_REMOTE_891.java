@@ -84,14 +84,12 @@ public class MemberController {
 		return "redirect:/home";
 
 	}
-
 	@GetMapping("/member/{id}")
 	public String showMember(@PathVariable(name = "id") int id, Model model) {
 		Member member;
 		return "memberDetails";
 		
 	}
-	
 	 @PostMapping("/deleteMember")
 	    public String deleteAccount(HttpSession session) {
 	        Member member = (Member) session.getAttribute("loggedMember");
