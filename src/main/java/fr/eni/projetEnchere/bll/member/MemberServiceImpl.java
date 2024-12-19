@@ -7,6 +7,7 @@ import org.postgresql.util.PSQLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -49,6 +50,7 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public void update(Member member) {
+		member.setPassword(passwordEncoder.encode(member.getPassword()));
 		memberRepo.update(member);
 	}
 
@@ -67,8 +69,14 @@ public class MemberServiceImpl implements MemberService {
 	public void save(Member member, Member loggedMember) throws UserNameAlreadyExistsException {
 	
 		if (loggedMember != null) {
-			Optional<Member> optMember = memberRepo.getByUserName(member.getUserName());
+			Optional<Member> optMember;
+			try {
 			logger.debug(member.toString());
+			optMember = memberRepo.getByUserName(member.getUserName());
+			logger.debug(member.toString());
+			} catch (EmptyResultDataAccessException e) {
+				optMember = Optional.empty();
+			}
 			if (optMember.isEmpty() || member.equals(optMember.get())) {
 //				try {
 					this.update(member);
