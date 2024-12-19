@@ -43,13 +43,16 @@ VALUES
 ('Sofa', 'Comfortable 3-seater sofa with fabric upholstery', '2024-12-05', '2024-12-29', 
 300, 300, 'AuctionStarted', 2, null, 2, 2),  -- Jane Smith is the vendor (idVendor 2)
 ('Novel - "The Great Adventure"', 'A thrilling novel about an epic journey', '2024-12-02', '2024-12-09', 
-20, 80, 'AuctionEnded', 3, 2, 3, 3);  -- Bob Jones is the vendor (idVendor 3)
+20, 80, 'AuctionEnded', 4, 2, 3, 3);  -- Bob Jones is the vendor (idVendor 3)
 
 -- Insert Bids
 INSERT INTO bids (idMember, idArticle, bidDate, bidPrice)
 VALUES 
-(2, 1, '2024-12-03', 550),  -- Jane Smith bidding on the Laptop
-(3, 2, '2024-12-06', 350),  -- Bob Jones bidding on the Sofa
+(2, 2, '2024-12-06', 550),  -- Jane Smith bidding on the Laptop
+(4, 2, '2024-12-07', 551),  -- Bob Jones bidding on the Laptop
+(2, 2, '2024-12-08', 580),  -- Jane Smith bidding on the Laptop
+(4, 2, '2024-12-09', 581),  -- Bob Jones bidding on the Laptop
+(4, 3, '2024-12-06', 36),   -- Bob Jones bidding on the Novel
 (1, 3, '2024-12-04', 25);   -- John Doe bidding on the Novel
 
 

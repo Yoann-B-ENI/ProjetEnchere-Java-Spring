@@ -77,9 +77,7 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 	
 	
 	private String processFilters(Map<String, String> filterMapLike, Map<String, String> filterMapEquals) {
-		
 		String filterString = " ";
-		
 		if (filterMapLike != null) {
 			for (Entry<String, String> entry : filterMapLike.entrySet()) {
 				filterString += "AND " + entry.getKey() + " LIKE '%" + entry.getValue() + "%' ";
@@ -87,10 +85,9 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 		}
 		if (filterMapEquals != null) {
 			for (Entry<String, String> entry : filterMapEquals.entrySet()) {
-				filterString += "AND " + entry.getKey() + " = '" + entry.getValue() + "'";
+				filterString += "AND " + entry.getKey() + " = '" + entry.getValue() + "' ";
 			}
 		}
-		
 		filterString += " ";//to be safe
 		return filterString;
 	}
@@ -98,30 +95,40 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 
 	@Override
 	public List<Article> getAll() {// call other one with empty filters
-		return this.getAll(null, null);
+		return this.getAll(null, null, 1);
 	}
 	
 	@Override
-	public List<Article> getAll(Map<String, String> filterMapLike, Map<String, String> filterMapEquals) {
+	public List<Article> getAll(Map<String, String> filterMapLike, Map<String, String> filterMapEquals, 
+			int idLoggedMember) {
 		System.out.println("\n > DATABASE : get all articles");
-		String sql = "SELECT \r\n"
-				+ "	art.idArticle, \r\n"
-				+ "	art.name, \r\n"
-				+ "	art.auctionStartDate, \r\n"
-				+ "	art.auctionEndDate, \r\n"
-				+ "	art.status, \r\n"
-				+ "	art.salePrice, \r\n"
-				+ "	art.idVendor, m1.username as username_vendor, \r\n"
-				+ "	art.idBuyer, m2.username as username_buyer, \r\n"
-				+ "	art.idCategory\r\n"
-				+ "FROM articles art\r\n"
-				+ "JOIN members m1 on art.idvendor = m1.idmember\r\n"
-				+ "LEFT JOIN members m2 on art.idbuyer = m2.idmember\r\n"
+		String sql = "SELECT * \r\n"
+				+ "FROM \r\n"
+				+ "(\r\n"
+				+ "	SELECT \r\n"
+				+ "		art.idArticle, \r\n"
+				+ "		art.name, \r\n"
+				+ "		art.auctionStartDate, \r\n"
+				+ "		art.auctionEndDate, \r\n"
+				+ "		art.status, \r\n"
+				+ "		art.salePrice, \r\n"
+				+ "		art.idVendor, m1.username as username_vendor, \r\n"
+				+ "		art.idBuyer, m2.username as username_buyer, \r\n"
+				+ "		art.idCategory, \r\n"
+				+ "		(case when exists (select 1 \r\n"
+				+ "							from bids \r\n"
+				+ "							where bids.idArticle = art.idArticle \r\n"
+				+ "							and bids.idMember = ?) \r\n"
+				+ "			then 1 else 0 end) as is_found_bid \r\n"
+				+ "	FROM articles art \r\n"
+				+ "	JOIN members m1 on art.idvendor = m1.idmember \r\n"
+				+ "	LEFT JOIN members m2 on art.idbuyer = m2.idmember \r\n"
+				+ ") as innerTable \r\n"
 				+ "WHERE 1=1 \r\n"
 				+ this.processFilters(filterMapLike, filterMapEquals)
-				+ "ORDER BY (art.auctionEndDate, art.salePrice) ASC";
+				+ "ORDER BY (innerTable.auctionEndDate, innerTable.salePrice) ASC";
 		System.out.println("  > DATABASE ARTICLE FILTER QUERY \n"+sql+"\n\n");
-		List<Article> articlesFound = jdbcTemplate.query(sql, new ArticleSmallRowMapper());
+		List<Article> articlesFound = jdbcTemplate.query(sql, new ArticleSmallRowMapper(), idLoggedMember);
 		
 		return articlesFound;
 	}

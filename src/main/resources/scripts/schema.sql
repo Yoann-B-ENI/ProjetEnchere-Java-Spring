@@ -78,11 +78,12 @@ CREATE TABLE IF NOT EXISTS ARTICLES (
 
 
 CREATE TABLE IF NOT EXISTS BIDS (
+	idBid			SERIAL NOT NULL, 
     idMember   		INTEGER NOT NULL,
     idArticle       INTEGER NOT NULL,
-    bidDate     DATE NOT NULL,
+    bidDate     TIMESTAMP NOT NULL,
 	bidPrice  	INTEGER NOT NULL, 
-	CONSTRAINT bids_pk PRIMARY KEY (idMember, idArticle), 
+	CONSTRAINT bids_pk PRIMARY KEY (idBid), 
 	
 	CONSTRAINT bids_members_fk FOREIGN KEY (idMember) REFERENCES Members (idMember), 
 	CONSTRAINT bids_articles_fk FOREIGN KEY (idArticle) REFERENCES ARTICLES (idArticle)
