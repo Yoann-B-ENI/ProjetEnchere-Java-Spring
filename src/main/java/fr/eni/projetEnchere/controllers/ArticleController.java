@@ -15,6 +15,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -167,8 +168,32 @@ public class ArticleController {
 	}
 	
 	
+	@GetMapping("/{id}")
+	public String showArticle(@PathVariable("id") int id, Model model) {
+		
+		Article art = articleService.getById(id);
+		model.addAttribute("article", art);
+		
+		return "article/articleDetails";
+	}
+	
+	@PostMapping("/bid")
+	public String processNewBid(@RequestParam("newPrice") int newPrice, Model model) {
+		System.out.println(newPrice);
+		
+		return "";
+	}
+	
+	
+	
+	
 	// jane_smith
 	// password
+	
+	
+	// make button to submit rencherir
+	// fix placeholder value for rencherir
+	// re-put the 'toutes encheres en cours' to AuctionStarted and not IGNORE
 	
 	
 	

@@ -140,6 +140,7 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 		String sql = "SELECT \r\n"
 				+ "	art.idArticle, \r\n"
 				+ "	art.name as article_name, \r\n"
+				+ "	art.description, \r\n"
 				+ "	art.auctionStartDate, \r\n"
 				+ "	art.auctionEndDate, \r\n"
 				+ "	art.status, \r\n"
@@ -247,9 +248,10 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 			
 			art.setIdArticle(rs.getInt("idArticle"));
 			art.setName(rs.getString("article_name"));
+			art.setDescription(rs.getString("description"));
 			art.setAuctionStartDate(rs.getObject("auctionStartDate", LocalDateTime.class));
 			art.setAuctionEndDate(rs.getObject("auctionEndDate", LocalDateTime.class));
-			art.setStatus(rs.getObject("status", ArticleStatus.class));
+			art.setStatus(ArticleStatus.valueOf(rs.getString("status")));
 			art.setStartingPrice(rs.getInt("startingPrice"));
 			art.setSalePrice(rs.getInt("salePrice"));
 			

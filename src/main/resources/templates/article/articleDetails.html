@@ -6,7 +6,62 @@
 </head>
 <body>
 
+<!-- Navigation -->
+<nav class="bg-gray-800 shadow-md">
+	<div class="max-w-7xl mx-auto px-4 py-4">
+		<div class="flex justify-between items-center">
+			<!-- Logo -->
+			<th:block th:replace="~{fragments/logo.html :: logo}"></th:block>
+			<!-- Barre de navigation -->
+			<th:block th:replace="~{fragments/navBar.html :: navBar}"></th:block>
+		</div>
+	</div>
+</nav>
 
+<div>
+
+	<div>
+		<h1 th:text="${article.name}"></h1>
+	</div>
+	
+	<div>
+		<p> <strong>Article n°</strong> <span th:text="${article.idArticle}"></span> </p>
+		
+		<p> <strong>Catégorie</strong> <span th:text="${article.category.name}"></span> </p>
+		
+		<p> <span th:text="${article.description}"></span> </p>
+		
+		<p> <strong>Vente au statut</strong> <span th:text="${article.status}"></span> </p>
+		<p> <strong>Date de début</strong> <span th:text="${article.auctionStartDate}"></span> </p>
+		<p> <strong>Date de fin</strong> <span th:text="${article.auctionEndDate}"></span> </p>
+		
+		<p> <strong>Prix initial</strong> <span th:text="${article.startingPrice}"></span> </p>
+		<p> <strong>Prix actuel</strong> <span th:text="${article.salePrice}"></span> </p>
+		
+		<p th:if="${article.status.name=='AuctionStarted' && article.buyer!=null}"> <strong>Gagnant actuel</strong> 
+			<span th:text="${article.buyer.userName}"></span> </p>
+		<p th:if="${article.status.name=='AuctionEnded' || article.status.name=='AuctionRemoved'}"> <strong>Gagnant</strong> 
+			<span th:text="${article.buyer.userName}"></span> </p>
+		
+		<div th:if="${article.status.name=='AuctionStarted'}"><form action="/article/bid">
+		<p> <strong>Renchérir</strong> 
+			<input type="number" th:name="newPrice" th:min="${article.salePrice}" placeholder="${article.salePrice}"> </p>
+		</form></div>
+		
+	</div>
+
+	<div>
+		<p> <strong>Vendu par</strong> <span th:text="${article.vendor.userName}"></span> </p>
+		
+		<p> <strong>Retrait au</strong> <br>
+			<span th:text="${article.removalPoint.roadNumber}+' '+${article.removalPoint.roadName}"></span> 
+			<br>
+			<span th:text="${article.removalPoint.zipCode}+' '+${article.removalPoint.townName}"></span>
+		</p>
+		
+	</div>
+
+</div>
 
 
 
