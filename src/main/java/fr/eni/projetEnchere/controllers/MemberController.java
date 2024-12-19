@@ -83,6 +83,10 @@ public class MemberController {
 		return "redirect:/home";
 
 	}
+	
+	
+	//blablabla test commit 
+	
 	 @PostMapping("/deleteMember")
 	    public String deleteAccount(HttpSession session) {
 	        Member member = (Member) session.getAttribute("loggedMember");
