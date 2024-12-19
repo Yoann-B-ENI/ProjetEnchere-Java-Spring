@@ -173,49 +173,6 @@ public class ArticleController {
 	
 	
 	
-	// re-make the filter system
-	
-	
-	/* 
-	 * 	toutes encheres
-	 * get all (null, null, 1)
-	 * 
-	 * 	mes achats
-	 * encheres en cours
-	 * 	status = AuctionStarted
-	 * 	is_found_bid = 1
-	 * 
-	 * encheres remportees non retirees
-	 * 	status = AuctionEnded
-	 * 	idBuyer = loggedMember.idMember
-	 * 
-	 * encheres remportees retirees
-	 * 	status = Removed
-	 * 	idBuyer = loggedMember.idMember
-	 * 
-	 * 
-	 * 
-	 * 	mes encheres
-	 * ventes pre debut
-	 * 	status = Created
-	 * 	idVendor = loggedMember.idMember
-	 * 
-	 * ventes en cours
-	 * 	status = AuctionStarted
-	 * 	idVendor = loggedMember.idMember
-	 * 
-	 * ventes remportees non retirees
-	 * 	status = AuctionEnded
-	 * 	idVendor = loggedMember.idMember
-	 * 
-	 * ventes remportees retirees
-	 * 	status = Removed
-	 * 	idVendor = loggedMember.idMember
-	 * 
-	 * 
-	 * 
-	 * 
-	 */
 	
 	
 	
