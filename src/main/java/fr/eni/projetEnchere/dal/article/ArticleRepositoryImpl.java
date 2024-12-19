@@ -3,7 +3,6 @@ package fr.eni.projetEnchere.dal.article;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -11,17 +10,13 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import org.thymeleaf.standard.expression.Each;
 
 import fr.eni.projetEnchere.bo.Article;
 import fr.eni.projetEnchere.bo.ArticleStatus;
@@ -84,7 +79,7 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 		String filterString = " ";
 		if (filterMapLike != null) {
 			for (Entry<String, String> entry : filterMapLike.entrySet()) {
-				filterString += "AND " + entry.getKey() + " LIKE '%" + entry.getValue() + "%' ";
+				filterString += "AND LOWER(" + entry.getKey() + ") LIKE '%" + entry.getValue().toLowerCase() + "%' ";
 			}
 		}
 		if (filterMapEquals != null) {
