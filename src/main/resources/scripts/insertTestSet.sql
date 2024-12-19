@@ -52,8 +52,8 @@ VALUES
 (4, 2, '2024-12-07', 351),  -- Bob Jones bidding on the Laptop
 (2, 2, '2024-12-08', 380),  -- Jane Smith bidding on the Laptop
 (4, 2, '2024-12-09', 381),  -- Bob Jones bidding on the Laptop
-(1, 3, '2024-12-04', 25);   -- John Doe bidding on the Novel
-(4, 3, '2024-12-06', 36),   -- Bob Jones bidding on the Novel
-
+(1, 3, '2024-12-04', 25),   -- John Doe bidding on the Novel
+(4, 3, '2024-12-06', 36)   -- Bob Jones bidding on the Novel
+;
 
 
