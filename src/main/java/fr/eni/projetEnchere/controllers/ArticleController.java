@@ -69,7 +69,7 @@ public class ArticleController {
 		// model for the html, session for the 1-database-call editor in the init binder
 		session.setAttribute("allCategories", categoriesFound); // session so make sure to overwrite it every form
 		model.addAttribute("allCategories", categoriesFound);
-		System.out.println(categoriesFound);
+		categoriesFound.forEach(c -> System.out.println(c +"\n"));
 		
 		Member member = (Member) session.getAttribute("loggedMember");
 		RemovalPoint rp = new RemovalPoint(0, 
@@ -80,7 +80,7 @@ public class ArticleController {
 		
 		session.setAttribute("allRemovalPoints", removalPointsFound);
 		model.addAttribute("allRemovalPoints", removalPointsFound);
-		System.out.println(removalPointsFound);
+		removalPointsFound.forEach(rpTemp -> System.out.println(rpTemp +"\n"));
 		
 		return "article/formCreateArticle";
 	}
@@ -97,6 +97,7 @@ public class ArticleController {
 		articleService.determineStatusFromDates(article);
 		Member member = (Member) session.getAttribute("loggedMember");
 		article.setVendor(member);
+		article.setBuyer(null);
 		article.setSalePrice(article.getStartingPrice());
 		
 		if (article.getRemovalPoint().getIdRemovalPoint() == 0) {
@@ -122,11 +123,11 @@ public class ArticleController {
 		// model for the html, session for the 1-database-call editor in the init binder
 		session.setAttribute("allCategories", categoriesFound); // session so make sure to overwrite it every form
 		model.addAttribute("allCategories", categoriesFound);
-		System.out.println(categoriesFound);
+		categoriesFound.forEach(c -> System.out.println(c +"\n"));
 		
 		List<Article> articlesFound = articleService.getAll();
 		model.addAttribute("articles", articlesFound);
-		System.out.println(articlesFound);
+		articlesFound.forEach(art -> System.out.println(art +"\n"));
 		
 		return "encheres";
 	}
@@ -153,16 +154,21 @@ public class ArticleController {
 		List<Article> articlesFound = articleService.getAll(filterMapLike, filterMapEquals);
 		
 		model.addAttribute("articles", articlesFound);
-		System.out.println(articlesFound);
+		articlesFound.forEach(art -> System.out.println(art +"\n"));
 		
 		return "encheres";
 	}
 	
 	
-	
-	
 	// jane_smith
 	// password
+	
+	
+	
+	// add highest buyer to article
+	// re-make the filter system
+	
+	
 	
 	
 	
