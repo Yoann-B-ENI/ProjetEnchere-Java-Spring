@@ -44,7 +44,7 @@ public class WebSecurityConfig {
 			)
 			.logout((logout) -> logout
 	                .logoutUrl("/logout") // URL de déconnexion
-	                .logoutSuccessUrl("/login?logout") // Redirection après déconnexion
+	                .logoutSuccessUrl("/home") // Redirection après déconnexion
 	                .permitAll() // Accessible sans authentification
 	            );
 		//logger.debug("login");

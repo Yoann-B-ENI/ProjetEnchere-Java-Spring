@@ -30,8 +30,20 @@
 
     </style>
 </head>
-<body
-	class="bg-gray-900 text-gray-200 flex items-center justify-center min-h-screen">
+<body class="bg-gray-900 font-sans text-gray-100">
+
+	<!-- Navigation -->
+	<nav class="bg-gray-800 shadow-md">
+		<div class="max-w-7xl mx-auto px-4 py-4">
+			<div class="flex justify-between items-center">
+				<!-- Logo -->
+				<th:block th:replace="~{fragments/logo.html :: logo}"></th:block>
+				<!-- Barre de navigation -->
+				<th:block th:replace="~{fragments/navBar.html :: navBar}"></th:block>
+			</div>
+		</div>
+	</nav>
+<div class="text-gray-200 flex items-center justify-center min-h-screen">
 
 	<div class="w-full max-w-md bg-gray-800 shadow-md rounded-lg p-6">
 		<h1 class="text-2xl font-bold text-gray-100 text-center mb-6">Login</h1>
@@ -63,6 +75,6 @@
 		</form>
 		<button><a href="/register">Créer un compte</a></button> 
 	</div>
-
+</div>
 </body>
 </html>
