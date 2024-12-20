@@ -72,8 +72,11 @@ public class MemberController {
 		}
 		 try {
 			 	member.setIdMember(loggedMember.getIdMember());
-		        session.setAttribute("loggedMember", member);
-		        service.save(member, loggedMember);
+			 	service.save(member, loggedMember);
+			 	Member UpdatedMember = service.getById(member.getIdMember());
+			 	logger.debug(UpdatedMember.toString());
+		        session.setAttribute("loggedMember", UpdatedMember);
+		        
 		    } catch (UserNameAlreadyExistsException e) {
 		        // Si l'exception est levée, on ajoute un message d'exception personnalisé à la vue
 		        redirectAttr.addFlashAttribute("UserNameAlreadyExistsException", true);
@@ -82,7 +85,7 @@ public class MemberController {
 		    }
 		 
 		return "redirect:/home";
-
+		
 	}
 
 	@GetMapping("/member/{id}")
