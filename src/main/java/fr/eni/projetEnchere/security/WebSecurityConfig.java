@@ -33,7 +33,7 @@ public class WebSecurityConfig {
 		//logger.debug("login");
 		http
 			.authorizeHttpRequests((requests) -> requests
-				.requestMatchers("/login","/","/images/*","/register","/home","/encheres").permitAll()
+				.requestMatchers("/images/**","/css/**","/login","/","/register","/home","/encheres").permitAll()
 				.requestMatchers("/article/loadArticles", "/article/searchArticles").permitAll()
 				.anyRequest().authenticated()
 			)
