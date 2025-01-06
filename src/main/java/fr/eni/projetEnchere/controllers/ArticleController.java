@@ -1,9 +1,7 @@
 package fr.eni.projetEnchere.controllers;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -178,12 +176,34 @@ public class ArticleController {
 	}
 	
 	@PostMapping("/bid")
-	public String processNewBid(@RequestParam("newPrice") int newPrice, Model model) {
+	public String processNewBid(@RequestParam("newPrice") int newPrice, 
+								@RequestParam("articleId") int articleId, 
+								HttpSession session, Model model) {
 		System.out.println(newPrice);
+		System.out.println(articleId);
 		
-		return "";
+		Article article = articleService.getById(articleId);
+		System.out.println("article bid on: "+article);
+		
+		Member loggedMember = (Member) session.getAttribute("loggedMember");
+		System.out.println("logged member: "+loggedMember);
+		
+		if(loggedMember.equals(article.getVendor())) {
+			System.err.println("Logged Member is already the vendor, should break but will continue for dev");
+		}
+		if(loggedMember.getCredits() - newPrice >= 0) {
+			loggedMember.addCredits(-newPrice);
+			article.getBuyer().addCredits(article.getSalePrice());
+
+			article.setBuyer(loggedMember);
+			article.setSalePrice(newPrice);
+			articleService.update(article);
+		}
+		else {System.err.println("insufficient credits error");}
+		
+		return "redirect:/article/"+article.getIdArticle();
 	}
-	
+	// @RequestParam("articleId") int articleId, 
 	
 	
 	
@@ -193,6 +213,7 @@ public class ArticleController {
 	
 	// make button to submit rencherir
 	// fix placeholder value for rencherir
+	
 	// re-put the 'toutes encheres en cours' to AuctionStarted and not IGNORE
 	
 	

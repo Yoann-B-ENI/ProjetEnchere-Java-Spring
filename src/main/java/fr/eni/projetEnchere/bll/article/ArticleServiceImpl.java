@@ -47,9 +47,7 @@ public class ArticleServiceImpl implements ArticleService{
 
 	@Override
 	public void update(Article t) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Method not implemented yet");
-		
+		this.articleRepository.update(t);
 	}
 
 	@Override

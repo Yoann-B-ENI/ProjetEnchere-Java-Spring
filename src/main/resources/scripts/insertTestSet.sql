@@ -7,7 +7,7 @@ VALUES
 ('john_doe', '$2a$10$VzBJ.BwtXdnPOacBUMcm4.FAh4jhggmQCgPv5hEZrfbZ5S5xw.sHG', 'Doe', 'John', 'john.doe@example.com', 
 '0234567890', 5, 'Main St', '12345', 'Springfield', 100, TRUE),
 ('jane_smith', '$2a$10$VzBJ.BwtXdnPOacBUMcm4.FAh4jhggmQCgPv5hEZrfbZ5S5xw.sHG', 'Smith', 'Jane', 'jane.smith@example.com', 
-'0876543210', 190, 'Oak Rd', '54321', 'Greenville', 50, FALSE),
+'0876543210', 190, 'Oak Rd', '54321', 'Greenville', 5000, FALSE),
 ('smith_smith', '$2a$10$VzBJ.BwtXdnPOacBUMcm4.FAh4jhggmQCgPv5hEZrfbZ5S5xw.sHG', 'Smith', 'Smith', 'smith.smith@example.com', 
 '0876543210', 190, 'Oak Rd', '54321', 'Greenville', 0, FALSE),
 ('bob_jones', '$2a$10$VzBJ.BwtXdnPOacBUMcm4.FAh4jhggmQCgPv5hEZrfbZ5S5xw.sHG', 'Jones', 'Bob', 'bob.jones@example.com', 
