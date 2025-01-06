@@ -14,7 +14,7 @@
 
 <p th:each = "error : ${validationErrors}" th:text = "${error.defaultMessage}"></p>
 
-<label> <p>Nom</p> <input name="name" type="text"> </label>
+<label> <p>Nom</p> <input th:field="*{name}" type="text"> </label>
 <label> <p>Description</p> <input name="description" type="text"> </label>
 
 <fieldset>

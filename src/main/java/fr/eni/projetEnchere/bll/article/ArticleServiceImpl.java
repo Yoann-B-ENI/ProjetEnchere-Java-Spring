@@ -1,6 +1,7 @@
 package fr.eni.projetEnchere.bll.article;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -32,6 +33,16 @@ public class ArticleServiceImpl implements ArticleService{
 	// call with empty filters, and id member 1 but that won't do anything without the is_found_bid filter
 	public List<Article> getAll() {
 		return this.articleRepository.getAll(null, null, 1);
+	}
+	
+	@Override
+	public List<Article> getAllCreatedByMember(int idMember){
+		
+		Map<String, String> filters = new HashMap<String, String>();
+		filters.put("status", "Created");
+		filters.put("idVendor", ""+idMember);
+		
+		return this.articleRepository.getAll(null, filters, idMember);
 	}
 	
 	@Override

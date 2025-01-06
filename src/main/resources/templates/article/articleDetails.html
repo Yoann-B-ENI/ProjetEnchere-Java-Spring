@@ -43,13 +43,15 @@
 		<p th:if="${article.status.name=='AuctionEnded' || article.status.name=='AuctionRemoved'}"> <strong>Gagnant</strong> 
 			<span th:text="${article.buyer.userName}"></span> </p>
 		
-		<div th:if="${article.status.name=='AuctionStarted'}"><form action="/article/bid" method="post">
-		<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-		<input type="hidden" name="articleId" th:value="${article.idArticle}">
-		<p> <strong>Renchérir</strong> 
-			<input type="number" name="newPrice" th:min="${article.salePrice+1}" th:placeholder="${article.salePrice+1}"> </p>
-		<button type="submit">Rencherir</button>
-		</form></div>
+		<div th:if="${article.status.name=='AuctionStarted' && !article.vendor.equals(loggedMember)}">
+		<form action="/article/bid" method="post">
+			<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+			<input type="hidden" name="idArticle" th:value="${article.idArticle}">
+			<p> <strong>Renchérir</strong> 
+				<input type="number" name="newPrice" th:min="${article.salePrice+1}" th:placeholder="${article.salePrice+1}"> </p>
+			<button type="submit">Renchérir</button>
+		</form>
+		</div>
 		
 	</div>
 
@@ -62,6 +64,13 @@
 			<span th:text="${article.removalPoint.zipCode}+' '+${article.removalPoint.townName}"></span>
 		</p>
 		
+	</div>
+	
+	<div th:if="${article.vendor.equals(loggedMember) && article.status.name=='Created'}">
+	<form action="/article/redirectToUpdate" method="get">
+		<input type="hidden" name="idArticle" th:value="${article.idArticle}">
+		<button>Modifier</button>
+	</form>
 	</div>
 
 </div>

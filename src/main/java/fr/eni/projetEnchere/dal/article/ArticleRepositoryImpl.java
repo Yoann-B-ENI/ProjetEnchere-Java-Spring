@@ -10,6 +10,7 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -33,7 +34,7 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 	
 	
-	
+	@Autowired
 	public ArticleRepositoryImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
 		super();
 		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
@@ -74,23 +75,6 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 		sql += "values(:name, :description, :auctionStartDate, :auctionEndDate, "
 				+ ":startingPrice, :salePrice, :statusTemp, :vendorTemp, :buyerTemp, :categoryTemp, :removalPointTemp)";
 		
-//		MapSqlParameterSource paramSource = new MapSqlParameterSource();
-//		paramSource.addValue("name", t.getName());
-//		paramSource.addValue("description", t.getDescription());
-//		paramSource.addValue("auctionStartDate", t.getAuctionStartDate());
-//		paramSource.addValue("auctionEndDate", t.getAuctionEndDate());
-//		paramSource.addValue("startingPrice", t.getStartingPrice());
-//		paramSource.addValue("salePrice", t.getSalePrice());
-//		paramSource.addValue("statusTemp", t.getStatus().toString());
-//		paramSource.addValue("vendorTemp", t.getVendor().getIdMember());
-//		if (t.getBuyer() != null) {
-//			paramSource.addValue("buyerTemp", t.getBuyer().getIdMember());
-//		}
-//		else {
-//			paramSource.addValue("buyerTemp", null);
-//		}
-//		paramSource.addValue("categoryTemp", t.getCategory().getIdCategory());
-//		paramSource.addValue("removalPointTemp", t.getRemovalPoint().getIdRemovalPoint());
 		MapSqlParameterSource paramSource = this.getArticleParameterSource(t);
 		
 		KeyHolder keyHolder = new GeneratedKeyHolder();

@@ -43,6 +43,7 @@ public class Article {
 	private int salePrice;
 	
 	// not null, fk members
+	@NotNull(message = "L'article doit avoir un vendeur.")
 	private Member vendor;
 	
 	// null, fk members
