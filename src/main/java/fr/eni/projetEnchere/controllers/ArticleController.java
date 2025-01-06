@@ -210,11 +210,10 @@ public class ArticleController {
 	// jane_smith
 	// password
 	
-	
-	// make button to submit rencherir
-	// fix placeholder value for rencherir
-	
+	//TODO End of dev : 
 	// re-put the 'toutes encheres en cours' to AuctionStarted and not IGNORE
+	// make a logged member not able to bit on their own bids (they just don't see the line?)
+	
 	
 	
 	
