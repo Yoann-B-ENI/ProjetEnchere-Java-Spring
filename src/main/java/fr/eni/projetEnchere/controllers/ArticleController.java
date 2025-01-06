@@ -193,7 +193,9 @@ public class ArticleController {
 		}
 		if(loggedMember.getCredits() - newPrice >= 0) {
 			loggedMember.addCredits(-newPrice);
-			article.getBuyer().addCredits(article.getSalePrice());
+			if (article.getBuyer() != null) {
+				article.getBuyer().addCredits(article.getSalePrice());
+			}
 
 			article.setBuyer(loggedMember);
 			article.setSalePrice(newPrice);
