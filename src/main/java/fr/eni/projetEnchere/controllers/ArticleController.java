@@ -141,15 +141,14 @@ public class ArticleController {
 	}
 	
 
-	@PostMapping("/create")
-	public String create(@ModelAttribute @Valid Article article, BindingResult bindingResult, 
+	@PostMapping("/createOrUpdate")
+	public String createOrUpdate(@ModelAttribute @Valid Article article, BindingResult bindingResult, 
 			Model model, HttpSession session) {
 		
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("validationErrors", bindingResult.getAllErrors());
 			return "article/formCreateArticle";
 		}
-		
 
 		articleService.determineStatusFromDates(article);
 		Member member = (Member) session.getAttribute("loggedMember");
@@ -161,7 +160,12 @@ public class ArticleController {
 			this.removalPointService.create(article.getRemovalPoint());
 		} // pray for an inplace modification
 		//logger.debug("\n Sending article to db " + article);
-		articleService.create(article);
+		if (article.getIdArticle() == 0) {
+			articleService.create(article);
+		}
+		else {
+			articleService.update(article);
+		}
 
 		return "redirect:/";
 	}
