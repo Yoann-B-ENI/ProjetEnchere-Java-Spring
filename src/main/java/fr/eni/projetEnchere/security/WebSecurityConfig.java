@@ -19,10 +19,10 @@ import org.springframework.security.web.SecurityFilterChain;
 public class WebSecurityConfig {
 
 	Logger logger = LoggerFactory.getLogger(WebSecurityConfig.class);
-	
+
 	@Autowired
-	private UserDetailsService service; 
-	
+	private UserDetailsService service;
+
 	public WebSecurityConfig(UserDetailsService service) {
 		super();
 		this.service = service;
@@ -46,7 +46,10 @@ public class WebSecurityConfig {
 	                .logoutUrl("/logout") // URL de déconnexion
 	                .logoutSuccessUrl("/home") // Redirection après déconnexion
 	                .permitAll() // Accessible sans authentification
-	            );
+	            )
+			.rememberMe()
+	        	.key("uniqueAndSecretKey")
+	        	.tokenValiditySeconds(86400);
 		//logger.debug("login");
 		return http.build();
 	}
@@ -54,10 +57,10 @@ public class WebSecurityConfig {
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
-		//NoOpPasswordEncoder si on ne veut pas chiffrer les mots de passe !!
-		//return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+		// NoOpPasswordEncoder si on ne veut pas chiffrer les mots de passe !!
+		// return PasswordEncoderFactories.createDelegatingPasswordEncoder();
 	}
-	
+
 //	@Bean
 //	public UserDetailsService userDetailsService() {
 //		UserDetails user =

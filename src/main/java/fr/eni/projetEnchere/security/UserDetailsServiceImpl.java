@@ -41,7 +41,7 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 			 		.password(member.getPassword())
 			 		//.roles()
 			 		.build();
-			 	logger.debug(user.toString());
+			 	//logger.debug(user.toString());
 				return user;
 		}
 		throw new UsernameNotFoundException(username + " not found.");
