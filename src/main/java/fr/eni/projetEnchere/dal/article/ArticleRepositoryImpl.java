@@ -203,9 +203,9 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 
 	@Override
 	public void delete(int id) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Method not implemented yet");
-		
+		logger.debug("DB: deleting article with id "+id);
+		String sql = "DELETE from ARTICLES where idArticle = ?";
+		jdbcTemplate.update(sql, id);
 	}
 	
 	

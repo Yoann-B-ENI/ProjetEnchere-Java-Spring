@@ -67,10 +67,18 @@
 	</div>
 	
 	<div th:if="${article.vendor.equals(loggedMember) && article.status.name=='Created'}">
-	<form action="/article/redirectToUpdate" method="get">
+	<form action="/article/redirectToUpdate" method="post">
+		<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 		<input type="hidden" name="idArticle" th:value="${article.idArticle}">
 		<button>Modifier</button>
 	</form>
+	
+	<form action="/article/deleteArticle" method="post">
+		<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+		<input type="hidden" name="idArticle" th:value="${article.idArticle}">
+		<button>Annuler la vente (supprimer la vente)</button>
+	</form>
+	
 	</div>
 
 </div>

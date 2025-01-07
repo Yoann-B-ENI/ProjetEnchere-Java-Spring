@@ -9,6 +9,14 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Set;
 
+
+/*
+ * A custom system to handle filters in a query decided from the HTML/Thymeleaf.
+ * 
+ * 
+ * 
+ * 
+ */
 public class FilterSystem {
 	
 	Logger logger = LoggerFactory.getLogger(ArticleController.class);
@@ -19,6 +27,7 @@ public class FilterSystem {
 	// one dictionary for the A LIKE %B% condition, one for the A = B condition
 	private Map<String, String> filterMapLike = new HashMap<String, String>();
 	private Map<String, String> filterMapEquals = new HashMap<String, String>();
+	
 	
 	// build from the set of entries coming from the HTML
 	public FilterSystem(Set<Entry<String, String>> entrySet) {
@@ -36,6 +45,9 @@ public class FilterSystem {
 		}
 	}
 
+	
+	
+	
 	// processes a string-shaped-list of filter instructions
 	private void processFilterInstructions(String rawInstructs) {
 		// split the string list < <sql_mode, sql_name> > into all the pairs

@@ -107,7 +107,7 @@ public class ArticleController {
 		return "article/formCreateArticle";
 	}
 	
-	@GetMapping("/redirectToUpdate")
+	@PostMapping("/redirectToUpdate")
 	public String redirectToUpdate(@RequestParam("idArticle") int idArticle, Model model, HttpSession session) {
 		//logger.debug("Ctrl: Article Ctrl: Redirecting to create article form");
 		
@@ -237,6 +237,7 @@ public class ArticleController {
 		return "article/articleDetails";
 	}
 	
+	
 	@PostMapping("/bid")
 	public String processNewBid(@RequestParam("newPrice") int newPrice, 
 								@RequestParam("idArticle") int idArticle, 
@@ -278,6 +279,29 @@ public class ArticleController {
 	}
 
 	
+	@PostMapping("/deleteArticle")
+	public String deleteArticle(@RequestParam("idArticle") int idArticle, HttpSession session) {
+		
+		Member loggedMember = (Member) session.getAttribute("loggedMember");
+		if (loggedMember == null) {
+			logger.error("Ctrl: ArticleCtrl: > Logged member not found on processing bid, must break");
+			return "redirect:/";
+		}
+		
+		Article art = articleService.getById(idArticle);
+		if (art == null) {
+			logger.error("Ctrl: ArticleCtrl: Error: article asked to be deleted not found");
+			return "redirect:/";
+		}
+		if (!art.getVendor().equals(loggedMember)) {
+			logger.error("Ctrl: ArticleCtrl: Error: article asked to be deleted by someone other than article vendor");
+		}
+		
+		logger.debug("Ctrl: ArticleCtrl: sending command to delete article of id "+idArticle);
+		articleService.delete(idArticle);
+		
+		return "redirect:/";
+	}
 	
 	
 	
@@ -287,7 +311,7 @@ public class ArticleController {
 	//TODO End of dev : 
 	// hide the "toutes encheres" debug option?
 	// decide on whether to have the base page show all auctions or just ongoing ones?
-	
+	// filter system doc
 	
 	
 	// if vendor and created -> can update
