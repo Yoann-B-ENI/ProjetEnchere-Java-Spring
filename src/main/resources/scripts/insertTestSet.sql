@@ -37,15 +37,9 @@ VALUES
 -- Insert Articles
 INSERT INTO articles (name, description, auctionStartDate, auctionEndDate, startingPrice, salePrice, status, idVendor, idBuyer, idCategory, idRemovalPoint)
 VALUES 
-<<<<<<< HEAD
-('Laptop', 'A high-performance laptop with 16GB RAM and 512GB SSD', '2025-01-20', '2025-01-30',
-500, 500, 'Created', 1, null, 1, 1),  -- John Doe is the vendor (idVendor 1)
-('Sofa', 'Comfortable 3-seater sofa with fabric upholstery', '2024-12-05', '2025-01-19',
-=======
 ('Laptop', 'A high-performance laptop with 16GB RAM and 512GB SSD', '2025-01-20', '2025-01-30', 
 500, 500, 'Created', 1, null, 1, 1),  -- John Doe is the vendor (idVendor 1)
 ('Sofa', 'Comfortable 3-seater sofa with fabric upholstery', '2024-12-05', '2025-01-19', 
->>>>>>> 2b54fc9dd0d014c7a45f026ddea0ced81cb27d66
 300, 581, 'AuctionStarted', 2, null, 2, 2),  -- Jane Smith is the vendor (idVendor 2)
 ('Novel - "The Great Adventure"', 'A thrilling novel about an epic journey', '2024-12-02', '2024-12-09', 
 20, 36, 'AuctionEnded', 4, 4, 3, 3),  -- Bob Jones is the vendor 
