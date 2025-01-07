@@ -43,6 +43,7 @@ public class Article {
 	private int salePrice;
 	
 	// not null, fk members
+	//@NotNull(message = "L'article doit avoir un vendeur.") // CANT, see ArticleController, we assign afterwards
 	private Member vendor;
 	
 	// null, fk members

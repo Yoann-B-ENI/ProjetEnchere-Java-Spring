@@ -1,9 +1,8 @@
 package fr.eni.projetEnchere.controllers;
 
-import java.util.HashMap;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,14 +14,17 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import fr.eni.projetEnchere.bll.article.ArticleService;
+import fr.eni.projetEnchere.bll.bid.BidService;
 import fr.eni.projetEnchere.bll.category.CategoryService;
 import fr.eni.projetEnchere.bll.removalpoint.RemovalPointService;
 import fr.eni.projetEnchere.bo.Article;
+import fr.eni.projetEnchere.bo.Bid;
 import fr.eni.projetEnchere.bo.Category;
 import fr.eni.projetEnchere.bo.Member;
 import fr.eni.projetEnchere.bo.RemovalPoint;
@@ -41,15 +43,17 @@ public class ArticleController {
 	private ArticleService articleService;
 	private CategoryService categoryService;
 	private RemovalPointService removalPointService;
+	private BidService bidService;
 
 
 	@Autowired
 	public ArticleController(CategoryService categoryService, RemovalPointService removalPointService,
-			ArticleService articleService) {
+			ArticleService articleService, BidService bidService) {
 		super();
 		this.categoryService = categoryService;
 		this.removalPointService = removalPointService;
 		this.articleService = articleService;
+		this.bidService = bidService;
 	}
 
 	@InitBinder
@@ -64,11 +68,19 @@ public class ArticleController {
         List<RemovalPoint> allRemovalPoints = (List<RemovalPoint>) session.getAttribute("allRemovalPoints");
         binder.registerCustomEditor(RemovalPoint.class, new CustomRemovalPointEditor(allRemovalPoints));
     }
-
-	@GetMapping("/redirectToCreate")
-	public String redirectToCreate(Model model, HttpSession session) {
-		//logger.debug("\n Redirecting to create article form");
-
+	
+	
+	private Article makeEmptyArticle() {
+		Article art = new Article();
+//		art.setName(null);
+//		art.setDescription(null);
+		
+		
+		return art;
+	}
+	
+	private void loadCategoriesAndArticles(Model model, HttpSession session) {
+		
 		List<Category> categoriesFound = categoryService.getAll();
 		// model for the html, session for the 1-database-call editor in the init binder
 		session.setAttribute("allCategories", categoriesFound); // session so make sure to overwrite it every form
@@ -76,29 +88,67 @@ public class ArticleController {
 		//logger.debug(categoriesFound);
 
 		Member member = (Member) session.getAttribute("loggedMember");
+		
 		RemovalPoint rp = new RemovalPoint(0, member.getRoadNumber(), member.getRoadName(), member.getZipCode(),
 				member.getTownName(), member, "Home Adress (auto)");
 		List<RemovalPoint> removalPointsFound = removalPointService.getAllByMemberId(member.getIdMember());
 		if (!removalPointsFound.contains(rp)) {
 			removalPointsFound.add(rp);
 		}
-
 		session.setAttribute("allRemovalPoints", removalPointsFound);
 		model.addAttribute("allRemovalPoints", removalPointsFound);
 		//logger.debug(removalPointsFound);
-
-		return "article/formCreateArticle";
+		
 	}
 
-	@PostMapping("/create")
-	public String create(@ModelAttribute @Valid Article article, BindingResult bindingResult, 
+	@GetMapping("/redirectToCreate")
+	public String redirectToCreate(Model model, HttpSession session) {
+		//logger.debug("\n Redirecting to create article form");
+		
+		Article art = this.makeEmptyArticle();
+		model.addAttribute("article", art);
+		
+		this.loadCategoriesAndArticles(model, session);
+		
+		return "article/formCreateArticle";
+	}
+	
+	@GetMapping("/redirectToUpdate")
+	public String redirectToUpdate(@RequestParam("idArticle") int idArticle, Model model, HttpSession session) {
+		
+		Member member = (Member) session.getAttribute("loggedMember");
+		if (member.equals(null)) {
+			System.err.println("somehow not logged in while updating an article, must break");
+			return "redirect:/";
+		}
+		
+		List<Article> articlesFound = this.articleService.getAllCreatedByMember(member.getIdMember());
+		
+		Article art = this.articleService.getById(idArticle);
+		if (art == null) {
+			System.err.println("article "+idArticle+" not found, must break");
+			return "redirect:/";
+		}
+		if (!articlesFound.contains(art)){
+			System.err.println("article "+idArticle+" not found in editable articles of member "+member+", must break");
+			return "redirect:/";
+		}
+		model.addAttribute("article", art);
+
+		this.loadCategoriesAndArticles(model, session);
+		
+		return "article/formCreateArticle";
+	}
+	
+
+	@PostMapping("/createOrUpdate")
+	public String createOrUpdate(@ModelAttribute @Valid Article article, BindingResult bindingResult, 
 			Model model, HttpSession session) {
 		
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("validationErrors", bindingResult.getAllErrors());
 			return "article/formCreateArticle";
 		}
-		
 
 		articleService.determineStatusFromDates(article);
 		Member member = (Member) session.getAttribute("loggedMember");
@@ -110,7 +160,12 @@ public class ArticleController {
 			this.removalPointService.create(article.getRemovalPoint());
 		} // pray for an inplace modification
 		//logger.debug("\n Sending article to db " + article);
-		articleService.create(article);
+		if (article.getIdArticle() == 0) {
+			articleService.create(article);
+		}
+		else {
+			articleService.update(article);
+		}
 
 		return "redirect:/";
 	}
@@ -167,8 +222,83 @@ public class ArticleController {
 	}
 	
 	
+	@GetMapping("/{id}")
+	public String showArticle(@PathVariable("id") int id, Model model, HttpSession session) {
+		
+		Article art = articleService.getById(id);
+		model.addAttribute("article", art);
+		System.out.println("loading article details of article with vendor "+art.getVendor());
+		Member loggedMember = (Member) session.getAttribute("loggedMember");
+		model.addAttribute("loggedMember", loggedMember);
+		System.out.println("with logged member "+loggedMember);
+		System.out.println("");
+		
+		return "article/articleDetails";
+	}
+	
+	@PostMapping("/bid")
+	public String processNewBid(@RequestParam("newPrice") int newPrice, 
+								@RequestParam("idArticle") int idArticle, 
+								HttpSession session, Model model) {
+		// 
+		Article article = articleService.getById(idArticle);
+		System.out.println("article bid on: "+article);
+		if (article == null) {
+			System.err.println("Article not found on processing bid, must break");
+			return "redirect:/";
+		}
+		
+		Member loggedMember = (Member) session.getAttribute("loggedMember");
+		System.out.println("logged member: "+loggedMember);
+		if (loggedMember == null) {
+			System.err.println("Logged member not found on processing bid, must break");
+			return "redirect:/article/"+article.getIdArticle();
+		}
+		
+		Bid bid = new Bid(loggedMember.getIdMember(), article.getIdArticle(), LocalDateTime.now(), newPrice);
+		
+		if(loggedMember.equals(article.getVendor())) {
+			System.err.println("Logged Member is already the vendor, should break but will continue for dev");
+			//return "redirect:/article/"+article.getIdArticle();
+		}
+		if(loggedMember.getCredits() - newPrice >= 0) {
+			loggedMember.addCredits(-newPrice);
+			if (article.getBuyer() != null) {
+				article.getBuyer().addCredits(article.getSalePrice());
+			}
+			article.setBuyer(loggedMember);
+			article.setSalePrice(newPrice);
+			articleService.update(article);
+			bidService.create(bid);
+		}
+		else {System.err.println("insufficient credits error");}
+		
+		return "redirect:/article/"+article.getIdArticle();
+	}
+
+	
+	
+	
+	
 	// jane_smith
 	// password
+	
+	//TODO End of dev : 
+	// re-put the 'toutes encheres en cours' to AuctionStarted and not IGNORE
+	// make a logged member not able to bid on their own bids (they just don't see the line?)
+	
+	
+	
+	// if vendor and created -> can update
+	// if vendor and else -> nothing
+	
+	// if not and created -> can't see page
+	// if not and started -> can bid
+	// if buyer and ended -> can see frozen
+	// else -> can't see
+	
+	
+	
 	
 	
 	
