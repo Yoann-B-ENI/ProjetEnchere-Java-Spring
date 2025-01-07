@@ -5,6 +5,8 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -20,9 +22,10 @@ import fr.eni.projetEnchere.bo.RemovalPoint;
 @Repository
 public class RemovalPointRepositoryImpl implements RemovalPointRepository{
 	
+	Logger logger = LoggerFactory.getLogger(RemovalPointRepositoryImpl.class);
+	
 	private JdbcTemplate jdbcTemplate;
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-	
 	
 
 	public RemovalPointRepositoryImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
@@ -32,8 +35,9 @@ public class RemovalPointRepositoryImpl implements RemovalPointRepository{
 	}
 
 	@Override
+	// sets the new id in the java object inplace
 	public void create(RemovalPoint t) {
-		// sets the new id in the java object
+		logger.debug("DB: create removal point "+t);
 		String sql = "INSERT into RemovalPoints (roadNumber, roadName, zipCode, townName, idMember, pointName)"
 				+ " VALUES(:roadNumber, :roadName, :zipCode, :townName, :memberTemp, :pointName)";
 		
@@ -48,24 +52,28 @@ public class RemovalPointRepositoryImpl implements RemovalPointRepository{
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		namedParameterJdbcTemplate.update(sql, paramSource, keyHolder, new String[]{"idmember"});
 		int newId = keyHolder.getKey().intValue();
+		if (newId == 0) {logger.error("DB: Error: newly created RemovalPoint got assigned id 0");}
 		
 		// in place, hope it reflects back up to the previous function call
 		t.setIdRemovalPoint(newId);
+		logger.debug("> set the id of the new removal point to "+newId);
 	}
 
 	@Override
 	public List<RemovalPoint> getAll() {
-		System.out.println("\n > DATABASE : get all removalpoints");
+		logger.debug("DB: get all removalpoints");
 		String sql = "SELECT * FROM removalpoints ORDER BY (idMember, idRemovalPoint) ASC";
 		List<RemovalPoint> removalPointsFound = jdbcTemplate.query(sql, new RemovalPointRowMapper());
+		if (removalPointsFound.isEmpty()) {logger.warn("DB: Warn: removal points found list is empty");}
 		return removalPointsFound;
 	}
 
 	@Override
 	public List<RemovalPoint> getAllByMemberId(int idMember) {
-		System.out.println("\n > DATABASE : get all removalpoints of Member "+idMember);
+		logger.debug("DB: get all removalpoints of member of id "+idMember);
 		String sql = "SELECT * FROM removalpoints WHERE idMember = ? ORDER BY (idMember, idRemovalPoint) ASC";
 		List<RemovalPoint> removalPointsFound = jdbcTemplate.query(sql, new RemovalPointRowMapper(), idMember);
+		if (removalPointsFound.isEmpty()) {logger.warn("DB: Warn: removal points found list is empty");}
 		return removalPointsFound;
 	}
 	@Override

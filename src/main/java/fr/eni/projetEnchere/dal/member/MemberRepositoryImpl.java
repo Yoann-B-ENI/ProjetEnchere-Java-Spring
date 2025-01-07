@@ -34,10 +34,12 @@ public class MemberRepositoryImpl implements MemberRepository {
 
 	@Override
 	public void create(Member member) {
+		logger.debug("DB: create member "+member);
 		String sql = "insert into Members (userName, password, name, firstName, email, phoneNumber, roadNumber, roadName, zipCode, townName, admin, credits) "
 				+ "values (:userName, :password, :name, :firstName, :email, :phoneNumber, :roadNumber, :roadName, :zipCode, :townName, :admin, :credits)";
 		int nbRows = namedParameterJdbcTemplate.update(sql, new BeanPropertySqlParameterSource(member));
 		if (nbRows != 1) {
+			logger.error("DB: Error: no new line added in DB while creating member");
 			throw new RuntimeException("Erreur, aucune ligne n'a été ajoutée pour l'utilisateur: " + member);
 		}
 	}
@@ -50,15 +52,18 @@ public class MemberRepositoryImpl implements MemberRepository {
 
 	@Override
 	public Optional<Member> getById(int id) {
+		logger.debug("DB: get member by id "+id);
 		String sql = "select idMember, userName, password, name, firstName, email, phoneNumber, roadNumber, roadName, zipCode, townname, credits, admin "
 				+ "from Members where idMember = ?";
 		Member member = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Member.class), id);
-
-		return Optional.ofNullable(member);
+		Optional<Member> opt_member = Optional.ofNullable(member);
+		if (opt_member.isEmpty()) {logger.warn("DB: Warn: member not found");}
+		return opt_member;
 	}
 
 	@Override
 	public void update(Member member){
+		logger.debug("DB: update member "+member);
 		String sql = "update Members set " + "userName = :userName, password = :password, "
 				+ "name = :name, firstName = :firstName, email = :email, "
 				+ "phoneNumber = :phoneNumber, roadNumber = :roadNumber,"
@@ -74,20 +79,21 @@ public class MemberRepositoryImpl implements MemberRepository {
 
 	@Override
 	public void delete(int id) {
+		logger.debug("DB: delete member of id "+id);
 		String sql = "delete from Members where idMember = ?";
-		
 		int nbRows = jdbcTemplate.update(sql, id);
 
 	}
 
 	@Override
 	public Optional<Member> getByUserName(String userName) {
+		logger.debug("DB: get member by username "+userName);
 		String sql = "select idMember, userName, password, name, firstName, email, phoneNumber, roadNumber, roadName, zipCode, townname, credits, admin "
 				+ "from Members where userName = ?";
-
 		Member member = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Member.class), userName);
-
-		return Optional.ofNullable(member);
+		Optional<Member> opt_member = Optional.ofNullable(member);
+		if (opt_member.isEmpty()) {logger.warn("DB: Warn: member not found");}
+		return opt_member;
 	}
 
 }

@@ -3,9 +3,15 @@ package fr.eni.projetEnchere.controllers;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Set;
 
 public class FilterSystem {
+	
+	Logger logger = LoggerFactory.getLogger(ArticleController.class);
 	
 	private static String FILTER_SYS_INSTRUCT_SPLIT = "_----_";
 	private static String FILTER_SYS_KEY_SPLIT = "_-_";
@@ -22,7 +28,7 @@ public class FilterSystem {
 			String val = entry.getValue();
 			if (val == null || val.isBlank() || val.isEmpty()) {val = "IGNORE";}
 			if (!key.contains(FilterSystem.FILTER_SYS_KEY_SPLIT)) {
-				System.out.println("Warn : filter system > skipping non-instruction "+key);
+				logger.warn("Filter System: Warn: skipping non-instruction "+key);
 				continue;
 			}
 			String rawInstructs = key+FilterSystem.FILTER_SYS_KEY_SPLIT+val;
@@ -38,7 +44,7 @@ public class FilterSystem {
 			// [sql_mode, sql_name, sql_val]
 			String[] modeNameVal = instruction.split(FilterSystem.FILTER_SYS_KEY_SPLIT);
 			if (modeNameVal.length != 3) {
-				System.out.println("Warn : filter system > skipping badly shaped instruction "+instruction);
+				logger.warn("Filter System: Warn: skipping badly shaped instruction "+instruction);
 				continue;
 			}
 			String sql_mode = modeNameVal[0];
@@ -52,10 +58,10 @@ public class FilterSystem {
 	private void processFilterKey(String sql_mode, String sql_name, String sql_val) {
 		// 
 		if (!sql_mode.equals("like") && !sql_mode.equals("equals")) {
-			System.out.println("Error : filter system > not recognising splitkey instruction " + sql_mode);
+			logger.error("Filter System: Error: not recognising splitkey instruction " + sql_mode);
 		}
 		if (sql_val.equals("IGNORE") || sql_val.isBlank() || sql_val.isEmpty()) {
-			System.out.println("WARN : filter system > skipping key "+sql_name+" bc no value");
+			logger.warn("Filter System: Warn: skipping key "+sql_name+" bc no value");
 		}
 		//TODO check that the sql_name is a name that exists in the sql query return?
 		//	> really annoying possibly?

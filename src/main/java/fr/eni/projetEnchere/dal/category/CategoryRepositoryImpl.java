@@ -39,9 +39,11 @@ public class CategoryRepositoryImpl implements CategoryRepository{
 
 	@Override
 	public List<Category> getAll() {
-		//logger.debug("\n > DATABASE: get all categories");
+		logger.debug("DB: get all categories");
 		String sql = "SELECT * FROM categories ORDER BY idCategory ASC";
 		List<Category> categoriesFound = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Category.class));
+		if (categoriesFound.isEmpty()) {logger.warn("DB: Warn: categories found list is empty");}
+		logger.debug("> categories found: "+categoriesFound);
 		return categoriesFound;
 	}
 
