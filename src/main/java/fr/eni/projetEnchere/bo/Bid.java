@@ -5,8 +5,10 @@ import java.util.Objects;
 
 public class Bid {
 	
+	private int idBid;
+	
 	// not null, pk1
-	private int idMember;
+	private Member member;
 	
 	// not null, pk2
 	private int idArticle;
@@ -20,19 +22,17 @@ public class Bid {
 	public Bid() {
 		super();
 	}
-	public Bid(int idMember, int idArticle, LocalDateTime bidDate, int bidPrice) {
+	public Bid(int idBid, Member member, int idArticle, LocalDateTime bidDate, int bidPrice) {
 		super();
-		this.idMember = idMember;
+		this.idBid = idBid;
+		this.member = member;
 		this.idArticle = idArticle;
 		this.bidDate = bidDate;
 		this.bidPrice = bidPrice;
 	}
-	public int getIdMember() {
-		return idMember;
-	}
-	public void setIdMember(int idMember) {
-		this.idMember = idMember;
-	}
+
+
+
 	public int getIdArticle() {
 		return idArticle;
 	}
@@ -52,11 +52,29 @@ public class Bid {
 		this.bidPrice = bidPrice;
 	}
 	
+	public int getIdBid() {
+		return idBid;
+	}
+	public void setIdBid(int idBid) {
+		this.idBid = idBid;
+	}
+
+	public Member getMember() {
+		return member;
+	}
+	public void setMember(Member member) {
+		this.member = member;
+	}
+	
+	
+	
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Bid [idMember=");
-		builder.append(idMember);
+		builder.append("Bid [idBid=");
+		builder.append(idBid);
+		builder.append(", member=");
+		builder.append(member);
 		builder.append(", idArticle=");
 		builder.append(idArticle);
 		builder.append(", bidDate=");
@@ -66,10 +84,9 @@ public class Bid {
 		builder.append("]");
 		return builder.toString();
 	}
-	
 	@Override
 	public int hashCode() {
-		return Objects.hash(idArticle, idMember);
+		return Objects.hash(bidDate, bidPrice, idArticle, idBid, member);
 	}
 	@Override
 	public boolean equals(Object obj) {
@@ -80,8 +97,17 @@ public class Bid {
 		if (getClass() != obj.getClass())
 			return false;
 		Bid other = (Bid) obj;
-		return idArticle == other.idArticle && idMember == other.idMember;
+		return Objects.equals(bidDate, other.bidDate) && bidPrice == other.bidPrice && idArticle == other.idArticle
+				&& idBid == other.idBid && Objects.equals(member, other.member);
 	}
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 }

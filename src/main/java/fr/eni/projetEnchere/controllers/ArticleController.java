@@ -234,6 +234,11 @@ public class ArticleController {
 		Member loggedMember = (Member) session.getAttribute("loggedMember");
 		model.addAttribute("loggedMember", loggedMember);
 		
+		if (art.getVendor().equals(loggedMember)) {
+			List<Bid> bidsFound = bidService.getBidsByArticleId(id);
+			model.addAttribute("bidsFound", bidsFound);
+		}
+		
 		return "article/articleDetails";
 	}
 	
@@ -256,7 +261,7 @@ public class ArticleController {
 			return "redirect:/article/"+article.getIdArticle();
 		}
 		
-		Bid bid = new Bid(loggedMember.getIdMember(), article.getIdArticle(), LocalDateTime.now(), newPrice);
+		Bid bid = new Bid(0, loggedMember, article.getIdArticle(), LocalDateTime.now(), newPrice);
 		
 		if(loggedMember.equals(article.getVendor())) {
 			logger.error("Ctrl: ArticleCtrl: > Logged Member is already the vendor, must break");
@@ -312,6 +317,7 @@ public class ArticleController {
 	// hide the "toutes encheres" debug option?
 	// decide on whether to have the base page show all auctions or just ongoing ones?
 	// filter system doc
+	// display dates cleaner in html
 	
 	
 	// if vendor and created -> can update
