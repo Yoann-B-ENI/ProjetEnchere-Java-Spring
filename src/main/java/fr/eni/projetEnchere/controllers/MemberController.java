@@ -3,6 +3,7 @@ package fr.eni.projetEnchere.controllers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,6 +20,7 @@ import fr.eni.projetEnchere.bll.member.MemberService;
 import fr.eni.projetEnchere.bo.Member;
 import fr.eni.projetEnchere.exception.UserNameAlreadyExistsException;
 import fr.eni.projetEnchere.security.UserDetailsServiceImpl;
+import fr.eni.projetEnchere.security.WebSecurityConfig;
 
 @Controller
 public class MemberController {
@@ -52,40 +54,61 @@ public class MemberController {
 	}
 
 	@GetMapping("/register")
-	public String showRegistrationForm(Model model, HttpSession session ) {
+	public String showRegistrationForm(Model model, HttpSession session) {
 		Member member = (Member) session.getAttribute("loggedMember");
-        if (member == null) {
-            member = initializeMember();
-        }
-        model.addAttribute("member", member);
-		return "register";
+		if (member == null) {
+			member = initializeMember();
+		}
+		model.addAttribute("member", member);
+		if ((Member)session.getAttribute("loggedMember") != null) {
+		logger.debug("membre dans le model : " + ((Member)model.getAttribute("member")).toString());
+		logger.debug("membre en session : " + ((Member)session.getAttribute("loggedMember")).toString());
+		}
+		return "/register";
 	}
 
 	@PostMapping("/register")
 	public String addMember(@Valid @ModelAttribute Member member, BindingResult result, RedirectAttributes redirectAttr,
 			HttpSession session, Model model) {
-		Member loggedMember = (Member) session.getAttribute("loggedMember");
+		System.out.println("oui je passe dans le postmapping /register");
+		Member loggedMember = (Member) session.getAttribute("member");
+		if (loggedMember != null) {
+			logger.debug(loggedMember.toString());
+		} else {
+			logger.debug("no logged member");
+
+		}
 		if (result.hasErrors()) {
+			logger.debug("Validation errors: " + result.getAllErrors());
 			redirectAttr.addFlashAttribute("org.springframework.validation.BindingResult.member", result);
 			redirectAttr.addFlashAttribute("member", member);
-			return "register";
+			return "/register";
 		}
-		 try {
-			 	member.setIdMember(loggedMember.getIdMember());
-			 	service.save(member, loggedMember);
-			 	Member UpdatedMember = service.getById(member.getIdMember());
-			 	logger.debug(UpdatedMember.toString());
-		        session.setAttribute("loggedMember", UpdatedMember);
-		        
-		    } catch (UserNameAlreadyExistsException e) {
-		        // Si l'exception est levée, on ajoute un message d'exception personnalisé à la vue
-		        redirectAttr.addFlashAttribute("UserNameAlreadyExistsException", true);
-		        redirectAttr.addFlashAttribute("ExceptionMessage", e.getMessage()); 
-		        return "redirect:/register";
-		    }
-		 
-		return "redirect:/home";
+		try {
+			if (loggedMember != null) {
+				member.setIdMember(loggedMember.getIdMember());
+				logger.debug(member.toString());
+				Member UpdatedMember = service.getById(member.getIdMember());
+				logger.debug(UpdatedMember.toString());
+				model.addAttribute("member", UpdatedMember);
+			}
+			service.save(member, loggedMember);
+			if (loggedMember == null) {
+				logger.debug("membre créé : " + service.getByUserName(member.getUserName()).toString());
+				return "/login";
+			}
+		} catch (UserNameAlreadyExistsException e) {
+			// Si l'exception est levée, on ajoute un message d'exception personnalisé à la
+			// vue
+			logger.debug("user already exists");
+			redirectAttr.addFlashAttribute("UserNameAlreadyExistsException", true);
+			redirectAttr.addFlashAttribute("ExceptionMessage", e.getMessage());
+			return "redirect:/register";
+		}
 		
+		logger.debug("Redirection to /home");
+		return "home";
+
 	}
 
 	@GetMapping("/member/{id}")
@@ -94,20 +117,21 @@ public class MemberController {
 		model.addAttribute("member", member);
 		logger.debug(member.toString());
 		return "member/memberDetails";
-		
+
 	}
-	
-	 @PostMapping("/deleteMember")
-	    public String deleteAccount(HttpSession session) {
-	        Member member = (Member) session.getAttribute("loggedMember");
-	        logger.debug(member.toString());
-	        if (member != null) {
-	            service.delete(member.getIdMember());
-	            logger.warn(member.toString());
-	            session.invalidate();
-	            
-	        }
-	        return "redirect:/home";
-	    }
+
+	@PostMapping("/deleteMember")
+	public String deleteAccount(HttpSession session) {
+		Member member = (Member) session.getAttribute("loggedMember");
+		
+		if (member != null) {
+			logger.debug(member.toString());
+			service.delete(member.getIdMember());
+			logger.warn(member.toString());
+			session.invalidate();
+
+		}
+		return "redirect:/home";
+	}
 
 }

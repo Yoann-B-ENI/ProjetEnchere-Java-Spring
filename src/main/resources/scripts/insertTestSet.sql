@@ -35,8 +35,7 @@ VALUES
 (45, 'Rue de lassociation', '44880', 'Nantes', 4, 'auction storage');
 
 -- Insert Articles
-INSERT INTO articles (name, description, auctionStartDate, auctionEndDate, 
-startingPrice, salePrice, status, idVendor, idBuyer, idCategory, idRemovalPoint)
+INSERT INTO articles (name, description, auctionStartDate, auctionEndDate, startingPrice, salePrice, status, idVendor, idBuyer, idCategory, idRemovalPoint)
 VALUES 
 ('Laptop', 'A high-performance laptop with 16GB RAM and 512GB SSD', '2025-01-20', '2025-01-30', 
 500, 500, 'Created', 1, null, 1, 1),  -- John Doe is the vendor (idVendor 1)
