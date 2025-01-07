@@ -55,7 +55,7 @@ public class WebSecurityConfig {
 					.invalidateHttpSession(true)
 					.addLogoutHandler(clearSiteData)
 	                .logoutUrl("/logout") // URL de déconnexion
-	                .logoutSuccessUrl("/login") // Redirection après déconnexion
+	                .logoutSuccessUrl("/home") // Redirection après déconnexion
 	                .permitAll() // Accessible sans authentification        
 	            )
 			.rememberMe()

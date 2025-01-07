@@ -51,10 +51,10 @@ public class LoginController {
     	return "redirect:/article/loadArticles";
     }
     
-    @PostMapping("/logout")
-    public String logout(HttpSession session, Model model) {
-    	logger.debug("logging out");
-		return "/home";    	
-   }
+//    @PostMapping("/logout")
+//    public String logout(HttpSession session, Model model) {
+//    	logger.debug("logging out");
+//		return "/home";    	
+//   }
     
 }

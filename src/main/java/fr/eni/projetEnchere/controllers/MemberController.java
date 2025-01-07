@@ -64,7 +64,7 @@ public class MemberController {
 		logger.debug("membre dans le model : " + ((Member)model.getAttribute("member")).toString());
 		logger.debug("membre en session : " + ((Member)session.getAttribute("loggedMember")).toString());
 		}
-		return "register";
+		return "/register";
 	}
 
 	@PostMapping("/register")
@@ -82,7 +82,7 @@ public class MemberController {
 			logger.debug("Validation errors: " + result.getAllErrors());
 			redirectAttr.addFlashAttribute("org.springframework.validation.BindingResult.member", result);
 			redirectAttr.addFlashAttribute("member", member);
-			return "register";
+			return "/register";
 		}
 		try {
 			if (loggedMember != null) {
@@ -107,7 +107,7 @@ public class MemberController {
 		}
 		
 		logger.debug("Redirection to /home");
-		return "/home";
+		return "home";
 
 	}
 

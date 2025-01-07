@@ -43,7 +43,7 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public Member getById(int id) throws EmptyResultDataAccessException{
+	public Member getById(int id) throws EmptyResultDataAccessException {
 		return memberRepo.getById(id).get();
 
 	}
@@ -61,34 +61,31 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public Member getByUserName(String userName){
+	public Member getByUserName(String userName) {
 		return memberRepo.getByUserName(userName).get();
 	}
 
 	@Override
 	public void save(Member member, Member loggedMember) throws UserNameAlreadyExistsException {
 		logger.debug("passage dans la méthode save");
-		if (loggedMember != null) {
-			Optional<Member> optMember = Optional.empty();
-			try {
+		Optional<Member> optMember = Optional.empty();
+		try {
 			logger.debug(member.toString());
 			optMember = memberRepo.getByUserName(member.getUserName());
-			//logger.debug(member.toString());
-			} catch (EmptyResultDataAccessException e) {
-				optMember = Optional.empty();
-			}finally {
+			// logger.debug(member.toString());
+		} catch (EmptyResultDataAccessException e) {
+			optMember = Optional.empty();
+		} finally {
 			if (optMember.isEmpty() || member.equals(optMember.get())) {
-//				try {
+				if (loggedMember != null) {
 					this.update(member);
-//				} catch (PSQLException e) {
-//					throw new UserNameAlreadyExistsException("Pseudo non disponible");
-//				}
-			}else {
-				
-				throw new UserNameAlreadyExistsException("Pseudo non disponible");		
-			}	}
-		} else {
-			this.create(member);
+				} else {
+					this.create(member);
+				}
+			} else {
+
+				throw new UserNameAlreadyExistsException("Pseudo non disponible");
+			}
 		}
 	}
 
