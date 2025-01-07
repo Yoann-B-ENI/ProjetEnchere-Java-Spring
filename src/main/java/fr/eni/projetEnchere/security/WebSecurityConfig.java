@@ -37,7 +37,7 @@ public class WebSecurityConfig {
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		//logger.debug("login");
+		
 		http
 			.authorizeHttpRequests((requests) -> requests
 				.requestMatchers("/images/**","/css/**","/login","/","/register","/home","/encheres").permitAll()
@@ -55,14 +55,15 @@ public class WebSecurityConfig {
 					.invalidateHttpSession(true)
 					.addLogoutHandler(clearSiteData)
 	                .logoutUrl("/logout") // URL de déconnexion
-	                .logoutSuccessUrl("/home") // Redirection après déconnexion
-	                .permitAll() // Accessible sans authentification
+	                .logoutSuccessUrl("/login") // Redirection après déconnexion
+	                .permitAll() // Accessible sans authentification        
 	            )
 			.rememberMe()
 	        	.key("uniqueAndSecretKey")
 	        	.tokenValiditySeconds(86400);
 		//logger.debug("login");
-		return http.build();
+		http.build();
+		return http.getOrBuild();
 	}
 
 	@Bean

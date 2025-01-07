@@ -3,6 +3,7 @@ package fr.eni.projetEnchere.controllers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,6 +20,7 @@ import fr.eni.projetEnchere.bll.member.MemberService;
 import fr.eni.projetEnchere.bo.Member;
 import fr.eni.projetEnchere.exception.UserNameAlreadyExistsException;
 import fr.eni.projetEnchere.security.UserDetailsServiceImpl;
+import fr.eni.projetEnchere.security.WebSecurityConfig;
 
 @Controller
 public class MemberController {
@@ -93,6 +95,7 @@ public class MemberController {
 			service.save(member, loggedMember);
 			if (loggedMember == null) {
 				logger.debug("membre créé : " + service.getByUserName(member.getUserName()).toString());
+				return "/login";
 			}
 		} catch (UserNameAlreadyExistsException e) {
 			// Si l'exception est levée, on ajoute un message d'exception personnalisé à la
@@ -102,8 +105,9 @@ public class MemberController {
 			redirectAttr.addFlashAttribute("ExceptionMessage", e.getMessage());
 			return "redirect:/register";
 		}
+		
 		logger.debug("Redirection to /home");
-		return "redirect:/home";
+		return "/home";
 
 	}
 

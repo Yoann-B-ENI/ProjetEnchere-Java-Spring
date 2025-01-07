@@ -81,7 +81,7 @@ public class MemberRepositoryImpl implements MemberRepository {
 	}
 
 	@Override
-	public Optional<Member> getByUserName(String userName) {
+	public Optional<Member> getByUserName(String userName) throws EmptyResultDataAccessException{
 		String sql = "select idMember, userName, password, name, firstName, email, phoneNumber, roadNumber, roadName, zipCode, townname, credits, admin "
 				+ "from Members where userName = ?";
 

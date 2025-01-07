@@ -67,7 +67,7 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public void save(Member member, Member loggedMember) throws UserNameAlreadyExistsException {
-	
+		logger.debug("passage dans la méthode save");
 		if (loggedMember != null) {
 			Optional<Member> optMember = Optional.empty();
 			try {
