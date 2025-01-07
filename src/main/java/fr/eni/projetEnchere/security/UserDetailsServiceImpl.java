@@ -17,7 +17,7 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 	
 	Logger logger = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
 	MemberRepository memberRepo;
-	Member member;
+
 	
 	public UserDetailsServiceImpl(MemberRepository memberRepo) {
 		super();
@@ -34,6 +34,7 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 		UserDetails user =null;
 		
 		if(!memberRepo.getByUserName(username).isEmpty()) {
+			Member member;
 			member = memberRepo.getByUserName(username).get();
 			
 			 	user = User.builder()
@@ -47,12 +48,6 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 		throw new UsernameNotFoundException(username + " not found.");
 	}
 
-	public Member getMember() {
-		return member;
-	}
-
-	public void setMember(Member member) {
-		this.member = member;
-	}
+	
 	
 }

@@ -13,6 +13,10 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.logout.HeaderWriterLogoutHandler;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.security.web.header.writers.ClearSiteDataHeaderWriter;
+import org.springframework.security.web.header.writers.ClearSiteDataHeaderWriter.Directive;
 
 @Configuration
 @EnableWebSecurity
@@ -22,6 +26,9 @@ public class WebSecurityConfig {
 
 	@Autowired
 	private UserDetailsService service;
+	
+	HeaderWriterLogoutHandler clearSiteData = new HeaderWriterLogoutHandler(new ClearSiteDataHeaderWriter(Directive.ALL));
+
 
 	public WebSecurityConfig(UserDetailsService service) {
 		super();
@@ -43,6 +50,10 @@ public class WebSecurityConfig {
 				.permitAll()
 			)
 			.logout((logout) -> logout
+					.deleteCookies("JSESSIONID")
+					.clearAuthentication(true)
+					.invalidateHttpSession(true)
+					.addLogoutHandler(clearSiteData)
 	                .logoutUrl("/logout") // URL de déconnexion
 	                .logoutSuccessUrl("/home") // Redirection après déconnexion
 	                .permitAll() // Accessible sans authentification

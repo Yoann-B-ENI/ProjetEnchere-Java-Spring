@@ -58,34 +58,53 @@ public class MemberController {
 			member = initializeMember();
 		}
 		model.addAttribute("member", member);
+		if ((Member)session.getAttribute("loggedMember") != null) {
+		logger.debug("membre dans le model : " + ((Member)model.getAttribute("member")).toString());
+		logger.debug("membre en session : " + ((Member)session.getAttribute("loggedMember")).toString());
+		}
 		return "register";
 	}
 
 	@PostMapping("/register")
 	public String addMember(@Valid @ModelAttribute Member member, BindingResult result, RedirectAttributes redirectAttr,
 			HttpSession session, Model model) {
-		Member loggedMember = (Member) session.getAttribute("loggedMember");
+		System.out.println("oui je passe dans le postmapping /register");
+		Member loggedMember = (Member) session.getAttribute("member");
+		if (loggedMember != null) {
+			logger.debug(loggedMember.toString());
+		} else {
+			logger.debug("no logged member");
+
+		}
 		if (result.hasErrors()) {
+			logger.debug("Validation errors: " + result.getAllErrors());
 			redirectAttr.addFlashAttribute("org.springframework.validation.BindingResult.member", result);
 			redirectAttr.addFlashAttribute("member", member);
 			return "register";
 		}
-		 try {
-			 	member.setIdMember(loggedMember.getIdMember());
-			 	service.save(member, loggedMember);
-			 	Member UpdatedMember = service.getById(member.getIdMember());
-			 	logger.debug(UpdatedMember.toString());
-		        session.setAttribute("loggedMember", UpdatedMember);
-		        
-		    } catch (UserNameAlreadyExistsException e) {
-		        // Si l'exception est levée, on ajoute un message d'exception personnalisé à la vue
-		        redirectAttr.addFlashAttribute("UserNameAlreadyExistsException", true);
-		        redirectAttr.addFlashAttribute("ExceptionMessage", e.getMessage()); 
-		        return "redirect:/register";
-		    }
-		 
+		try {
+			if (loggedMember != null) {
+				member.setIdMember(loggedMember.getIdMember());
+				logger.debug(member.toString());
+				Member UpdatedMember = service.getById(member.getIdMember());
+				logger.debug(UpdatedMember.toString());
+				model.addAttribute("member", UpdatedMember);
+			}
+			service.save(member, loggedMember);
+			if (loggedMember == null) {
+				logger.debug("membre créé : " + service.getByUserName(member.getUserName()).toString());
+			}
+		} catch (UserNameAlreadyExistsException e) {
+			// Si l'exception est levée, on ajoute un message d'exception personnalisé à la
+			// vue
+			logger.debug("user already exists");
+			redirectAttr.addFlashAttribute("UserNameAlreadyExistsException", true);
+			redirectAttr.addFlashAttribute("ExceptionMessage", e.getMessage());
+			return "redirect:/register";
+		}
+		logger.debug("Redirection to /home");
 		return "redirect:/home";
-		
+
 	}
 
 	@GetMapping("/member/{id}")
@@ -100,8 +119,9 @@ public class MemberController {
 	@PostMapping("/deleteMember")
 	public String deleteAccount(HttpSession session) {
 		Member member = (Member) session.getAttribute("loggedMember");
-		logger.debug(member.toString());
+		
 		if (member != null) {
+			logger.debug(member.toString());
 			service.delete(member.getIdMember());
 			logger.warn(member.toString());
 			session.invalidate();

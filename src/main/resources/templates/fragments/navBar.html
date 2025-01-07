@@ -22,7 +22,7 @@
 					th:text="${#authentication.getPrincipal().getUsername()}"></label>
 			</p>
 			<a href="/encheres">Enchères</a> <a href="/article/redirectToCreate">Vendre
-				un article</a> <a href="/register">Mon Profil</a>
+				un article</a> <a th:href="@{/register}">Mon Profil</a>
 			<form th:action="@{/logout}" method="post" class="flex items-center">
 				<button type="submit" class="ml-4">Déconnexion</button>
 		</div>
