@@ -1,6 +1,8 @@
 package fr.eni.projetEnchere.controllers;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -178,7 +180,16 @@ public class ArticleController {
 		List<Category> categoriesFound = categoryService.getAll();
 		model.addAttribute("allCategories", categoriesFound);
 		
-		List<Article> articlesFound = articleService.getAll();
+		boolean showAll = true;
+		List<Article> articlesFound = new ArrayList<Article>();
+		if (showAll) {
+			articlesFound = articleService.getAll();
+		}
+		else {
+			Map<String, String> filterMap = new HashMap<String, String>();
+			filterMap.put("status", "AuctionStarted");
+			articlesFound = articleService.getAll(null, filterMap, 0);
+		}
 		model.addAttribute("articles", articlesFound);
 		
 		return "encheres";
@@ -199,7 +210,7 @@ public class ArticleController {
 			idLoggedMember = member.getIdMember();
 			model.addAttribute("idMember", member.getIdMember());
 		}
-		logger.debug("> searching with logged member id (0=not logged): "+idLoggedMember);
+		logger.debug("> searching with logged member id (0=not logged in): "+idLoggedMember);
 		
 		List<Article> articlesFound = articleService.getAll(
 				filters.getFilterMapLike(), 
@@ -274,8 +285,8 @@ public class ArticleController {
 	// password
 	
 	//TODO End of dev : 
-	// re-put the 'toutes encheres en cours' to AuctionStarted and not IGNORE
-	// make a logged member not able to bid on their own bids (they just don't see the line?)
+	// hide the "toutes encheres" debug option?
+	// decide on whether to have the base page show all auctions or just ongoing ones?
 	
 	
 	

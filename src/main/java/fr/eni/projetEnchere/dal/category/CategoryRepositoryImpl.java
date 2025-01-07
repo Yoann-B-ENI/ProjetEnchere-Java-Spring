@@ -2,7 +2,7 @@ package fr.eni.projetEnchere.dal.category;
 
 import java.util.List;
 import java.util.Optional;
-
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,10 +40,15 @@ public class CategoryRepositoryImpl implements CategoryRepository{
 	@Override
 	public List<Category> getAll() {
 		logger.debug("DB: get all categories");
+		
 		String sql = "SELECT * FROM categories ORDER BY idCategory ASC";
 		List<Category> categoriesFound = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Category.class));
+		
 		if (categoriesFound.isEmpty()) {logger.warn("DB: Warn: categories found list is empty");}
-		logger.debug("> categories found: "+categoriesFound);
+		String categoriesStr = categoriesFound.stream()
+                .map(c -> ""+c.getIdCategory()+" "+c.getName())
+                .collect(Collectors.joining(", \n"));
+		logger.debug("> categories found: \n"+categoriesStr);
 		return categoriesFound;
 	}
 

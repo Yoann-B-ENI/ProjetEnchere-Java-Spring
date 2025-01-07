@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -142,8 +143,12 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 				+ "ORDER BY (innerTable.auctionEndDate, innerTable.salePrice) ASC";
 		logger.debug("DB: Article filter query \n"+sql+"\n");
 		List<Article> articlesFound = jdbcTemplate.query(sql, new ArticleSmallRowMapper(), idLoggedMember);
+		
 		if (articlesFound.isEmpty()) {logger.warn("DB: Warn: articles found list is empty");}
-		logger.debug("> Articles found "+articlesFound);
+		String articlesStr = articlesFound.stream()
+                .map(art -> ""+art.getIdArticle()+" "+art.getName())
+                .collect(Collectors.joining(", \n"));
+		logger.debug("> Articles found: \n"+articlesStr);
 		return articlesFound;
 	}
 
