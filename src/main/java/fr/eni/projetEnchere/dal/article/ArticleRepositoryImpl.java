@@ -10,6 +10,7 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -33,23 +34,20 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 	
 	
-	
+	@Autowired
 	public ArticleRepositoryImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
 		super();
 		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
 		this.jdbcTemplate = this.namedParameterJdbcTemplate.getJdbcTemplate();
 	}
 
-	@Override
-	// sets the new id in the java object
-	public void create(Article t) {
-		String sql = "INSERT into Articles(name, description, auctionStartDate, auctionEndDate, "
-				+ "startingPrice, salePrice, status, idVendor, idBuyer, idCategory, idRemovalPoint)";
-		sql += "values(:name, :description, :auctionStartDate, :auctionEndDate, "
-				+ ":startingPrice, :salePrice, :statusTemp, :vendorTemp, :buyerTemp, :categoryTemp, :removalPointTemp)";
+	
+	
+	private MapSqlParameterSource getArticleParameterSource(Article t) {
 		
 		MapSqlParameterSource paramSource = new MapSqlParameterSource();
 		paramSource.addValue("name", t.getName());
+		paramSource.addValue("idArticle", t.getIdArticle());
 		paramSource.addValue("description", t.getDescription());
 		paramSource.addValue("auctionStartDate", t.getAuctionStartDate());
 		paramSource.addValue("auctionEndDate", t.getAuctionEndDate());
@@ -65,6 +63,19 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 		}
 		paramSource.addValue("categoryTemp", t.getCategory().getIdCategory());
 		paramSource.addValue("removalPointTemp", t.getRemovalPoint().getIdRemovalPoint());
+		
+		return paramSource;
+	}
+	
+	@Override
+	// sets the new id in the java object
+	public void create(Article t) {
+		String sql = "INSERT into Articles(name, description, auctionStartDate, auctionEndDate, "
+				+ "startingPrice, salePrice, status, idVendor, idBuyer, idCategory, idRemovalPoint)";
+		sql += "values(:name, :description, :auctionStartDate, :auctionEndDate, "
+				+ ":startingPrice, :salePrice, :statusTemp, :vendorTemp, :buyerTemp, :categoryTemp, :removalPointTemp)";
+		
+		MapSqlParameterSource paramSource = this.getArticleParameterSource(t);
 		
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		namedParameterJdbcTemplate.update(sql, paramSource, keyHolder, new String[]{"idarticle"});
@@ -140,6 +151,7 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 		String sql = "SELECT \r\n"
 				+ "	art.idArticle, \r\n"
 				+ "	art.name as article_name, \r\n"
+				+ "	art.description, \r\n"
 				+ "	art.auctionStartDate, \r\n"
 				+ "	art.auctionEndDate, \r\n"
 				+ "	art.status, \r\n"
@@ -169,9 +181,18 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 
 	@Override
 	public void update(Article t) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Method not implemented yet");
+		System.out.println("db called update on article");
+		String sql = "UPDATE Articles SET name = :name, description = :description, "
+				+ "auctionStartDate = :auctionStartDate, auctionEndDate = :auctionEndDate, "
+				+ "startingPrice = :startingPrice, salePrice = :salePrice, "
+				+ "status = :statusTemp, "
+				+ "idVendor = :vendorTemp, idBuyer = :buyerTemp, idCategory = :categoryTemp, "
+				+ "idRemovalPoint = :removalPointTemp "
+				+ " WHERE idArticle = :idArticle";
 		
+		MapSqlParameterSource paramSource = this.getArticleParameterSource(t);
+		
+		namedParameterJdbcTemplate.update(sql, paramSource);
 	}
 
 	@Override
@@ -247,9 +268,10 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 			
 			art.setIdArticle(rs.getInt("idArticle"));
 			art.setName(rs.getString("article_name"));
+			art.setDescription(rs.getString("description"));
 			art.setAuctionStartDate(rs.getObject("auctionStartDate", LocalDateTime.class));
 			art.setAuctionEndDate(rs.getObject("auctionEndDate", LocalDateTime.class));
-			art.setStatus(rs.getObject("status", ArticleStatus.class));
+			art.setStatus(ArticleStatus.valueOf(rs.getString("status")));
 			art.setStartingPrice(rs.getInt("startingPrice"));
 			art.setSalePrice(rs.getInt("salePrice"));
 			

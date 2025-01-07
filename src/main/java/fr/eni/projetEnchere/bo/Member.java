@@ -254,6 +254,12 @@ public class Member {
 	public void setCredits(int i) {
 		this.credits = i;
 	}
+	public void addCredits(int delta) {
+		if(this.getCredits() + delta < 0) {
+			System.err.println("Member has their credits tried to reduce below 0");
+		}
+		this.setCredits(this.getCredits() + delta);
+	}
 
 	public Boolean getAdmin() {
 		return admin;

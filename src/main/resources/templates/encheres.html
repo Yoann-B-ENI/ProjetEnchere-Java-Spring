@@ -69,7 +69,7 @@
 					<div class="lg:col-span-2">
 						<h3 class="text-xl font-semibold mb-2">Statut des enchères</h3>
 						<div>
-							<input type="radio" name="equals_-_status" value="IGNORE"
+							<input type="radio" name="equals_-_status" value="AuctionStarted"
 								checked="checked" id="all-auctions" /> <label
 								for="all-auctions" class="ml-2">Toutes enchères en cours</label>
 						</div>
@@ -152,8 +152,8 @@
 			<div class="card bg-gray-800 p-6 rounded-lg shadow-md"
 				th:each="art : ${articles}">
 				
-				<h3 class="text-xl font-semibold mb-2" th:text="${art.name}">Nom
-					de l'article</h3>
+				<a th:href="@{/article/{id}(id=${art.idArticle})}"><h3 class="text-xl font-semibold mb-2" th:text="${art.name}">
+					Nom de l'article</h3></a>
 				<p>
 					<strong>Id Enchère:</strong> <span th:text="${art.idArticle}"></span>
 				</p>

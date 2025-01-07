@@ -1,6 +1,7 @@
 package fr.eni.projetEnchere.bll.article;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -35,6 +36,16 @@ public class ArticleServiceImpl implements ArticleService{
 	}
 	
 	@Override
+	public List<Article> getAllCreatedByMember(int idMember){
+		
+		Map<String, String> filters = new HashMap<String, String>();
+		filters.put("status", "Created");
+		filters.put("idVendor", ""+idMember);
+		
+		return this.articleRepository.getAll(null, filters, idMember);
+	}
+	
+	@Override
 	public List<Article> getAll(Map<String, String> filterMapLike, Map<String, String> filterMapEquals, int idLoggedMember) {
 		return this.articleRepository.getAll(filterMapLike, filterMapEquals, idLoggedMember);
 	}
@@ -47,9 +58,7 @@ public class ArticleServiceImpl implements ArticleService{
 
 	@Override
 	public void update(Article t) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Method not implemented yet");
-		
+		this.articleRepository.update(t);
 	}
 
 	@Override
