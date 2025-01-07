@@ -27,6 +27,7 @@ public class LoginController {
     
     @GetMapping({"/", "/home", "/encheres"})
     public String home(HttpSession session) {
+    	
     	session.setAttribute("loggedMember", ((UserDetailsServiceImpl) service).getMember());
     	return "redirect:/article/loadArticles";
     }

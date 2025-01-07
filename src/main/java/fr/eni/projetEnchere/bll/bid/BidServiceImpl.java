@@ -48,4 +48,9 @@ public class BidServiceImpl implements BidService{
 		
 	}
 
+	@Override
+	public List<Bid> getBidsByArticleId(int idArticle) {
+		return this.bidRepo.getBidsByArticleId(idArticle);
+	}
+
 }

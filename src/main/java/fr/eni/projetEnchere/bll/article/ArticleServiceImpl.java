@@ -63,9 +63,7 @@ public class ArticleServiceImpl implements ArticleService{
 
 	@Override
 	public void delete(int id) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Method not implemented yet");
-		
+		this.articleRepository.delete(id);
 	}
 
 	@Override

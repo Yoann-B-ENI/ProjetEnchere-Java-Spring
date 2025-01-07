@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -68,7 +69,7 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 	}
 	
 	@Override
-	// sets the new id in the java object
+	// sets the new id in the java object inplace
 	public void create(Article t) {
 		String sql = "INSERT into Articles(name, description, auctionStartDate, auctionEndDate, "
 				+ "startingPrice, salePrice, status, idVendor, idBuyer, idCategory, idRemovalPoint)";
@@ -78,10 +79,13 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 		MapSqlParameterSource paramSource = this.getArticleParameterSource(t);
 		
 		KeyHolder keyHolder = new GeneratedKeyHolder();
+		logger.debug("DB: creating new Article "+t);
 		namedParameterJdbcTemplate.update(sql, paramSource, keyHolder, new String[]{"idarticle"});
 		int newId = keyHolder.getKey().intValue();
+		if (newId == 0) {logger.error("DB: Error: newly created article got assigned id 0");}
 		
 		t.setIdArticle(newId);
+		logger.debug("> new Article got db id "+newId);
 	}
 	
 	
@@ -137,17 +141,20 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 				+ "WHERE 1=1 \r\n"
 				+ this.processFilters(filterMapLike, filterMapEquals)
 				+ "ORDER BY (innerTable.auctionEndDate, innerTable.salePrice) ASC";
-		//logger.debug("  > DATABASE ARTICLE FILTER QUERY \n"+sql+"\n\n");
+		logger.debug("DB: Article filter query \n"+sql+"\n");
 		List<Article> articlesFound = jdbcTemplate.query(sql, new ArticleSmallRowMapper(), idLoggedMember);
-
 		
+		if (articlesFound.isEmpty()) {logger.warn("DB: Warn: articles found list is empty");}
+		String articlesStr = articlesFound.stream()
+                .map(art -> ""+art.getIdArticle()+" "+art.getName())
+                .collect(Collectors.joining(", \n"));
+		logger.debug("> Articles found: \n"+articlesStr);
 		return articlesFound;
 	}
 
 	@Override
 	public Optional<Article> getById(int id) {
-
-		//logger.debug("\n > DATABASE : get article of id "+id);
+		logger.debug("DB: get Article of id "+id);
 		String sql = "SELECT \r\n"
 				+ "	art.idArticle, \r\n"
 				+ "	art.name as article_name, \r\n"
@@ -172,16 +179,16 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 				+ "JOIN categories cat on art.idcategory = cat.idcategory\r\n"
 				+ "JOIN removalpoints rp on art.idremovalpoint = rp.idremovalpoint\r\n"
 				+ "WHERE art.idArticle = ?";
-
 		
 		Article art = jdbcTemplate.queryForObject(sql, new ArticleBigRowMapper(), id);
 		Optional<Article> return_art = Optional.ofNullable(art);
+		if (return_art.isEmpty()) {logger.warn("DB: Warn: article not found");}
 		return return_art;
 	}
 
 	@Override
 	public void update(Article t) {
-		System.out.println("db called update on article");
+		logger.debug("DB: update article "+t);
 		String sql = "UPDATE Articles SET name = :name, description = :description, "
 				+ "auctionStartDate = :auctionStartDate, auctionEndDate = :auctionEndDate, "
 				+ "startingPrice = :startingPrice, salePrice = :salePrice, "
@@ -191,18 +198,15 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 				+ " WHERE idArticle = :idArticle";
 		
 		MapSqlParameterSource paramSource = this.getArticleParameterSource(t);
-		
 		namedParameterJdbcTemplate.update(sql, paramSource);
 	}
 
 	@Override
 	public void delete(int id) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Method not implemented yet");
-		
+		logger.debug("DB: deleting article with id "+id);
+		String sql = "DELETE from ARTICLES where idArticle = ?";
+		jdbcTemplate.update(sql, id);
 	}
-	
-	
 	
 	
 	
