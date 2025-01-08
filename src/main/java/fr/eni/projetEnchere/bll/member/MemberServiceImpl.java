@@ -43,7 +43,7 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public Member getById(int id) {
+	public Member getById(int id) throws EmptyResultDataAccessException {
 		return memberRepo.getById(id).get();
 
 	}
@@ -67,28 +67,25 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public void save(Member member, Member loggedMember) throws UserNameAlreadyExistsException {
-	
-		if (loggedMember != null) {
-			Optional<Member> optMember;
-			try {
+		logger.debug("passage dans la méthode save");
+		Optional<Member> optMember = Optional.empty();
+		try {
 			logger.debug(member.toString());
 			optMember = memberRepo.getByUserName(member.getUserName());
-			logger.debug(member.toString());
-			} catch (EmptyResultDataAccessException e) {
-				optMember = Optional.empty();
-			}
+			// logger.debug(member.toString());
+		} catch (EmptyResultDataAccessException e) {
+			optMember = Optional.empty();
+		} finally {
 			if (optMember.isEmpty() || member.equals(optMember.get())) {
-//				try {
+				if (loggedMember != null) {
 					this.update(member);
-//				} catch (PSQLException e) {
-//					throw new UserNameAlreadyExistsException("Pseudo non disponible");
-//				}
-			}else {
-				
-				throw new UserNameAlreadyExistsException("Pseudo non disponible");		
-			}	
-		} else {
-			this.create(member);
+				} else {
+					this.create(member);
+				}
+			} else {
+
+				throw new UserNameAlreadyExistsException("Pseudo non disponible");
+			}
 		}
 	}
 

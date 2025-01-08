@@ -34,7 +34,7 @@ public class MemberRepositoryImpl implements MemberRepository {
 
 	@Override
 	public void create(Member member) {
-		logger.debug("DB: create member "+member);
+		logger.debug("DB: create member " + member);
 		String sql = "insert into Members (userName, password, name, firstName, email, phoneNumber, roadNumber, roadName, zipCode, townName, admin, credits) "
 				+ "values (:userName, :password, :name, :firstName, :email, :phoneNumber, :roadNumber, :roadName, :zipCode, :townName, :admin, :credits)";
 		int nbRows = namedParameterJdbcTemplate.update(sql, new BeanPropertySqlParameterSource(member));
@@ -51,8 +51,13 @@ public class MemberRepositoryImpl implements MemberRepository {
 	}
 
 	@Override
+<<<<<<< HEAD
 	public Optional<Member> getById(int id) {
 		logger.debug("DB: get member by id "+id);
+=======
+
+	public Optional<Member> getById(int id) throws EmptyResultDataAccessException {
+>>>>>>> 18a8cf4a50c22d0af93aebea4153cc9b2fa871ff
 		String sql = "select idMember, userName, password, name, firstName, email, phoneNumber, roadNumber, roadName, zipCode, townname, credits, admin "
 				+ "from Members where idMember = ?";
 		Member member = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Member.class), id);
@@ -62,15 +67,15 @@ public class MemberRepositoryImpl implements MemberRepository {
 	}
 
 	@Override
-	public void update(Member member){
-		logger.debug("DB: update member "+member);
+	public void update(Member member) {
+		logger.debug("DB: update member " + member);
 		String sql = "update Members set " + "userName = :userName, password = :password, "
 				+ "name = :name, firstName = :firstName, email = :email, "
 				+ "phoneNumber = :phoneNumber, roadNumber = :roadNumber,"
 				+ " roadName = :roadName, zipCode = zipCode, townName = :townName, "
 				+ "credits = :credits, admin = :admin where idMember = :idMember";
 //		try {
-			namedParameterJdbcTemplate.update(sql, new BeanPropertySqlParameterSource(member));
+		namedParameterJdbcTemplate.update(sql, new BeanPropertySqlParameterSource(member));
 //		} catch (Exception e) {
 //			throw new PSQLException("pseudo non disponible", null);
 //		}
@@ -79,20 +84,22 @@ public class MemberRepositoryImpl implements MemberRepository {
 
 	@Override
 	public void delete(int id) {
-		logger.debug("DB: delete member of id "+id);
+		logger.debug("DB: delete member of id " + id);
 		String sql = "delete from Members where idMember = ?";
 		int nbRows = jdbcTemplate.update(sql, id);
 
 	}
 
 	@Override
-	public Optional<Member> getByUserName(String userName) {
-		logger.debug("DB: get member by username "+userName);
+	public Optional<Member> getByUserName(String userName) throws EmptyResultDataAccessException {
+		logger.debug("DB: get member by username " + userName);
 		String sql = "select idMember, userName, password, name, firstName, email, phoneNumber, roadNumber, roadName, zipCode, townname, credits, admin "
 				+ "from Members where userName = ?";
 		Member member = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Member.class), userName);
 		Optional<Member> opt_member = Optional.ofNullable(member);
-		if (opt_member.isEmpty()) {logger.warn("DB: Warn: member not found");}
+		if (opt_member.isEmpty()) {
+			logger.warn("DB: Warn: member not found");
+		}
 		return opt_member;
 	}
 

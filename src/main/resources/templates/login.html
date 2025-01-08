@@ -59,19 +59,26 @@
 		<!-- Login Form -->
 		<form th:action="@{/login}" method="post" class="space-y-4">
 			<div>
-				<label class="block text-sm font-medium text-gray-300">Identifiant</label> <input type="text" name="username"
+				<label class="block text-sm font-medium text-gray-300">Identifiant</label> <input autocomplete="username" type="text" name="username"
 					class="mt-1 block w-full border-gray-700 bg-gray-900 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-gray-100 p-2" />
 			</div>
 			<div>
 				<label class="block text-sm font-medium text-gray-300">Mot de passe</label>
-				<input type="password" name="password"
+				<input autocomplete="current-password" type="password" name="password"
 					class="mt-1 block w-full border-gray-700 bg-gray-900 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-gray-100 p-2" />
+			</div>
+			<div class="flex items-center">
+			    <input type="checkbox" id="remember-me" name="remember-me"
+			        class="h-4 w-4 text-indigo-600 bg-gray-900 border-gray-700 rounded focus:ring-indigo-500">
+			    <label for="remember-me" class="ml-2 block text-sm text-gray-300">Se souvenir de moi</label>
 			</div>
 			<div>
 				<button type="submit"
 					class="w-full bg-indigo-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-800">
 					Connexion</button>
 			</div>
+			
+		    
 		</form>
 		<button><a href="/register">Créer un compte</a></button> 
 	</div>
