@@ -3,6 +3,8 @@ package fr.eni.projetEnchere.controllers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -71,7 +73,7 @@ public class MemberController {
 	public String addMember(@Valid @ModelAttribute Member member, BindingResult result, RedirectAttributes redirectAttr,
 			HttpSession session, Model model) {
 		System.out.println("oui je passe dans le postmapping /register");
-		Member loggedMember = (Member) session.getAttribute("member");
+		Member loggedMember = (Member) session.getAttribute("loggedMember");
 		if (loggedMember != null) {
 			logger.debug(loggedMember.toString());
 		} else {
@@ -85,29 +87,26 @@ public class MemberController {
 			return "/register";
 		}
 		try {
-			if (loggedMember != null) {
-				member.setIdMember(loggedMember.getIdMember());
-				logger.debug(member.toString());
-				Member UpdatedMember = service.getById(member.getIdMember());
-				logger.debug(UpdatedMember.toString());
-				model.addAttribute("member", UpdatedMember);
-			}
-			service.save(member, loggedMember);
+			model.addAttribute("member", member);
+			Member updatedMember = service.save(member, loggedMember);
+			session.setAttribute("loggedMember", updatedMember);
+			model.addAttribute("member", updatedMember);
+			
 			if (loggedMember == null) {
 				logger.debug("membre créé : " + service.getByUserName(member.getUserName()).toString());
-				return "/login";
+				return "redirect:/home";
 			}
 		} catch (UserNameAlreadyExistsException e) {
-			// Si l'exception est levée, on ajoute un message d'exception personnalisé à la
-			// vue
+			// Si l'exception est levée, on ajoute un message d'exception personnalisé à la vue
 			logger.debug("user already exists");
+			redirectAttr.addFlashAttribute("member", member);
 			redirectAttr.addFlashAttribute("UserNameAlreadyExistsException", true);
 			redirectAttr.addFlashAttribute("ExceptionMessage", e.getMessage());
 			return "redirect:/register";
 		}
 		
 		logger.debug("Redirection to /home");
-		return "home";
+		return "redirect:/home";
 
 	}
 

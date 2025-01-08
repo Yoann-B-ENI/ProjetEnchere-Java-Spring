@@ -17,12 +17,12 @@ import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class LoginController {
-	
+
 	Logger logger = LoggerFactory.getLogger(LoginController.class);
 	@Autowired
 	UserDetailsService service;
 	MemberService memberService;
-	
+
 	public LoginController(UserDetailsService service, MemberService memberService) {
 		super();
 		this.service = service;
@@ -30,32 +30,33 @@ public class LoginController {
 	}
 
 	// password for bob_jones : mySecret789
-    @GetMapping("/login")
-    public String login() {
-        return "login"; 
-    }
-    
-    @GetMapping({"/", "/home", "/encheres"})
+	@GetMapping("/login")
+	public String login() {
+		return "login";
+	}
 
-    public String home(HttpSession session ) {
-    	// Get the currently authenticated user
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        
-        if (principal instanceof UserDetails) {
-            UserDetails userDetails = (UserDetails) principal;
-            String username = userDetails.getUsername();
-            Member member = memberService.getByUserName(username);
-            // You can use the userDetails here
-            session.setAttribute("loggedMember", member);
-        }
+	@GetMapping({ "/", "/home", "/encheres" })
+
+	public String home(HttpSession session) {
+		// Get the currently authenticated user
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (session.getAttribute("loggedMember") == null) {
+			if (principal instanceof UserDetails) {
+				UserDetails userDetails = (UserDetails) principal;
+				String username = userDetails.getUsername();
+				Member member = memberService.getByUserName(username);
+				// You can use the userDetails here
+				session.setAttribute("loggedMember", member);
+			}
+		}
 //    	session.setAttribute("loggedMember", );
-    	return "redirect:/article/loadArticles";
-    }
-    
+		return "redirect:/article/loadArticles";
+	}
+
 //    @PostMapping("/logout")
 //    public String logout(HttpSession session, Model model) {
 //    	logger.debug("logging out");
 //		return "/home";    	
 //   }
-    
+
 }

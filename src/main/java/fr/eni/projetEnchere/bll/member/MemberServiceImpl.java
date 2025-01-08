@@ -66,27 +66,52 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public void save(Member member, Member loggedMember) throws UserNameAlreadyExistsException {
+	public Member save(Member member, Member loggedMember) throws UserNameAlreadyExistsException {
 		logger.debug("passage dans la méthode save");
 		Optional<Member> optMember = Optional.empty();
+		Member updatedMember = new Member();
 		try {
-			logger.debug(member.toString());
+			if (loggedMember != null){
+				member.setIdMember(loggedMember.getIdMember());
+				//logger.debug("loggedMember: " + loggedMember.toString());
+			}
+			logger.debug("loggedMember: " + member.toString());
 			optMember = memberRepo.getByUserName(member.getUserName());
-			// logger.debug(member.toString());
+			logger.debug(" try : " + member.toString());
 		} catch (EmptyResultDataAccessException e) {
+			logger.debug(" catch : " + optMember.toString());
 			optMember = Optional.empty();
-		} finally {
-			if (optMember.isEmpty() || member.equals(optMember.get())) {
-				if (loggedMember != null) {
+			if (loggedMember != null) {
+				if (optMember.isEmpty() || member.equals(optMember.get())) {
 					this.update(member);
-				} else {
-					this.create(member);
+					updatedMember = this.getById(member.getIdMember());
+					
 				}
+			} else if (loggedMember == null && optMember.isEmpty()) {
+				this.create(member);
+				updatedMember = this.getByUserName(member.getUserName());
+				
 			} else {
-
 				throw new UserNameAlreadyExistsException("Pseudo non disponible");
 			}
+			return updatedMember;
 		}
+		
+		if (loggedMember != null) {
+			if (optMember.isEmpty() || member.equals(optMember.get())) {
+				this.update(member);
+				updatedMember = this.getById(member.getIdMember());
+				
+			} else {
+				throw new UserNameAlreadyExistsException("Pseudo non disponible");
+			}
+		} else if (loggedMember == null && optMember.isEmpty()) {
+			this.create(member);
+			updatedMember = this.getByUserName(member.getUserName());
+			
+		} else {
+			throw new UserNameAlreadyExistsException("Pseudo non disponible");
+		}
+		return updatedMember;
 	}
-
 }
