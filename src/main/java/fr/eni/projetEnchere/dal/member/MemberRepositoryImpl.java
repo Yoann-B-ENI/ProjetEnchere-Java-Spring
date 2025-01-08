@@ -51,13 +51,8 @@ public class MemberRepositoryImpl implements MemberRepository {
 	}
 
 	@Override
-<<<<<<< HEAD
-	public Optional<Member> getById(int id) {
-		logger.debug("DB: get member by id "+id);
-=======
-
 	public Optional<Member> getById(int id) throws EmptyResultDataAccessException {
->>>>>>> 18a8cf4a50c22d0af93aebea4153cc9b2fa871ff
+	logger.debug("DB: get member by id "+id);
 		String sql = "select idMember, userName, password, name, firstName, email, phoneNumber, roadNumber, roadName, zipCode, townname, credits, admin "
 				+ "from Members where idMember = ?";
 		Member member = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Member.class), id);
