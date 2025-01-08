@@ -41,6 +41,7 @@ public class AuctionImageService {
     // DEV ONLY
 	@PostConstruct
 	public void startUpSequence() {
+		logger.debug("Startup: Images: Launching StartUp Sequence");
 		Path path = Paths.get(imageDirectory); // make the root
 		// ABSOLUTELY DO NOT DO AN IF EXISTS DELETE (in prod at least)
         this.ifNotExistsCreate(path);
@@ -87,9 +88,9 @@ public class AuctionImageService {
     	if (!Files.exists(path)) {
             try {
                 Files.createDirectories(path);
-                logger.debug("Startup: Images: created directory "+path);
+                logger.debug("> Images: created directory "+path);
             } catch (IOException e) {
-            	logger.error("Startup: Images: ERROR: "+e.getMessage());
+            	logger.error("> Images: ERROR: "+e.getMessage());
                 e.printStackTrace();
             }
         }
@@ -100,7 +101,7 @@ public class AuctionImageService {
             try {
 				this.deleteDirectory(path);
 			} catch (IOException e) {
-				logger.error("Startup: Images: ERROR: Failed to delete existing folders"+e.getMessage());
+				logger.error("> Images: ERROR: Failed to delete existing folders"+e.getMessage());
 				e.printStackTrace();
 			}
         }
@@ -111,7 +112,7 @@ public class AuctionImageService {
             Files.walk(directory)
                     .map(Path::toFile)
                     .forEach(File::delete);
-            logger.warn("Deleted existing directory at: " + directory);
+            logger.warn("> Images: Deleted existing directory at: " + directory);
         }
     }
 

@@ -118,7 +118,6 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 	@Override
 	public List<Article> getAll(Map<String, String> filterMapLike, Map<String, String> filterMapEquals, 
 			int idLoggedMember) {
-		//logger.debug("\n > DATABASE : get all articles");
 		String sql = "SELECT * \r\n"
 				+ "FROM \r\n"
 				+ "(\r\n"
