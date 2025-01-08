@@ -1,11 +1,28 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Détails Article</title>
-</head>
-<body>
 
+<title>Détails de l'article</title>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+        /* Flashy Animated Background */
+        body {
+            background: linear-gradient(135deg, #ff00ff, #ff7700, #00ff00, #0000ff);
+            background-size: 400% 400%;
+            animation: backgroundGradient 8s infinite;
+        }
+
+        @keyframes backgroundGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+</style>
+</head>
+<body class="bg-gray-900 font-sans text-gray-100">
+<div ></div>
 <!-- Navigation -->
 <nav class="bg-gray-800 shadow-md">
 	<div class="max-w-7xl mx-auto px-4 py-4">
@@ -18,7 +35,7 @@
 	</div>
 </nav>
 
-<div>
+<div class="max-w-7xl mx-auto px-4 py-8">
 
 	<div>
 		<h1 th:text="${article.name}"></h1>
@@ -57,66 +74,44 @@
 			<button type="submit">Renchérir</button>
 		</form>
 		</div>
-		
-	</div>
-
-	<div>
-		<p> <strong>Vendu par</strong> <span th:text="${article.vendor.userName}"></span> 
-			<span th:if="${article.vendor.equals(loggedMember)}"> (Vous)</span>
-		</p>
-		
-		<p> <strong>Retrait au</strong> <br>
-			<span th:text="${article.removalPoint.roadNumber}+' '+${article.removalPoint.roadName}"></span> 
-			<br>
-			<span th:text="${article.removalPoint.zipCode}+' '+${article.removalPoint.townName}"></span>
-		</p>
-		
-	</div>
 	
-	<div th:if="${article.vendor.equals(loggedMember) && article.status.name=='Created'}">
-	<form action="/article/redirectToUpdate" method="post">
-		<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-		<input type="hidden" name="idArticle" th:value="${article.idArticle}">
-		<button>Modifier</button>
-	</form>
+		<!-- Historique des offres -->
+		<div class="mt-8" th:if="${article.vendor.equals(loggedMember)}">
+			<h2 class="text-2xl font-semibold mb-4">Historique des offres :</h2>
+			<table class="w-full border-collapse border border-gray-600">
+				<thead>
+					<tr class="bg-gray-700 text-white">
+						<th class="p-2 border border-gray-600">ID Offre</th>
+						<th class="p-2 border border-gray-600">Auteur offre</th>
+						<th class="p-2 border border-gray-600">Date de l'offre</th>
+						<th class="p-2 border border-gray-600">Prix de l'offre</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="b : ${bidsFound}" class="text-gray-300">
+						<td class="p-2 border border-gray-600" th:text="${b.idBid}"></td>
+						<td class="p-2 border border-gray-600" th:text="${b.Member.userName}"></td>
+						<td class="p-2 border border-gray-600" th:text="${b.bidDate}"></td>
+						<td class="p-2 border border-gray-600" th:text="${b.bidPrice}"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 	
-	<form action="/article/deleteArticle" method="post">
-		<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-		<input type="hidden" name="idArticle" th:value="${article.idArticle}">
-		<button>Annuler la vente (supprimer la vente)</button>
-	</form>
+		<!-- Boutons pour modifier ou annuler la vente -->
+		<div class="max-w-3xl bg-gray-700 p-4 rounded-lg shadow-md flex justify-center space-x-4 mt-6 mx-auto" th:if="${article.vendor.equals(loggedMember) && article.status.name=='Created'}">
+			<form action="/article/redirectToUpdate" method="post">
+				<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+				<input type="hidden" name="idArticle" th:value="${article.idArticle}">
+				<button class="w-full py-3 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">Modifier</button>
+			</form>
+			<form action="/article/deleteArticle" method="post">
+				<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+				<input type="hidden" name="idArticle" th:value="${article.idArticle}">
+				<button class="w-full py-3 bg-red-500 text-white font-semibold rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500">Annuler la vente (supprimer la vente)</button>
+			</form>
+		</div>
 	</div>
-	
-	
-	<div th:if="${article.vendor.equals(loggedMember)}">
-	<p> <strong>Historique des offres : </strong> </p>
-	<table border=10>
-		<thead>
-			<tr>
-				<th>ID Offre</th>
-				<th>Auteur offre</th>
-				<th>Date de l'offre</th>
-				<th>Prix de l'offre</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr th:each="b : ${bidsFound}">
-				<td th:text="${b.idBid}"></td>
-				<td th:text="${b.Member.userName}"></td>
-				<td th:text="${b.bidDate}"></td>
-				<td th:text="${b.bidPrice}"></td>
-			</tr>
-		</tbody>
-	</table>
-	</div>
-
 </div>
-
-
-
 </body>
 </html>
-
-
-
-
