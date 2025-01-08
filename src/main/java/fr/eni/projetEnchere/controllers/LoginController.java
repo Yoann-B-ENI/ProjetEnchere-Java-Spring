@@ -29,14 +29,12 @@ public class LoginController {
 		this.memberService = memberService;
 	}
 
-	// password for bob_jones : mySecret789
     @GetMapping("/login")
     public String login() {
         return "login"; 
     }
     
     @GetMapping({"/", "/home", "/encheres"})
-
     public String home(HttpSession session ) {
     	// Get the currently authenticated user
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -48,7 +46,6 @@ public class LoginController {
             // You can use the userDetails here
             session.setAttribute("loggedMember", member);
         }
-//    	session.setAttribute("loggedMember", );
     	return "redirect:/article/loadArticles";
     }
     

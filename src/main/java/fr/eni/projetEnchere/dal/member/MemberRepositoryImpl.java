@@ -60,6 +60,7 @@ public class MemberRepositoryImpl implements MemberRepository {
 		if (opt_member.isEmpty()) {logger.warn("DB: Warn: member not found");}
 		return opt_member;
 	}
+	
 
 	@Override
 	public void update(Member member) {
