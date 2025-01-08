@@ -202,7 +202,7 @@ public class ArticleController {
 		else {
 			Map<String, String> filterMap = new HashMap<String, String>();
 			filterMap.put("status", "AuctionStarted");
-			articlesFound = articleService.getAll(null, filterMap, 0);
+			articlesFound = articleService.getAll(null, filterMap, 0, 0);
 		}
 		model.addAttribute("articles", articlesFound);
 		
@@ -229,7 +229,7 @@ public class ArticleController {
 		List<Article> articlesFound = articleService.getAll(
 				filters.getFilterMapLike(), 
 				filters.getFilterMapEquals(), 
-				idLoggedMember);
+				idLoggedMember, 0);
 		model.addAttribute("articles", articlesFound);
 		
 		List<Category> categoriesFound = categoryService.getAll();
