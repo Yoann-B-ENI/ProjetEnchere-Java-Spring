@@ -176,6 +176,7 @@ public class ArticleController {
 		if (!imageFile.isEmpty()) {
 			imageService.saveNewImage(imageFile, article);
 		}
+		article.setImgFileName(AuctionImageService.defaultImgName);
 		articleService.update(article);
 
 		return "redirect:/";
@@ -183,7 +184,7 @@ public class ArticleController {
 
 	@GetMapping("/loadArticles")
 	public String loadArticles(HttpSession session, Model model) {
-		//logger.debug("Ctrl: Article Ctrl: get load articles");
+		logger.debug("Ctrl: Article Ctrl: get load articles");
 
 		Member member = (Member) session.getAttribute("loggedMember");
 		if (member != null) {
@@ -194,7 +195,7 @@ public class ArticleController {
 		List<Category> categoriesFound = categoryService.getAll();
 		model.addAttribute("allCategories", categoriesFound);
 		
-		boolean showAll = true;
+		boolean showAll = true; // decide if we want default all page to show all, or only in progress
 		List<Article> articlesFound = new ArrayList<Article>();
 		if (showAll) {
 			articlesFound = articleService.getAll();
@@ -205,6 +206,7 @@ public class ArticleController {
 			articlesFound = articleService.getAll(null, filterMap, 0, 0);
 		}
 		model.addAttribute("articles", articlesFound);
+		model.addAttribute("nbArticlesPerPage", 6); //TODO link to var in repo
 		
 		return "encheres";
 	}
