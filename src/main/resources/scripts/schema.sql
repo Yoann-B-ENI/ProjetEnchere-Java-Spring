@@ -60,6 +60,7 @@ CREATE TABLE IF NOT EXISTS ARTICLES (
     idBuyer						  INTEGER NULL, 
     idCategory                    INTEGER NOT NULL, 
     idRemovalPoint				  INTEGER NOT NULL, 
+    imgFileName					  VARCHAR(50) NULL, 
     CONSTRAINT articles_pk PRIMARY KEY (idArticle), 
     
     CONSTRAINT articles_members_vendor_fk FOREIGN KEY (idVendor) REFERENCES Members (idMember), 

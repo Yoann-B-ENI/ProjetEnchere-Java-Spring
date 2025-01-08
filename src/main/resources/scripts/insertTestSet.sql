@@ -35,33 +35,34 @@ VALUES
 (45, 'Rue de lassociation', '44880', 'Nantes', 4, 'auction storage');
 
 -- Insert Articles
-INSERT INTO articles (name, description, auctionStartDate, auctionEndDate, startingPrice, salePrice, status, idVendor, idBuyer, idCategory, idRemovalPoint)
+INSERT INTO articles (name, description, auctionStartDate, auctionEndDate, 
+startingPrice, salePrice, status, idVendor, idBuyer, idCategory, idRemovalPoint, imgFileName)
 VALUES 
 ('Laptop', 'A high-performance laptop with 16GB RAM and 512GB SSD', '2025-01-20', '2025-01-30', 
-500, 500, 'Created', 1, null, 1, 1),  -- John Doe is the vendor (idVendor 1)
+500, 500, 'Created', 1, null, 1, 1, 'laptop.png'),  -- John Doe is the vendor (idVendor 1)
 ('Sofa', 'Comfortable 3-seater sofa with fabric upholstery', '2024-12-05', '2025-01-19', 
-300, 581, 'AuctionStarted', 2, 4, 2, 2),  -- Jane Smith is the vendor (idVendor 2)
+300, 581, 'AuctionStarted', 2, 4, 2, 2, 'sofa.png'),  -- Jane Smith is the vendor (idVendor 2)
 ('Novel - "The Great Adventure"', 'A thrilling novel about an epic journey', '2024-12-02', '2024-12-09', 
-20, 36, 'AuctionEnded', 4, 4, 3, 3),  -- Bob Jones is the vendor 
+20, 36, 'AuctionEnded', 4, 4, 3, 3, 'book.png'),  -- Bob Jones is the vendor 
 
 ('Smartphone', 'Latest model smartphone with a 6.5-inch OLED screen', '2025-02-01', '2025-02-10', 
- 200, 200, 'Created', 1, null, 1, 1),  -- John Doe is the vendor
+ 200, 200, 'Created', 1, null, 1, 1, 'smartphone.png'),  -- John Doe is the vendor
 ('Dining Table', 'Stylish wooden dining table for 6 people', '2025-02-05', '2025-02-15', 
- 150, 150, 'Created', 2, null, 2, 2),  -- Jane Smith is the vendor
+ 150, 150, 'Created', 2, null, 2, 2, 'dining_table.png'),  -- Jane Smith is the vendor
 ('Python Programming Book', 'Comprehensive guide to Python programming', '2025-01-01', '2025-01-04', 
- 25, 35, 'AuctionEnded', 3, 2, 3, 3),  -- Bob Jones is the vendor
+ 25, 35, 'AuctionEnded', 3, 2, 3, 3, 'python_programming.png'),  -- Bob Jones is the vendor
 ('Bicycle', 'Mountain bike with 21-speed gear system', '2025-02-10', '2025-02-20', 
- 100, 100, 'Created', 4, null, 1, 4),  -- Bob Jones is the vendor
+ 100, 100, 'Created', 4, null, 1, 4, 'bicycle.png'),  -- Bob Jones is the vendor
 ('Coffee Machine', 'High-end espresso machine with built-in grinder', '2025-01-06', '2025-03-10', 
- 350, 350, 'AuctionStarted', 1, null, 1, 1),  -- John Doe is the vendor
+ 350, 350, 'AuctionStarted', 1, null, 1, 1, 'coffee_machine.png'),  -- John Doe is the vendor
 ('Washing Machine', 'Energy-efficient washing machine with quick wash cycle', '2025-01-01', '2025-03-25', 
- 400, 400, 'AuctionStarted', 2, null, 2, 2),  -- Jane Smith is the vendor
+ 400, 400, 'AuctionStarted', 2, null, 2, 2, 'washing_machine.png'),  -- Jane Smith is the vendor
 ('Action Figure', 'Limited edition superhero action figure', '2025-01-03', '2025-01-20', 
- 50, 60, 'AuctionStarted', 3, 2, 4, 3),  -- Bob Jones is the vendor
+ 50, 60, 'AuctionStarted', 3, 2, 4, 3, 'action_figure.png'),  -- Bob Jones is the vendor
 ('Leather Jacket', 'Genuine leather jacket in black', '2025-01-02', '2025-01-05', 
- 90, 130, 'AuctionEnded', 4, 3, 2, 4),  -- Bob Jones is the vendor
+ 90, 130, 'AuctionEnded', 4, 3, 2, 4, 'leather_jacket.png'),  -- Bob Jones is the vendor
 ('Drone', 'Drone with 4K camera and long battery life', '2025-01-25', '2025-02-05', 
- 250, 250, 'Created', 1, null, 1, 1)  -- John Doe is the vendor
+ 250, 250, 'Created', 1, null, 1, 1, 'drone.png')  -- John Doe is the vendor
  ;
 
 -- Insert Bids

@@ -13,8 +13,28 @@ import java.util.Set;
 /*
  * A custom system to handle filters in a query decided from the HTML/Thymeleaf.
  * 
+ * Takes in a set of HTML request parameters, and parses them.
  * 
+ * Builds a set of filters based on the SQL condition A %LIKE% B, and another
+ * set of filters based on the condition A = B, resp. "filterMapLike" and 
+ * "filterMapEquals".
  * 
+ * To use: 
+ * - new FilterSystem(set of HTML requests)
+ * - get each filter map
+ * 
+ * The HTML requests need to be shaped as: 
+ * [like/equals]_-_[key_name]_-_[key_value]
+ * and can be chained with the _----_ splitter (both splitters being variable).
+ * 
+ * For example: 
+ * - name="equals_-_status" value="IGNORE"
+ * - name="equals_-_status" value="AuctionStarted"
+ * - name="equals_-_status" th:value="'AuctionEnded_----_equals_-_idBuyer_-_'+${idMember}"
+ * - name="equals_-_status" th:value="'AuctionEnded_----_equals_-_idVendor_-_'+${idMember}"
+ * The filter system takes every 'name'/'value' pair coming from the HTML, concatenates each half with
+ * a _-_ splitter, then processes the entire string as a list (_----_ separated) of instructions, 
+ * with each instruction being [like/equals]_-_[key_name]_-_[key_value].
  * 
  */
 public class FilterSystem {
