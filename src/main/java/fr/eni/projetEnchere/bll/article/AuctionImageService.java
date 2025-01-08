@@ -22,7 +22,7 @@ import jakarta.validation.Valid;
 public class AuctionImageService {
 	
 	private final String imageDirectory; // the root folder of all auction storage
-	private final String defaultImgName = "image_0.jpg";
+	public final static String defaultImgName = "image_0.jpg";
 	
 	Logger logger = LoggerFactory.getLogger(AuctionImageService.class);
 	
@@ -141,9 +141,6 @@ public class AuctionImageService {
 			logger.error("Image: Save New: ERROR: "+e.getMessage());
 			e.printStackTrace();
 		}
-
-        // update the java attribute, need to send to database in parent calling function
-        article.setImgFileName(this.defaultImgName);
 	}
 	
 	

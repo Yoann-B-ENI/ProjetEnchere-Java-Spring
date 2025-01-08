@@ -145,8 +145,8 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 				+ ") as innerTable \r\n"
 				+ "WHERE 1=1 \r\n"
 				+ this.processFilters(filterMapLike, filterMapEquals)
-				+ "ORDER BY (innerTable.auctionEndDate, innerTable.salePrice) ASC \r\n"
-				+ "LIMIT "+nbArticlesPerPage+" OFFSET "+nbArticlesPerPage*pageNb;
+				+ "ORDER BY (innerTable.auctionEndDate, innerTable.salePrice) ASC \r\n";
+				//+ "LIMIT "+nbArticlesPerPage+" OFFSET "+nbArticlesPerPage*pageNb;
 		logger.debug("DB: Article filter query \n"+sql+"\n");
 		List<Article> articlesFound = jdbcTemplate.query(sql, new ArticleSmallRowMapper(), idLoggedMember);
 		
