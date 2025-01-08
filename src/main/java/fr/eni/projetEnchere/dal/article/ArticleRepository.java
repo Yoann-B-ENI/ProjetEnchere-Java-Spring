@@ -10,7 +10,8 @@ public interface ArticleRepository extends CRUDRepository<Article>{
 
 	//List<Article> getAll(Map<String, String> filterMapLike, Map<String, String> filterMapEquals);
 
-	List<Article> getAll(Map<String, String> filterMapLike, Map<String, String> filterMapEquals, int idLoggedMember);
+	List<Article> getAll(Map<String, String> filterMapLike, Map<String, String> filterMapEquals, 
+			int idLoggedMember, int pageNb);
 	
 	
 }

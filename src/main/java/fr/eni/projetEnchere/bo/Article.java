@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 import org.springframework.boot.jdbc.HikariCheckpointRestoreLifecycle;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.FutureOrPresent;
@@ -29,10 +30,12 @@ public class Article {
 
 	@NotNull(message = "La date de mise en vente est obligatoire.")
 	// took out the FutureOrPresent because it didn't work for current minute? + people might cross over the minute
+	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
 	private LocalDateTime auctionStartDate;
 
 	@NotNull(message = "La date de fin de vente est obligatoire.")
 	@Future
+	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
 	// validating that it's after the start date looks horrible to do
 	private LocalDateTime auctionEndDate;
 	

@@ -29,6 +29,8 @@ import fr.eni.projetEnchere.bo.RemovalPoint;
 @Repository
 public class ArticleRepositoryImpl implements ArticleRepository{
 	
+	private final static int nbArticlesPerPage = 6;
+	
 	Logger logger = LoggerFactory.getLogger(ArticleRepositoryImpl.class);
 	
 	private JdbcTemplate jdbcTemplate;
@@ -112,13 +114,12 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 
 	@Override
 	public List<Article> getAll() {// call other one with empty filters
-		return this.getAll(null, null, 1);
+		return this.getAll(null, null, 1, 0);
 	}
 	
 	@Override
 	public List<Article> getAll(Map<String, String> filterMapLike, Map<String, String> filterMapEquals, 
-			int idLoggedMember) {
-		//logger.debug("\n > DATABASE : get all articles");
+			int idLoggedMember, int pageNb) {
 		String sql = "SELECT * \r\n"
 				+ "FROM \r\n"
 				+ "(\r\n"
@@ -144,7 +145,8 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 				+ ") as innerTable \r\n"
 				+ "WHERE 1=1 \r\n"
 				+ this.processFilters(filterMapLike, filterMapEquals)
-				+ "ORDER BY (innerTable.auctionEndDate, innerTable.salePrice) ASC";
+				+ "ORDER BY (innerTable.auctionEndDate, innerTable.salePrice) ASC \r\n"
+				+ "LIMIT "+nbArticlesPerPage+" OFFSET "+nbArticlesPerPage*pageNb;
 		logger.debug("DB: Article filter query \n"+sql+"\n");
 		List<Article> articlesFound = jdbcTemplate.query(sql, new ArticleSmallRowMapper(), idLoggedMember);
 		

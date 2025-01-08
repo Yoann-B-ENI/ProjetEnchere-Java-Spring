@@ -10,7 +10,8 @@ public interface ArticleService extends CRUDService<Article>{
 
 	void determineStatusFromDates(Article elem);
 
-	List<Article> getAll(Map<String, String> filterMapLike, Map<String, String> filterMapEquals, int idLoggedMember);
+	List<Article> getAll(Map<String, String> filterMapLike, Map<String, String> filterMapEquals, 
+			int idLoggedMember, int pageNb);
 
 	List<Article> getAllCreatedByMember(int idMember);
 	

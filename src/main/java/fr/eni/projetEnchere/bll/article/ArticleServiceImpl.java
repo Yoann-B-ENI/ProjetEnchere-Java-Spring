@@ -32,7 +32,7 @@ public class ArticleServiceImpl implements ArticleService{
 	@Override
 	// call with empty filters, and id member 1 but that won't do anything without the is_found_bid filter
 	public List<Article> getAll() {
-		return this.articleRepository.getAll(null, null, 1);
+		return this.articleRepository.getAll(null, null, 1, 0);
 	}
 	
 	@Override
@@ -42,12 +42,13 @@ public class ArticleServiceImpl implements ArticleService{
 		filters.put("status", "Created");
 		filters.put("idVendor", ""+idMember);
 		
-		return this.articleRepository.getAll(null, filters, idMember);
+		return this.articleRepository.getAll(null, filters, idMember, 0);
 	}
 	
 	@Override
-	public List<Article> getAll(Map<String, String> filterMapLike, Map<String, String> filterMapEquals, int idLoggedMember) {
-		return this.articleRepository.getAll(filterMapLike, filterMapEquals, idLoggedMember);
+	public List<Article> getAll(Map<String, String> filterMapLike, Map<String, String> filterMapEquals, 
+			int idLoggedMember, int pageNb) {
+		return this.articleRepository.getAll(filterMapLike, filterMapEquals, idLoggedMember, pageNb);
 	}
 
 	@Override
