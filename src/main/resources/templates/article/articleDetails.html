@@ -27,6 +27,9 @@
 	<div>
 		<p> <strong>Article n°</strong> <span th:text="${article.idArticle}"></span> </p>
 		
+		<img th:if="${article.imgFileName != null}" alt="article image" 
+		th:src="@{/images/{auctionId}/images/{imgName}(auctionId=${article.idArticle}, imgName=${article.imgFileName})}">
+		
 		<p> <strong>Catégorie</strong> <span th:text="${article.category.name}"></span> </p>
 		
 		<p> <span th:text="${article.description}"></span> </p>
