@@ -20,8 +20,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import fr.eni.projetEnchere.bll.article.ArticleService;
+import fr.eni.projetEnchere.bll.article.AuctionImageService;
 import fr.eni.projetEnchere.bll.bid.BidService;
 import fr.eni.projetEnchere.bll.category.CategoryService;
 import fr.eni.projetEnchere.bll.removalpoint.RemovalPointService;
@@ -45,16 +47,20 @@ public class ArticleController {
 	private CategoryService categoryService;
 	private RemovalPointService removalPointService;
 	private BidService bidService;
+	
+	private AuctionImageService imageService;
 
 
 	@Autowired
 	public ArticleController(CategoryService categoryService, RemovalPointService removalPointService,
-			ArticleService articleService, BidService bidService) {
+			ArticleService articleService, BidService bidService, AuctionImageService imageService) {
 		super();
 		this.categoryService = categoryService;
 		this.removalPointService = removalPointService;
 		this.articleService = articleService;
 		this.bidService = bidService;
+		
+		this.imageService = imageService;
 	}
 
 	@InitBinder
@@ -142,7 +148,8 @@ public class ArticleController {
 
 	@PostMapping("/createOrUpdate")
 	public String createOrUpdate(@ModelAttribute @Valid Article article, BindingResult bindingResult, 
-			Model model, HttpSession session) {
+			Model model, HttpSession session, 
+			@RequestParam("imageFile") MultipartFile imageFile) {
 		
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("validationErrors", bindingResult.getAllErrors());
@@ -152,20 +159,24 @@ public class ArticleController {
 		articleService.determineStatusFromDates(article);
 		Member member = (Member) session.getAttribute("loggedMember");
 		article.setVendor(member);
-		article.setBuyer(null);
+		article.setBuyer(null); //TODO issue for update?
+		// as long as we can only update an article before any bid, then this is fine
 		article.setSalePrice(article.getStartingPrice());
-
+		
 		if (article.getRemovalPoint().getIdRemovalPoint() == 0) {
 			// pray for an inplace modification
 			this.removalPointService.create(article.getRemovalPoint());
 			logger.debug("> Auto gen RemovalPoint detected, sending it to DB");
 		}
+		
+		// CREATE OR UPDATE
 		if (article.getIdArticle() == 0) {
 			articleService.create(article);
 		}
-		else {
-			articleService.update(article);
+		if (!imageFile.isEmpty()) {
+			imageService.saveNewImage(imageFile, article);
 		}
+		articleService.update(article);
 
 		return "redirect:/";
 	}
@@ -319,8 +330,13 @@ public class ArticleController {
 	//TODO End of dev : 
 	// hide the "toutes encheres" debug option?
 	// decide on whether to have the base page show all auctions or just ongoing ones?
-	// filter system doc
 	// display dates cleaner in html
+	// make inversion of control on AuctionImageService
+	
+	
+	
+	
+	
 	
 	
 	// if vendor and created -> can update

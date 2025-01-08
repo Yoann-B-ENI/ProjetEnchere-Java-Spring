@@ -12,14 +12,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import fr.eni.projetEnchere.bo.Article;
 import jakarta.annotation.PostConstruct;
+import jakarta.validation.Valid;
 
 @Service
 public class AuctionImageService {
 	
-	private final String imageDirectory;
+	private final String imageDirectory; // the root folder of all auction storage
 	private final String defaultImgName = "image_0.jpg";
 	
 	Logger logger = LoggerFactory.getLogger(AuctionImageService.class);
@@ -39,71 +41,35 @@ public class AuctionImageService {
     // DEV ONLY
 	@PostConstruct
 	public void startUpSequence() {
-		Path path = Paths.get(imageDirectory);
-        if (!Files.exists(path)) {
-            try {
-                Files.createDirectories(path);
-                logger.debug("Startup: Images: created directory "+path);
-            } catch (IOException e) {
-            	logger.error("Startup: Images: ERROR: "+e.getMessage());
-                e.printStackTrace();
-            }
-        }
+		Path path = Paths.get(imageDirectory); // make the root
+		// ABSOLUTELY DO NOT DO AN IF EXISTS DELETE (in prod at least)
+        this.ifNotExistsCreate(path);
         
         List<Article> articlesFound = articleService.getAll();
         for (Article art : articlesFound) {
 			if (art.getImgFileName() == null) {continue;}
-			this.startUpDirectory(formatDirectoryName(art), art.getImgFileName());
+			this.makeArticleFolders(getArticlePath(art), art.getImgFileName());
+			
 			art = articleService.getById(art.getIdArticle()); // doesn't work without
 			art.setImgFileName(this.defaultImgName);
 			articleService.update(art);
 		}
-		
 	}
 	
-	private String formatDirectoryName(Article art) {
-		return this.imageDirectory+"/"+art.getIdArticle()+"/images/";
-	}
-	
-	private void startUpDirectory(String dirName, String imgFileName) {
-		Path path = Paths.get(dirName);
-        if (Files.exists(path)) {
-            try {
-				this.deleteDirectory(path);
-			} catch (IOException e) {
-				logger.error("Startup: Images: ERROR: Failed to delete existing folders"+e.getMessage());
-				e.printStackTrace();
-			}
-        }
+	// directory is the server/images/auction id/images path
+	private void makeArticleFolders(String auctionImageDir, String imgFileName) {
+		Path path = Paths.get(auctionImageDir);
+        this.ifExistsDelete(path);
+        this.ifNotExistsCreate(path);
         
-        try {
-			Files.createDirectories(path);
-	        logger.debug("Startup: Images: created directory "+path);
-		} catch (IOException e) {
-        	logger.error("Startup: Images: ERROR: Failed to set up folders"+e.getMessage());
-            e.printStackTrace();
-        }
-        
-        this.copyImageToFolder(imgFileName, dirName);
-		
-		// create folder structure
-		// move correct image 
-		
+        this.copyImageToFolder(imgFileName, auctionImageDir);
 	}
 	
-	private void deleteDirectory(Path directory) throws IOException {
-        if (Files.exists(directory)) {
-            Files.walk(directory)
-                    .map(Path::toFile)
-                    .forEach(File::delete);
-            logger.warn("Deleted existing directory at: " + directory);
-        }
-    }
-	
-	public void copyImageToFolder(String imgFileName, String destinationDir) {
+	// DEV ONLY
+	private void copyImageToFolder(String imgFileName, String destinationDir) {
         Path sourcePath = Paths.get("src/main/resources/static/test_images/"+imgFileName);
         Path destinationFolder = Paths.get(destinationDir);
-        Path destinationFile = destinationFolder.resolve(this.defaultImgName);
+        Path destinationFile = destinationFolder.resolve(this.defaultImgName); // full path to new img
 
         try {
             // Copy the image file to the new folder
@@ -115,6 +81,70 @@ public class AuctionImageService {
             e.printStackTrace();
         }
     }
+	
+	
+    private void ifNotExistsCreate(Path path) {
+    	if (!Files.exists(path)) {
+            try {
+                Files.createDirectories(path);
+                logger.debug("Startup: Images: created directory "+path);
+            } catch (IOException e) {
+            	logger.error("Startup: Images: ERROR: "+e.getMessage());
+                e.printStackTrace();
+            }
+        }
+    }
+    
+    private void ifExistsDelete(Path path) {
+    	if (Files.exists(path)) {
+            try {
+				this.deleteDirectory(path);
+			} catch (IOException e) {
+				logger.error("Startup: Images: ERROR: Failed to delete existing folders"+e.getMessage());
+				e.printStackTrace();
+			}
+        }
+    }
+	
+	private void deleteDirectory(Path directory) throws IOException {
+        if (Files.exists(directory)) {
+            Files.walk(directory)
+                    .map(Path::toFile)
+                    .forEach(File::delete);
+            logger.warn("Deleted existing directory at: " + directory);
+        }
+    }
+
+	private String getArticlePath(Article art) {
+		return this.imageDirectory+"/"+art.getIdArticle()+"/images/";
+	}
+	
+	
+	
+	
+	// DEV AND PROD !!!!
+	public void saveNewImage(MultipartFile imageFile, Article article) {
+		Path auctionImageDir = Paths.get(getArticlePath(article));
+		this.ifExistsDelete(auctionImageDir);
+		this.ifNotExistsCreate(auctionImageDir);
+		
+        String filename = imageFile.getOriginalFilename(); //TODO should check and process it, do something with it
+        Path targetPath = auctionImageDir.resolve(this.defaultImgName);
+
+        try {
+			imageFile.transferTo(targetPath);
+		} catch (IllegalStateException e) {
+			logger.error("Image: Save New: ERROR: "+e.getMessage());
+			e.printStackTrace();
+		} catch (IOException e) {
+			logger.error("Image: Save New: ERROR: "+e.getMessage());
+			e.printStackTrace();
+		}
+
+        // update the java attribute, need to send to database in parent calling function
+        article.setImgFileName(this.defaultImgName);
+	}
+	
 	
 	
 	

@@ -6,44 +6,59 @@
 </head>
 <body>
 
+<!-- Navigation -->
+<nav class="bg-gray-800 shadow-md">
+	<div class="max-w-7xl mx-auto px-4 py-4">
+		<div class="flex justify-between items-center">
+			<!-- Logo -->
+			<th:block th:replace="~{fragments/logo.html :: logo}"></th:block>
+			<!-- Barre de navigation -->
+			<th:block th:replace="~{fragments/navBar.html :: navBar}"></th:block>
+		</div>
+	</div>
+</nav>
+
 <h1>Création d'un article</h1>
 
-<form action="createOrUpdate" method="post" th:object="${article}">
+<form action="createOrUpdate" method="post" th:object="${article}" enctype="multipart/form-data">
 
-<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-<input type="hidden" name="idArticle" th:value="${article.idArticle}"/>
-
-<p th:each = "error : ${validationErrors}" th:text = "${error.defaultMessage}"></p>
-
-<label> <p>Nom</p> <input th:field="*{name}" type="text"> </label>
-<label> <p>Description</p> <input th:field="*{description}" type="text"> </label>
-
-<fieldset>
-  <legend>Choisir la catégorie de l'article</legend>
-  
-  	<select th:field = "*{category}">
-		<option th:each="cat : ${allCategories}" th:value = "${cat.idCategory}">
-		[[${cat.idCategory}]] - [[${cat.name}]]</option>
-	</select>
-  
-</fieldset>
-
-<label> <p>Prix initial</p> <input th:field="*{startingPrice}" type="number" placeholder=0> </label>
-<label> <p>Date début d'enchère</p> <input th:field="*{auctionStartDate}" type="datetime-local" placeholder="Date début"> </label>
-<label> <p>Date fin d'enchère</p> <input th:field="*{auctionEndDate}" type="datetime-local" placeholder="Date fin"> </label>
-
-<fieldset>
-  <legend>Choisir le point de retrait</legend>
-  
-  	<select th:field = "*{removalPoint}">
-		<option th:each="rp : ${allRemovalPoints}" th:value = "${rp.idRemovalPoint}">
-		[[${rp.idRemovalPoint}]] - [[${rp.pointName}]] - [[${rp.roadNumber}]] [[${rp.roadName}]] [[${rp.zipCode}]] [[${rp.townName}]]</option>
-	</select>
-  
-</fieldset>
-
-
-<button type="submit">Envoyer</button>
+	<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+	<input type="hidden" name="idArticle" th:value="${article.idArticle}"/>
+	
+	<p th:each = "error : ${validationErrors}" th:text = "${error.defaultMessage}"></p>
+	
+	<label> <p>Nom</p> <input th:field="*{name}" type="text"> </label><br>
+	
+	<label for="imageFile">Image : </label><br>
+	<p th:if="${article.imgFileName == null}">Pas d'image chargée pour cet article</p>
+	<img th:if="${article.imgFileName != null}" alt="article image" 
+		th:src="@{/images/{auctionId}/images/{imgName}(auctionId=${article.idArticle}, imgName=${article.imgFileName})}">
+	<input type="file" name="imageFile" accept="image/*">
+	
+	<label> <p>Description</p> <input th:field="*{description}" type="text"> </label>
+	
+	<fieldset>
+	  <legend>Choisir la catégorie de l'article</legend>
+	  	<select th:field = "*{category}">
+			<option th:each="cat : ${allCategories}" th:value = "${cat.idCategory}">
+			[[${cat.idCategory}]] - [[${cat.name}]]</option>
+		</select>
+	</fieldset>
+	
+	<label> <p>Prix initial</p> <input th:field="*{startingPrice}" type="number" placeholder=0> </label>
+	<label> <p>Date début d'enchère</p> <input th:field="*{auctionStartDate}" type="datetime-local" placeholder="Date début"> </label>
+	<label> <p>Date fin d'enchère</p> <input th:field="*{auctionEndDate}" type="datetime-local" placeholder="Date fin"> </label>
+	
+	<fieldset>
+	  <legend>Choisir le point de retrait</legend>
+	  	<select th:field = "*{removalPoint}">
+			<option th:each="rp : ${allRemovalPoints}" th:value = "${rp.idRemovalPoint}">
+			[[${rp.idRemovalPoint}]] - [[${rp.pointName}]] - [[${rp.roadNumber}]] [[${rp.roadName}]] [[${rp.zipCode}]] [[${rp.townName}]]</option>
+		</select>
+	</fieldset>
+	
+	
+	<button type="submit">Envoyer</button>
 
 
 </form>
