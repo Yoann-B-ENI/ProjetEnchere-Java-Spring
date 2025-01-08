@@ -36,48 +36,43 @@
 
 <div class="max-w-7xl mx-auto px-4 py-8">
 
-	<!-- Titre -->
-	<div class="container">
-		<div class="mb-6">
-			<h1 class="text-3xl text-gray-800 font-bold mb-4" th:text="${article.name}"></h1>
-		</div>
+	<div>
+		<h1 th:text="${article.name}"></h1>
+	</div>
 	
-		<!-- Informations sur l'article -->
-		<div class="bg-gray-700 p-6 rounded-lg shadow-md grid grid-cols-1 lg:grid-cols-2 gap-8">
-			<div>
-				<p class="mb-4"><strong>Article n° :</strong> <span th:text="${article.idArticle}"></span></p>
-				<p class="mb-4"><strong>Catégorie :</strong> <span th:text="${article.category.name}"></span></p>
-				<p class="mb-4"><span th:text="${article.description}"></span></p>
-				<p class="mb-4"><strong>Statut de la vente :</strong> <span th:text="${article.status}"></span></p>
-				<p class="mb-4"><strong>Date de début :</strong> <span th:text="${article.auctionStartDate}"></span></p>
-				<p class="mb-4"><strong>Date de fin :</strong> <span th:text="${article.auctionEndDate}"></span></p>
-				<p class="mb-4"><strong>Prix initial :</strong> <span th:text="${article.startingPrice}"></span></p>
-				<p class="mb-4"><strong>Prix actuel :</strong> <span th:text="${article.salePrice}"></span></p>
-				<p class="mb-4" th:if="${article.status.name=='AuctionStarted' && article.buyer!=null}"><strong>Gagnant actuel :</strong> <span th:text="${article.buyer.userName}"></span><span th:if="${article.buyer.equals(loggedMember)}"> (Vous)</span></p>
-				<p class="mb-4" th:if="${article.status.name=='AuctionEnded' || article.status.name=='AuctionRemoved'}"><strong>Gagnant :</strong> <span th:text="${article.buyer.userName}"></span><span th:if="${article.buyer.equals(loggedMember)}"> (Vous)</span></p>
-			</div>
-			<div>
-				<p class="mb-4"><strong>Vendu par :</strong> <span th:text="${article.vendor.userName}"></span><span th:if="${article.vendor.equals(loggedMember)}"> (Vous)</span></p>
-				<p class="mb-4"><strong>Retrait au :</strong> <br><span th:text="${article.removalPoint.roadNumber} + ' ' + ${article.removalPoint.roadName}"></span><br><span th:text="${article.removalPoint.zipCode} + ' ' + ${article.removalPoint.townName}"></span></p>
-			</div>
+	<div>
+		<p> <strong>Article n°</strong> <span th:text="${article.idArticle}"></span> </p>
+		
+		<img th:if="${article.imgFileName != null}" alt="article image" 
+		th:src="@{/images/{auctionId}/images/{imgName}(auctionId=${article.idArticle}, imgName=${article.imgFileName})}">
+		
+		<p> <strong>Catégorie</strong> <span th:text="${article.category.name}"></span> </p>
+		
+		<p> <span th:text="${article.description}"></span> </p>
+		
+		<p> <strong>Vente au statut</strong> <span th:text="${article.status}"></span> </p>
+		<p> <strong>Date de début</strong> <span th:text="${article.auctionStartDate}"></span> </p>
+		<p> <strong>Date de fin</strong> <span th:text="${article.auctionEndDate}"></span> </p>
+		
+		<p> <strong>Prix initial</strong> <span th:text="${article.startingPrice}"></span> </p>
+		<p> <strong>Prix actuel</strong> <span th:text="${article.salePrice}"></span> </p>
+		
+		<p th:if="${article.status.name=='AuctionStarted' && article.buyer!=null}"> <strong>Gagnant actuel</strong> 
+			<span th:text="${article.buyer.userName}"></span> 
+			<span th:if="${article.buyer.equals(loggedMember)}"> (Vous)</span></p>
+		<p th:if="${article.status.name=='AuctionEnded' || article.status.name=='AuctionRemoved'}"> <strong>Gagnant</strong> 
+			<span th:text="${article.buyer.userName}"></span> 
+			<span th:if="${article.buyer.equals(loggedMember)}"> (Vous)</span></p>
+		
+		<div th:if="${article.status.name=='AuctionStarted' && !article.vendor.equals(loggedMember)}">
+		<form action="/article/bid" method="post">
+			<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+			<input type="hidden" name="idArticle" th:value="${article.idArticle}">
+			<p> <strong>Renchérir</strong> 
+				<input type="number" name="newPrice" th:min="${article.salePrice+1}" th:placeholder="${article.salePrice+1}"> </p>
+			<button type="submit">Renchérir</button>
+		</form>
 		</div>
-	
-
-		<!-- Formulaire de renchère -->
-		<div th:if="${article.status.name=='AuctionStarted' && !article.vendor.equals(loggedMember)}" class="max-w-3xl bg-gray-700 p-4 rounded-lg shadow-md flex justify-center space-x-4 mt-6 mx-auto">
-		    <form action="/article/bid" method="post" class="space-y-4">
-		        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-		        <input type="hidden" name="idArticle" th:value="${article.idArticle}">
-		        <div>
-			        <label for="newPrice" class="font-semibold block text-1xl text-white mb-2">Montant :</label>
-			        <div class="flex space-x-2">
-			            <input id="newPrice" type="number" name="newPrice" th:min="${article.salePrice+1}" th:placeholder="${article.salePrice+1}" class="text-gray-800 w-full p-2 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-			            <button type="submit" class="py-1 px-5 bg-violet-500 text-white font-semibold rounded-md hover:bg-violet-600 focus:outline-none focus:ring-2 focus:ring-blue-500">Enchérir</button>
-			        </div>
-		        </div>
-		    </form>
-		</div>
-	
 	
 		<!-- Historique des offres -->
 		<div class="mt-8" th:if="${article.vendor.equals(loggedMember)}">

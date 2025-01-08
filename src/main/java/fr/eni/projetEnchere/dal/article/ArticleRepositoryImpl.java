@@ -64,6 +64,7 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 		}
 		paramSource.addValue("categoryTemp", t.getCategory().getIdCategory());
 		paramSource.addValue("removalPointTemp", t.getRemovalPoint().getIdRemovalPoint());
+		paramSource.addValue("imgFileName", t.getImgFileName());
 		
 		return paramSource;
 	}
@@ -72,9 +73,11 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 	// sets the new id in the java object inplace
 	public void create(Article t) {
 		String sql = "INSERT into Articles(name, description, auctionStartDate, auctionEndDate, "
-				+ "startingPrice, salePrice, status, idVendor, idBuyer, idCategory, idRemovalPoint)";
+				+ "startingPrice, salePrice, status, idVendor, idBuyer, idCategory, idRemovalPoint, "
+				+ "imgFileName)";
 		sql += "values(:name, :description, :auctionStartDate, :auctionEndDate, "
-				+ ":startingPrice, :salePrice, :statusTemp, :vendorTemp, :buyerTemp, :categoryTemp, :removalPointTemp)";
+				+ ":startingPrice, :salePrice, :statusTemp, :vendorTemp, :buyerTemp, :categoryTemp, :removalPointTemp, "
+				+ ":imgFileName)";
 		
 		MapSqlParameterSource paramSource = this.getArticleParameterSource(t);
 		
@@ -129,6 +132,7 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 				+ "		art.idVendor, m1.username as username_vendor, \r\n"
 				+ "		art.idBuyer, m2.username as username_buyer, \r\n"
 				+ "		art.idCategory, \r\n"
+				+ "		art.imgFileName, \r\n"
 				+ "		(case when exists (select 1 \r\n"
 				+ "							from bids \r\n"
 				+ "							where bids.idArticle = art.idArticle \r\n"
@@ -169,6 +173,7 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 				+ "	art.idCategory, \r\n"
 				+ "	cat.name as cat_name, \r\n"
 				+ "	art.idRemovalPoint, \r\n"
+				+ " art.imgFileName, \r\n"
 				+ "	rp.roadNumber, \r\n"
 				+ "	rp.roadName, \r\n"
 				+ "	rp.zipCode, \r\n"
@@ -194,7 +199,7 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 				+ "startingPrice = :startingPrice, salePrice = :salePrice, "
 				+ "status = :statusTemp, "
 				+ "idVendor = :vendorTemp, idBuyer = :buyerTemp, idCategory = :categoryTemp, "
-				+ "idRemovalPoint = :removalPointTemp "
+				+ "idRemovalPoint = :removalPointTemp, imgFileName = :imgFileName "
 				+ " WHERE idArticle = :idArticle";
 		
 		MapSqlParameterSource paramSource = this.getArticleParameterSource(t);
@@ -218,9 +223,12 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 			emptyVendor.setIdMember(rs.getInt("idVendor"));
 			emptyVendor.setUserName(rs.getString("username_vendor"));
 			
-			Member emptyBuyer = new Member();
-			emptyBuyer.setIdMember(rs.getInt("idBuyer"));
-			emptyBuyer.setUserName(rs.getString("username_buyer"));
+			Member emptyBuyer = null;
+			if (rs.getInt("idBuyer") > 0) {
+				emptyBuyer = new Member();
+				emptyBuyer.setIdMember(rs.getInt("idBuyer"));
+				emptyBuyer.setUserName(rs.getString("username_buyer"));
+			}
 			
 			Category cat = new Category();
 			cat.setIdCategory(rs.getInt("idCategory"));
@@ -237,6 +245,8 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 			art.setStatus(ArticleStatus.valueOf(rs.getString("status")));
 			art.setSalePrice(rs.getInt("salePrice"));
 			
+			art.setImgFileName(rs.getString("imgFileName"));
+			
 			return art;
 		}
 	}
@@ -249,9 +259,12 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 			emptyVendor.setIdMember(rs.getInt("idVendor"));
 			emptyVendor.setUserName(rs.getString("username_vendor"));
 			
-			Member emptyBuyer = new Member();
-			emptyBuyer.setIdMember(rs.getInt("idBuyer"));
-			emptyBuyer.setUserName(rs.getString("username_buyer"));
+			Member emptyBuyer = null;
+			if (rs.getInt("idBuyer") > 0) {
+				emptyBuyer = new Member();
+				emptyBuyer.setIdMember(rs.getInt("idBuyer"));
+				emptyBuyer.setUserName(rs.getString("username_buyer"));
+			}
 			
 			Category cat = new Category();
 			cat.setIdCategory(rs.getInt("idCategory"));
@@ -278,6 +291,8 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 			art.setStatus(ArticleStatus.valueOf(rs.getString("status")));
 			art.setStartingPrice(rs.getInt("startingPrice"));
 			art.setSalePrice(rs.getInt("salePrice"));
+			
+			art.setImgFileName(rs.getString("imgFileName"));
 			
 			return art;
 		}

@@ -58,6 +58,9 @@ public class Article {
 	
 	// not null
 	private ArticleStatus status;
+	
+	// null
+	private String imgFileName;
 
 	public Article() {
 		super();
@@ -80,7 +83,7 @@ public class Article {
 	// all attributes
 	public Article(int idArticle, String name, String description, LocalDateTime auctionStartDate,
 			LocalDateTime auctionEndDate, int startingPrice, int salePrice, Member vendor, Category category,
-			RemovalPoint removalPoint, ArticleStatus status) {
+			RemovalPoint removalPoint, ArticleStatus status, String imgFileName) {
 		super();
 		this.idArticle = idArticle;
 		this.name = name;
@@ -93,6 +96,7 @@ public class Article {
 		this.category = category;
 		this.removalPoint = removalPoint;
 		this.status = status;
+		this.imgFileName = imgFileName;
 	}
 	
 	
@@ -169,7 +173,13 @@ public class Article {
 	public void setStatus(ArticleStatus status) {
 		this.status = status;
 	}
-	
+
+	public String getImgFileName() {
+		return imgFileName;
+	}
+	public void setImgFileName(String imgFileName) {
+		this.imgFileName = imgFileName;
+	}
 	
 
 	@Override
@@ -199,7 +209,8 @@ public class Article {
 		builder.append(removalPoint);
 		builder.append(", \n  >  >  status=");
 		builder.append(status);
-		builder.append("]");
+		builder.append(", imgFileName=");
+		builder.append(imgFileName);
 		return builder.toString();
 	}
 	@Override

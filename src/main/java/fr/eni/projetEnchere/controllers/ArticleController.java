@@ -97,6 +97,9 @@ public class ArticleController {
 		model.addAttribute("allRemovalPoints", removalPointsFound);
 	}
 
+	
+	
+	
 	@GetMapping("/redirectToCreate")
 	public String redirectToCreate(Model model, HttpSession session) {
 		//logger.debug("Ctrl: Article Ctrl: Redirecting to create article form");

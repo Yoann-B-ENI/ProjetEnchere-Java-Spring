@@ -1,0 +1,5 @@
+{"properties": [{
+  "name": "image.directory",
+  "type": "java.lang.String",
+  "description": "'image.directory' is the global application-wide path where the server will store the images, outside of the JAR scope"
+}]}
