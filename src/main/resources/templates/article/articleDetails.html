@@ -74,12 +74,31 @@
             <p class="text-lg" th:if="${article.status.name=='AuctionStarted' && article.buyer!=null}">
                 <strong>Gagnant actuel:</strong> <span th:text="${article.buyer.userName}"></span>
                 <span th:if="${article.buyer.equals(loggedMember)}"> (Vous)</span>
+                <a th:href="@{/member/{id}(id=${article.buyer.idMember})}"
+						class="text-blue-400 hover:underline">Voir profil</a>
             </p>
             <p class="text-lg" th:if="${article.status.name=='AuctionEnded' || article.status.name=='AuctionRemoved'}">
                 <strong>Gagnant:</strong> <span th:text="${article.buyer.userName}"></span>
                 <span th:if="${article.buyer.equals(loggedMember)}"> (Vous)</span>
+                <a th:href="@{/member/{id}(id=${article.buyer.idMember})}"
+						class="text-blue-400 hover:underline">Voir profil</a>
             </p>
         </div>
+        
+		<div>
+			<p class="text-lg" > <strong>Vendu par</strong> <span th:text="${article.vendor.userName}"></span> 
+				<span th:if="${article.vendor.equals(loggedMember)}"> (Vous)</span>
+                <a th:href="@{/member/{id}(id=${article.vendor.idMember})}"
+						class="text-blue-400 hover:underline">Voir profil</a>
+			</p>
+			
+			<p class="text-lg" > <strong>Retrait au</strong> <br>
+				<span th:text="${article.removalPoint.roadNumber}+' '+${article.removalPoint.roadName}"></span> 
+				<br>
+				<span th:text="${article.removalPoint.zipCode}+' '+${article.removalPoint.townName}"></span>
+			</p>
+			
+		</div>
 
         <!-- Formulaire de renchère -->
         <div class="bg-gray-700 p-4 rounded-lg shadow-md" th:if="${article.status.name=='AuctionStarted' && !article.vendor.equals(loggedMember)}">
