@@ -339,7 +339,6 @@ public class ArticleController {
 	
 	
 	
-	
 	// if vendor and created -> can update
 	// if vendor and else -> nothing
 	
