@@ -23,9 +23,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import fr.eni.projetEnchere.bll.article.ArticleService;
+import fr.eni.projetEnchere.bll.article.AuctionImageService;
 import fr.eni.projetEnchere.bll.article.AuctionImageServiceImpl;
 import fr.eni.projetEnchere.bll.bid.BidService;
 import fr.eni.projetEnchere.bll.category.CategoryService;
+import fr.eni.projetEnchere.bll.member.MemberService;
 import fr.eni.projetEnchere.bll.removalpoint.RemovalPointService;
 import fr.eni.projetEnchere.bo.Article;
 import fr.eni.projetEnchere.bo.Bid;
@@ -47,18 +49,21 @@ public class ArticleController {
 	private CategoryService categoryService;
 	private RemovalPointService removalPointService;
 	private BidService bidService;
+	private MemberService memberService;
 	
-	private AuctionImageServiceImpl imageService;
+	private AuctionImageService imageService;
 
 
 	@Autowired
 	public ArticleController(CategoryService categoryService, RemovalPointService removalPointService,
-			ArticleService articleService, BidService bidService, AuctionImageServiceImpl imageService) {
+			ArticleService articleService, BidService bidService, AuctionImageService imageService, 
+			MemberService memberService) {
 		super();
 		this.categoryService = categoryService;
 		this.removalPointService = removalPointService;
 		this.articleService = articleService;
 		this.bidService = bidService;
+		this.memberService = memberService;
 		
 		this.imageService = imageService;
 	}
@@ -273,6 +278,7 @@ public class ArticleController {
 		}
 		
 		Member loggedMember = (Member) session.getAttribute("loggedMember");
+		loggedMember = memberService.getById(loggedMember.getIdMember()); //in case session member sucks
 		if (loggedMember == null) {
 			logger.error("Ctrl: ArticleCtrl: > Logged member not found on processing bid, must break");
 			return "redirect:/article/"+article.getIdArticle();
@@ -286,11 +292,14 @@ public class ArticleController {
 		}
 		if(loggedMember.getCredits() - newPrice >= 0) {
 			logger.debug("> setup and checks passed, going forward with bid processing");
-			loggedMember.addCredits(-newPrice);
 			
+			loggedMember.addCredits(-newPrice);
 			if (article.getBuyer() != null) {
 				article.getBuyer().addCredits(article.getSalePrice());
-			}
+				memberService.update(article.getBuyer());
+			} // this order of DB update ensures we can re-bid without having the whole total
+			memberService.update(loggedMember);
+			
 			article.setBuyer(loggedMember);
 			article.setSalePrice(newPrice);
 			articleService.update(article);
@@ -334,7 +343,7 @@ public class ArticleController {
 	// decide on whether to have the base page show all auctions or just ongoing ones?
 	// display dates cleaner in html
 	
-	
+	//TODO cant bid twice in a row on an item (try jane smith > coffee machine > 1350 then 2350)
 	
 	
 	
