@@ -53,16 +53,18 @@ public class FilterSystem {
 	// build from the set of entries coming from the HTML
 	public FilterSystem(Set<Entry<String, String>> entrySet) {
 		// browse all the html request parameters sent for us
-		for (Entry<String, String> entry : entrySet) {
-			String key = entry.getKey();
-			String val = entry.getValue();
-			if (val == null || val.isBlank() || val.isEmpty()) {val = "IGNORE";}
-			if (!key.contains(FilterSystem.FILTER_SYS_KEY_SPLIT)) {
-				logger.warn("Filter System: Warn: skipping non-instruction "+key);
-				continue;
+		if (entrySet != null) {
+			for (Entry<String, String> entry : entrySet) {
+				String key = entry.getKey();
+				String val = entry.getValue();
+				if (val == null || val.isBlank() || val.isEmpty()) {val = "IGNORE";}
+				if (!key.contains(FilterSystem.FILTER_SYS_KEY_SPLIT)) {
+					logger.warn("Filter System: Warn: skipping non-instruction "+key);
+					continue;
+				}
+				String rawInstructs = key+FilterSystem.FILTER_SYS_KEY_SPLIT+val;
+				this.processFilterInstructions(rawInstructs);
 			}
-			String rawInstructs = key+FilterSystem.FILTER_SYS_KEY_SPLIT+val;
-			this.processFilterInstructions(rawInstructs);
 		}
 	}
 
