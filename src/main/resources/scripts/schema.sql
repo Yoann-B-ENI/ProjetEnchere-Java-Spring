@@ -2,9 +2,9 @@
 
 DROP TABLE IF EXISTS Bids;
 DROP TABLE IF EXISTS Articles;
+DROP TABLE IF EXISTS RemovalPoints;
 DROP TABLE IF EXISTS Members;
 DROP TABLE IF EXISTS Categories;
-DROP TABLE IF EXISTS RemovalPoints;
 
 
 
@@ -44,6 +44,7 @@ CREATE TABLE IF NOT EXISTS RemovalPoints (
     pointName			  VARCHAR(30) NULL, 
     CONSTRAINT removalPoints_pk PRIMARY KEY (idRemovalPoint), 
     
+    CONSTRAINT removalPoints_fk FOREIGN KEY (idMember) REFERENCES Members (idMember), 
     CONSTRAINT removalPoints_uq UNIQUE(roadNumber, roadName, zipCode, townName, idMember)
 );
 
