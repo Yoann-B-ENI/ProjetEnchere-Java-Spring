@@ -44,8 +44,9 @@ public class FilterSystem {
 	private static String FILTER_SYS_INSTRUCT_SPLIT = "_----_";
 	private static String FILTER_SYS_KEY_SPLIT = "_-_";
 	
-	// one dictionary for the A LIKE %B% condition, one for the A = B condition
+	// A LIKE %B% condition
 	private Map<String, String> filterMapLike = new HashMap<String, String>();
+	// A = B condition
 	private Map<String, String> filterMapEquals = new HashMap<String, String>();
 	
 	
