@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import fr.eni.projetEnchere.bll.article.ArticleService;
-import fr.eni.projetEnchere.bll.article.AuctionImageService;
+import fr.eni.projetEnchere.bll.article.AuctionImageServiceImpl;
 import fr.eni.projetEnchere.bll.bid.BidService;
 import fr.eni.projetEnchere.bll.category.CategoryService;
 import fr.eni.projetEnchere.bll.removalpoint.RemovalPointService;
@@ -48,12 +48,12 @@ public class ArticleController {
 	private RemovalPointService removalPointService;
 	private BidService bidService;
 	
-	private AuctionImageService imageService;
+	private AuctionImageServiceImpl imageService;
 
 
 	@Autowired
 	public ArticleController(CategoryService categoryService, RemovalPointService removalPointService,
-			ArticleService articleService, BidService bidService, AuctionImageService imageService) {
+			ArticleService articleService, BidService bidService, AuctionImageServiceImpl imageService) {
 		super();
 		this.categoryService = categoryService;
 		this.removalPointService = removalPointService;
@@ -152,6 +152,7 @@ public class ArticleController {
 			@RequestParam("imageFile") MultipartFile imageFile) {
 		
 		if (bindingResult.hasErrors()) {
+			this.loadCategoriesAndArticles(model, session);
 			model.addAttribute("validationErrors", bindingResult.getAllErrors());
 			return "article/formCreateArticle";
 		}
@@ -176,7 +177,7 @@ public class ArticleController {
 		if (!imageFile.isEmpty()) {
 			imageService.saveNewImage(imageFile, article);
 		}
-		article.setImgFileName(AuctionImageService.defaultImgName);
+		article.setImgFileName(AuctionImageServiceImpl.defaultImgName);
 		articleService.update(article);
 
 		return "redirect:/";
@@ -232,6 +233,7 @@ public class ArticleController {
 				filters.getFilterMapEquals(), 
 				idLoggedMember, 0);
 		model.addAttribute("articles", articlesFound);
+		model.addAttribute("nbArticlesPerPage", 6); //TODO link to var in repo
 		
 		List<Category> categoriesFound = categoryService.getAll();
 		model.addAttribute("allCategories", categoriesFound);
@@ -285,6 +287,7 @@ public class ArticleController {
 		if(loggedMember.getCredits() - newPrice >= 0) {
 			logger.debug("> setup and checks passed, going forward with bid processing");
 			loggedMember.addCredits(-newPrice);
+			
 			if (article.getBuyer() != null) {
 				article.getBuyer().addCredits(article.getSalePrice());
 			}
@@ -323,16 +326,13 @@ public class ArticleController {
 		return "redirect:/";
 	}
 	
-	
-	
-	// jane_smith
-	// password
+
+
 	
 	//TODO End of dev : 
 	// hide the "toutes encheres" debug option?
 	// decide on whether to have the base page show all auctions or just ongoing ones?
 	// display dates cleaner in html
-	// make inversion of control on AuctionImageService
 	
 	
 	
