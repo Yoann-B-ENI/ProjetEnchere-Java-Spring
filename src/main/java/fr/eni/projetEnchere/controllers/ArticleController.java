@@ -213,8 +213,7 @@ public class ArticleController {
 	
 	
 	@PostMapping("/searchArticles")
-	public String searchArticles(@RequestParam Map<String,String> allRequestParams, 
-			HttpSession session, Model model) {
+	public String searchArticles(@RequestParam Map<String,String> allRequestParams, HttpSession session, Model model) {
 		logger.debug("Ctrl: Article Ctrl: post map search articles");
 		logger.debug("> HTML form params: "+allRequestParams);
 		

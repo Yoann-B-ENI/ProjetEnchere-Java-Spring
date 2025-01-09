@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS RemovalPoints (
     pointName			  VARCHAR(30) NULL, 
     CONSTRAINT removalPoints_pk PRIMARY KEY (idRemovalPoint), 
     
-    CONSTRAINT removalPoints_fk FOREIGN KEY (idMember) REFERENCES Members (idMember), 
+    CONSTRAINT removalpoints_members_fk FOREIGN KEY (idMember) REFERENCES Members (idMember), 
     CONSTRAINT removalPoints_uq UNIQUE(roadNumber, roadName, zipCode, townName, idMember)
 );
 

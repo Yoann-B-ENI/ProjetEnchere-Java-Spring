@@ -52,7 +52,7 @@ public class AuctionImageService {
 			this.makeArticleFolders(getArticlePath(art), art.getImgFileName());
 			
 			art = articleService.getById(art.getIdArticle()); // doesn't work without
-			art.setImgFileName(this.defaultImgName);
+			art.setImgFileName(AuctionImageService.defaultImgName);
 			articleService.update(art);
 		}
 	}
