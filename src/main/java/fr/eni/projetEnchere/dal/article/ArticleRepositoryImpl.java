@@ -118,6 +118,7 @@ public class ArticleRepositoryImpl implements ArticleRepository{
 	}
 	
 	@Override
+	//TODO use pageNb
 	public List<Article> getAll(Map<String, String> filterMapLike, Map<String, String> filterMapEquals, 
 			int idLoggedMember, int pageNb) {
 		String sql = "SELECT * \r\n"
